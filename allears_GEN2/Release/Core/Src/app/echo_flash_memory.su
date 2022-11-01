@@ -1,0 +1,2 @@
+../Core/Src/app/echo_flash_memory.c:55:19:Echo_Flash_Write	24	static
+../Core/Src/app/echo_flash_memory.c:100:19:Echo_Flash_Read	0	static

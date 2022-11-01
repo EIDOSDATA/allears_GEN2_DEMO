@@ -1,0 +1,14 @@
+../Core/Src/app/echo_shell.c:80:6:Echo_Shell_Init	8	static
+../Core/Src/app/echo_shell.c:98:6:Echo_Shell_DeInit	8	static
+../Core/Src/app/echo_shell.c:104:6:Echo_Shell_RxPoll	0	static
+../Core/Src/app/echo_shell.c:119:6:Echo_ShellPrint_Char	16	static
+../Core/Src/app/echo_shell.c:134:6:Echo_ShellPrint_Hex	16	static
+../Core/Src/app/echo_shell.c:152:6:Echo_Print_Manual	0	static
+../Core/Src/app/echo_shell.c:161:6:Echo_Print_Version	48	static
+../Core/Src/app/echo_shell.c:190:6:Echo_ShellCMD_Read	0	static
+../Core/Src/app/echo_shell.c:174:6:HAL_UART_RxCpltCallback	8	static
+../Core/Src/app/echo_shell.c:209:6:Echo_Shell_Input_Print	8	static
+../Core/Src/app/echo_shell.c:246:6:Echo_AdminCMD_Check	24	static
+../Core/Src/app/echo_shell.c:294:6:Echo_ParameterCMD_Check	24	static
+../Core/Src/app/echo_shell.c:222:6:Echo_Shell_CMD_EXE	16	static
+../Core/Src/app/echo_shell.c:341:6:Echo_Shell_Start	0	static
