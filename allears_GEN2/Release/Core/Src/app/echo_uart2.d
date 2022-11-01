@@ -1,6 +1,6 @@
-Core/Src/app/echo_sys_common.o: ../Core/Src/app/echo_sys_common.c \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_stim_setting.h \
- ../Core/Inc/main.h ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
+Core/Src/app/echo_uart2.o: ../Core/Src/app/echo_uart2.c \
+ C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h \
+ ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h \
@@ -33,19 +33,11 @@ Core/Src/app/echo_sys_common.o: ../Core/Src/app/echo_sys_common.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h \
  C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_shell.h \
  C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_btn.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_flash_memory.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_led.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_schedule.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_state.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_stim_fdbk.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_sys_common.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_uart2.h
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_stim_setting.h:
-../Core/Inc/main.h:
+ C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_uart2.h \
+ ../Core/Inc/main.h
+C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h:
@@ -79,14 +71,7 @@ C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_stim
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h:
 C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_shell.h:
 C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_btn.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_flash_memory.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_led.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_schedule.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_state.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_stim_fdbk.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_sys_common.h:
 C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_uart2.h:
+../Core/Inc/main.h:

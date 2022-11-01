@@ -16,6 +16,7 @@
 #include "echo_state.h"
 #include "echo_stim_fdbk.h"
 #include "echo_sys_common.h"
+#include "echo_uart2.h"
 
 /*
  * NOT USAGE
@@ -84,7 +85,7 @@ void Echo_PCI_State_Init()
 	Echo_LED_Init();
 	Echo_FSM_State_Init();
 	Echo_Shell_Init();
-	Echo_Shell_Start();
+	Echo_Uart2_INTERRUPT_ENA();
 }
 
 void Echo_Clock_Config()

@@ -41,7 +41,8 @@ Core/Src/app/echo_shell.o: ../Core/Src/app/echo_shell.c \
  C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_led.h \
  C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_schedule.h \
  C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_state.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_sys_common.h
+ C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_sys_common.h \
+ C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_uart2.h
 C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_stim_setting.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
@@ -86,3 +87,4 @@ C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_led.
 C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_schedule.h:
 C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_state.h:
 C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_sys_common.h:
+C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_uart2.h:

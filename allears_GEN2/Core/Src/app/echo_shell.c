@@ -8,17 +8,31 @@
 #include "echo_shell.h"
 #include "echo_state.h"
 #include "echo_sys_common.h"
+#include "echo_uart2.h"
 
 #ifdef	ECHO_SHELL_ENABLED
 
 extern pwm_pulse_param_t pwm_param;
 
-uint8_t uart1_input_data = 0;
-uint8_t uart2_input_data = 0;
-uint8_t uart1_buff[256];
-uint8_t uart2_buff[256];
-int uart1_buff_pos = 0;
-int uart2_buff_pos = 0;
+#define ECHO_SHELL_MSG_RCV_FLUSH_TIMEOUT			2000
+#define ECHO_SHELL_MSG_RCV_HANDSHAKING_TIMEOUT		(ECHO_DELAY_1SEC * 10)					/* 10s */
+
+#define SHELL_MSG_RCV_BUF_SIZE					256
+#define SHELL_MSG_RCV_POS						ehco_shell_msg_state.pos
+#define SHELL_MSG_RCV_BUF						ehco_shell_msg_state.buf
+#define SHELL_MSG_RCV_FLUSH_CHK_TIME			ehco_shell_msg_state.flush_chk_time
+#define SHELL_MSG_RCV_HANDSHAKING_TIME			ehco_shell_msg_state.handshaking_time
+
+extern uint8_t echo_uart2_rcv_byte;
+typedef struct
+{
+	uint8_t pos;
+	uint8_t buf[SHELL_MSG_RCV_BUF_SIZE];
+	uint32_t flush_chk_time;
+	uint32_t handshaking_time;
+} echo_shell_msg_rcv_state_t;
+
+echo_shell_msg_rcv_state_t ehco_shell_msg_state;
 
 const char *help_manual = "\r\n----------   MANUAL   ----------\r\n"
 		"\r\n********  ADMIN COMMAND  ********\r\n"
@@ -76,30 +90,6 @@ const parameter_cmd_str_t parameter_cmd_str_table[parameter_cmd_max] =
 { (unsigned char*) "#getHZ", 6 },
 { (unsigned char*) "#getVPW", 7 },
 { (unsigned char*) "#getALLPRM", 10 } };
-
-void Echo_Shell_Init(void)
-{
-	ECHO_H_SHELL.Instance = USART2;
-	ECHO_H_SHELL.Init.BaudRate = 115200;
-	ECHO_H_SHELL.Init.WordLength = UART_WORDLENGTH_8B;
-	ECHO_H_SHELL.Init.StopBits = UART_STOPBITS_1;
-	ECHO_H_SHELL.Init.Parity = UART_PARITY_NONE;
-	ECHO_H_SHELL.Init.Mode = UART_MODE_TX_RX;
-	ECHO_H_SHELL.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-	ECHO_H_SHELL.Init.OverSampling = UART_OVERSAMPLING_16;
-	ECHO_H_SHELL.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-	ECHO_H_SHELL.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-	if (HAL_UART_Init(&huart2) != HAL_OK)
-	{
-		Error_Handler();
-	}
-}
-
-void Echo_Shell_DeInit(void)
-{
-	HAL_UART_AbortReceive_IT(&ECHO_H_SHELL);
-	HAL_UART_DeInit(&ECHO_H_SHELL);
-}
 
 void Echo_Shell_RxPoll(void)
 {
@@ -169,73 +159,86 @@ void Echo_Print_Version()
 /**********************/
 
 /*
- * 1. UART RX Interrupt
- */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if (huart->Instance == USART1)
-	{
-	}
-	else if (huart->Instance == USART2)
-	{
-		Echo_ShellCMD_Read();
-	}
-	HAL_UART_Receive_IT(&ECHO_H_SHELL, &uart2_input_data, 1);
-}
-/**********************/
-
-/*
- *  2. DATA >> BUFFER
- */
-void Echo_ShellCMD_Read()
-{
-	/* NULL */
-	if (uart2_buff_pos == 0 && uart2_input_data == '\n')
-	{
-		uart2_buff_pos = 0;
-		uart2_input_data = '\0';
-	}
-	else
-	{
-		uart2_buff[uart2_buff_pos] = uart2_input_data;
-		uart2_buff_pos++;
-	}
-}
-/**********************/
-
-/*
  *  INPUT DATA PRINT
  */
 void Echo_Shell_Input_Print()
 {
-	if (uart2_input_data != 0)
+	if (echo_uart2_rcv_byte != 0)
 	{
-		HAL_UART_Transmit(&ECHO_H_SHELL, &uart2_input_data, 1, 10);
-		uart2_input_data = 0;
+		HAL_UART_Transmit(&ECHO_USART2_HANDLE, &echo_uart2_rcv_byte, 1, 10);
+		echo_uart2_rcv_byte = 0;
 	}
 }
 /**********************/
 
+void Echo_Shell_Init(void)
+{
+	memset(SHELL_MSG_RCV_BUF, '\0', SHELL_MSG_RCV_BUF_SIZE);
+	SHELL_MSG_RCV_POS = 0;
+}
+
 /*
  *  SHELL COMMAND EXE
  */
-void Echo_Shell_CMD_EXE()
+void Echo_Shell_CMD_Handle()
 {
-	/* ENTER KEY CHECK */
-	if (uart2_buff[uart2_buff_pos - 1] == 13)
+	static uint8_t st_byte;
+	while (Echo_Uart2_Get_RCV_Q(&st_byte) == true
+			&& SHELL_MSG_RCV_POS < SHELL_MSG_RCV_BUF_SIZE)
 	{
-		if (strncmp((const char*) uart2_buff, (const char*) "#set", 4) == 0
-				|| strncmp((const char*) uart2_buff, (const char*) "#get", 4)
-						== 0)
+		SHELL_MSG_RCV_FLUSH_CHK_TIME = HAL_GetTick();
+		if ((st_byte == '#') || SHELL_MSG_RCV_POS != 0)
 		{
-			Echo_ParameterCMD_Check(uart2_buff, uart2_buff_pos);
+			SHELL_MSG_RCV_BUF[SHELL_MSG_RCV_POS] = st_byte;
+			SHELL_MSG_RCV_POS++;
+
+			/* ENTER KEY CHECK */
+			if (st_byte == 13)
+			{
+				if (strncmp((const char*) SHELL_MSG_RCV_BUF,
+						(const char*) "#set", 4) == 0
+						|| strncmp((const char*) SHELL_MSG_RCV_BUF,
+								(const char*) "#get", 4) == 0)
+				{
+					Echo_ParameterCMD_Check(SHELL_MSG_RCV_BUF,
+					SHELL_MSG_RCV_POS);
+				}
+				else
+				{
+					Echo_AdminCMD_Check(SHELL_MSG_RCV_BUF, SHELL_MSG_RCV_POS);
+				}
+				Echo_Shell_Init();
+				SHELL_MSG_RCV_HANDSHAKING_TIME = HAL_GetTick();
+			}
 		}
-		else
+	}
+
+	if (SHELL_MSG_RCV_POS > 0)
+	{
+		/* Check flush timeout */
+		if (HAL_GetTick() - SHELL_MSG_RCV_FLUSH_CHK_TIME
+				> ECHO_SHELL_MSG_RCV_FLUSH_TIMEOUT)
 		{
-			Echo_AdminCMD_Check(uart2_buff, uart2_buff_pos);
+#if 1
+			ECHO_SHELL_PRINT(("BT_MSG: Flush timeout\n"));
+			ECHO_SHELL_PRINT_CHAR(SHELL_MSG_RCV_BUF, SHELL_MSG_RCV_POS);
+#endif
+			Echo_Shell_Init();
 		}
-		memset(uart2_buff, '\0', uart2_buff_pos);
-		uart2_buff_pos = 0;
+	}
+	if (Echo_Get_FSM_State() == ECHO_STATE_RUN)
+	{
+		/* Check handshaking timeout */
+		if (HAL_GetTick() - SHELL_MSG_RCV_HANDSHAKING_TIME
+				> ECHO_SHELL_MSG_RCV_HANDSHAKING_TIMEOUT)
+		{
+#if 0
+			ECHO_SHELL_PRINT(("SHELL MSG: Handshaking timeout\n"));
+			aulStimul_forceStop();
+#endif
+			/* Reset time */
+			SHELL_MSG_RCV_HANDSHAKING_TIME = HAL_GetTick();
+		}
 	}
 }
 /**********************/
@@ -335,12 +338,6 @@ void Echo_ParameterCMD_Check(uint8_t *data, uint16_t len)
 	default:
 		break;
 	}
-}
-
-/* IN main.c UART RX Interrupt START Command */
-void Echo_Shell_Start()
-{
-	HAL_UART_Receive_IT(&huart2, &uart2_input_data, 1);
 }
 
 #endif	/*  AUL_DEBUG_ENABLED */

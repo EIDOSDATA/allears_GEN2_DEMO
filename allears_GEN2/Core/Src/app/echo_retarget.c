@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "main.h"
-#include "echo_shell.h"
 #include "echo_private.h"
+#include "echo_uart2.h"
 
 struct __FILE
 {
@@ -25,8 +25,8 @@ PUTCHAR_PROTOTYPE
 {
 	if (ch == '\n')
 	{
-		HAL_UART_Transmit(&ECHO_H_SHELL, (uint8_t*) "\r", 1, 0xFFFF);
+		HAL_UART_Transmit(&ECHO_USART2_HANDLE, (uint8_t*) "\r", 1, 0xFFFF);
 	}
-	HAL_UART_Transmit(&ECHO_H_SHELL, (uint8_t*) &ch, 1, 0xFFFF);
+	HAL_UART_Transmit(&ECHO_USART2_HANDLE, (uint8_t*) &ch, 1, 0xFFFF);
 	return ch;
 }

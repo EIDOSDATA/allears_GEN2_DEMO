@@ -43,36 +43,27 @@ typedef enum
 /* Enable debug print as each module in here */
 #define ECHO_SHELL_INIT(void)										Echo_Shell_Init()
 #define ECHO_SHELL_DEINIT(void)										Echo_Shell_DeInit()
-#define ECHO_SHELL_PRINT(x)										printf x
+#define ECHO_SHELL_PRINT(x)											printf x
 
 #define ECHO_SHELL_PRINT_CHAR(data, len)						Echo_ShellPrint_Char(data, len)
-#define ECHO_SHELL_PRINT__HEX(data, len)						Echo_ShellPrint_Hex(data, len)
+#define ECHO_SHELL_PRINT_HEX(data, len)							Echo_ShellPrint_Hex(data, len)
 #define ECHO_SHELL_RCV_POLL()									Echo_Shell_RxPoll()
 
-void Echo_Shell_Init(void);
-void Echo_Shell_DeInit(void);
 void Echo_Shell_RxPoll(void);
-
 void Echo_ShellPrint_Char(uint8_t *data, uint16_t len);
 void Echo_ShellPrint_Hex(uint8_t *data, uint16_t len);
+
 int Echo_Shell_printf(const char *format, ...);
 
 void Echo_Print_Manual(void);
 void Echo_Print_Version(void);
-
 void Echo_Shell_Input_Print(void);
-void Echo_Shell_CMD_EXE(void);
-void Echo_ShellCMD_Read(void);
+
+void Echo_Shell_Init(void);
+void Echo_Shell_CMD_Handle(void);
 
 void Echo_AdminCMD_Check(uint8_t *data, uint16_t len);
 void Echo_ParameterCMD_Check(uint8_t *data, uint16_t len);
-void Echo_Shell_Start(void);
-
-#define ECHO_H_BT					huart1
-extern UART_HandleTypeDef huart1;
-
-#define ECHO_H_SHELL						huart2
-extern UART_HandleTypeDef huart2;
 
 #else
 

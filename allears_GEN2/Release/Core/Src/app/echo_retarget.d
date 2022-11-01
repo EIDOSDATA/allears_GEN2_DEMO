@@ -34,7 +34,8 @@ Core/Src/app/echo_retarget.o: ../Core/Src/app/echo_retarget.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
  C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h \
  C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_shell.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h
+ C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h \
+ C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_uart2.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -72,3 +73,4 @@ Core/Src/app/echo_retarget.o: ../Core/Src/app/echo_retarget.c \
 C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h:
 C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_shell.h:
 C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h:
+C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_uart2.h:
