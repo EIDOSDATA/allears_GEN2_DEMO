@@ -1,0 +1,4 @@
+../Core/Src/app/echo_btn.c:28:6:Echo_Btn_IsHandled	0	static
+../Core/Src/app/echo_btn.c:33:6:Echo_Btn_Handled_Clear	0	static
+../Core/Src/app/echo_btn.c:38:6:Echo_Btn_HandleEnable	0	static
+../Core/Src/app/echo_btn.c:43:6:Echo_Btn_Handle	8	static
