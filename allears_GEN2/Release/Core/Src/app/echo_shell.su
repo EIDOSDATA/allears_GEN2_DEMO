@@ -1,0 +1,10 @@
+../Core/Src/app/echo_shell.c:94:6:Echo_Shell_RxPoll	0	static
+../Core/Src/app/echo_shell.c:109:6:Echo_ShellPrint_Char	16	static
+../Core/Src/app/echo_shell.c:124:6:Echo_ShellPrint_Hex	16	static
+../Core/Src/app/echo_shell.c:142:6:Echo_Print_Manual	0	static
+../Core/Src/app/echo_shell.c:151:6:Echo_Print_Version	48	static
+../Core/Src/app/echo_shell.c:164:6:Echo_Shell_Input_Print	8	static
+../Core/Src/app/echo_shell.c:174:6:Echo_Shell_Init	8	static
+../Core/Src/app/echo_shell.c:249:6:Echo_AdminCMD_Check	24	static
+../Core/Src/app/echo_shell.c:297:6:Echo_ParameterCMD_Check	24	static
+../Core/Src/app/echo_shell.c:183:6:Echo_Shell_CMD_Handle	24	static

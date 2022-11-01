@@ -1,0 +1,44 @@
+** Check Points
+
+1. Detect In case and Out of case
+	1) See phy_state.c, appPhyStateHandleMessage(), CHARGER_MESSAGE_ATTACHED and CHARGER_MESSAGE_DETACHED
+	2) See charger_monitor.c, Charger_UpdateConnected()
+	3) See system_message.h and MESSAGE_CHARGER_CHANGED
+	4) System checks VCHG_SENSE pin to detect if device is in case or out of case.
+	5) Although charging is complete, if VCHG_SENSE is hight (5V), system can detect current case state exactly
+
+2. Reset when in or Out of case or watchdog
+	1) Global definition: INCLUDE_WATCHDOG
+	2) See tws_topology_common_primary.rules and tws_topology_common_secondary.rules
+	3) See tws_topology_common_primary_rule_functions.h/.c and tws_topology_common_secondary_rule_functions.h/.c ruleTwsTopPriInCaseWatchdogStart() and ruleTwsTopPriInCaseWatchdogStop()
+	4) See wathdog.h and wathdog.h
+	5) When in case, watchdog start and after time is elapsed watchdog reset works. 
+	6) When Out of case, watchdog stops
+
+3. AUL(Application User Level) log
+	1) AUL log is used for developers and made when application is implemented
+	2) So, in official product, AUL log had better be removed
+	3) To remove AUL log, remove AUL_DEBUG_PRINT_ENABLED in global definitions
+	
+
+4. Disable Debug Log
+	1) It is impossible to disable log
+	2) Do not try to disable Hydra log
+	3) It is possible to changbe log level, but do not change if possible
+		- logging.h
+			Change DEFAULT_LOG_LEVEL as wish, currently DEBUG_LOG_LEVEL_INFO
+	
+5. Disable Hydra log
+	1) It is impossible to disable Hydra log
+	2) Do not try to disable Hydra log
+	3) It is possible to changbe log level, but do not change if possible
+		- buld_defs.h
+			Change HYDRA_LOG_MAX_LEVEL
+
+6. Add Release Build
+	1) In QMDE -> Build Settings -> Clone -> Rename "Release"
+	2) Properties -> General tab -> DEFS
+		- Remove
+			AV_DEBUG
+			DEBUG
+	3) FW image size are not different greatly of Debug and Release
