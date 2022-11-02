@@ -17,7 +17,7 @@ typedef struct
 {
 	uint16_t dead_time;		// TIME
 	uint16_t pulse_width;	// TIME
-	uint16_t pulse_freq;		// Hz
+	uint16_t pulse_freq;	// Hz
 } pwm_pulse_param_t;
 
 typedef struct

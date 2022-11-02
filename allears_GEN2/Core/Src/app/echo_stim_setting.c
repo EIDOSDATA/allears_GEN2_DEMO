@@ -15,6 +15,7 @@
 #define MASTER_CLK_FREQ					80000000
 #define MASTER_PSC						80
 #define MASTER_ARR						1000000
+#define ECHO_SET_HZ_PERIOD				10
 
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
@@ -84,7 +85,6 @@ void Echo_Set_HZ(uint8_t *data, uint16_t len)
 
 	sscanf((const char*) data, (const char*) "#setHZ,%hd%*[^\r]",
 			&pwm_param.pulse_freq);
-
 	if (Echo_Get_FSM_State() == ECHO_STATE_RUN)
 	{
 		Echo_Set_FSM_State_Stop();
@@ -95,6 +95,7 @@ void Echo_Set_HZ(uint8_t *data, uint16_t len)
 	{
 		Echo_Pulse_Prm_Config();
 	}
+
 	Echo_Get_Res_Data(RESPONSE_FREQUENCY);
 
 }
@@ -157,11 +158,14 @@ void Echo_Get_Res_Data(uint8_t select_msg)
  * */
 void Echo_Pulse_Prm_Config()
 {
+	uint32_t arr_data;
 	ano_matching_tim1 = pwm_param.pulse_width;
 	cat_matching_tim1 = ano_matching_tim1 + pwm_param.dead_time;
 	cat_matching_tim2 = (ano_matching_tim1 * 2) + pwm_param.dead_time;
 
-	TIM2->ARR = (MASTER_ARR / pwm_param.pulse_freq) - 1;
+	arr_data = MASTER_ARR / pwm_param.pulse_freq;
+	TIM2->CNT = 0;
+	TIM2->ARR = arr_data - 1;
 	TIM2->CCR1 = ano_matching_tim1;
 	pwm_arr[0] = cat_matching_tim2;
 	pwm_arr[1] = cat_matching_tim1;
