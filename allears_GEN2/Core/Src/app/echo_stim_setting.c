@@ -5,16 +5,16 @@
  *      Author: ECHO
  */
 
-#include <echo_stim_setting.h>
 #include <string.h>
 #include <strings.h>
 #include "main.h"
-#include "stm32l4xx_ll_tim.h"
 #include "echo_flash_memory.h"
+#include "echo_stim_setting.h"
+#include "echo_state.h"
 
 #define MASTER_CLK_FREQ					80000000
-#define TIM1_PRESCALER					1599
-#define TIM2_PRESCALER					79
+#define MASTER_PSC						80
+#define MASTER_ARR						1000000
 
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
@@ -69,24 +69,34 @@ void Echo_Set_DT(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setDT,%hd%*[^\r]",
 			&pwm_param.dead_time);
-	Echo_Pulse_DT_PW_Config();
+	Echo_Pulse_Prm_Config();
 	Echo_Get_Res_Data(RESPONSE_DEADTIME);
 }
 void Echo_Set_PW(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setPW,%hd%*[^\r]",
 			&pwm_param.pulse_width);
-	Echo_Pulse_DT_PW_Config();
+	Echo_Pulse_Prm_Config();
 	Echo_Get_Res_Data(RESPONSE_PULSEWIDTH);
 }
 void Echo_Set_HZ(uint8_t *data, uint16_t len)
 {
+
 	sscanf((const char*) data, (const char*) "#setHZ,%hd%*[^\r]",
 			&pwm_param.pulse_freq);
-	//Echo_PulseWidth_Config();
-	//Echo_TIM2_PWM_Config();
-	//Echo_TIM1_PWM_Config();
+
+	if (Echo_Get_FSM_State() == ECHO_STATE_RUN)
+	{
+		Echo_Set_FSM_State_Stop();
+		Echo_Pulse_Prm_Config();
+		Echo_Set_FSM_State_Start();
+	}
+	else
+	{
+		Echo_Pulse_Prm_Config();
+	}
 	Echo_Get_Res_Data(RESPONSE_FREQUENCY);
+
 }
 void Echo_Set_V_PW(uint8_t *data, uint16_t len)
 {
@@ -145,19 +155,21 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 /*
  * PWM VALUE WRITE TO REGISTOR
  * */
-void Echo_Pulse_DT_PW_Config()
+void Echo_Pulse_Prm_Config()
 {
 	ano_matching_tim1 = pwm_param.pulse_width;
 	cat_matching_tim1 = ano_matching_tim1 + pwm_param.dead_time;
 	cat_matching_tim2 = (ano_matching_tim1 * 2) + pwm_param.dead_time;
-	LL_TIM_OC_SetCompareCH1(htim2.Instance, ano_matching_tim1);
+
+	TIM2->ARR = (MASTER_ARR / pwm_param.pulse_freq) - 1;
+	TIM2->CCR1 = ano_matching_tim1;
 	pwm_arr[0] = cat_matching_tim2;
 	pwm_arr[1] = cat_matching_tim1;
 }
 
 void Echo_Pulse_V_PW_Config()
 {
-	LL_TIM_OC_SetCompareCH1(htim1.Instance, v_step);
+	TIM1->CCR1 = v_step;
 }
 
 /*
@@ -185,13 +197,8 @@ void Echo_Stim_Stop()
 
 void Echo_Stim_Start()
 {
-	ano_matching_tim1 = pwm_param.pulse_width;
-	cat_matching_tim1 = ano_matching_tim1 + pwm_param.dead_time;
-	cat_matching_tim2 = (ano_matching_tim1 * 2) + pwm_param.dead_time;
+	Echo_Pulse_Prm_Config();
 
-	pwm_arr[0] = cat_matching_tim2;
-	pwm_arr[1] = cat_matching_tim1;
-	LL_TIM_OC_SetCompareCH1(htim2.Instance, ano_matching_tim1);
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_2, (uint32_t*) pwm_arr, 2);
 	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
@@ -200,20 +207,20 @@ void Echo_Stim_Start()
 }
 
 #if 0
-void Echo_Pulse_DT_PW_Config()
+void Echo_Pulse_Prm_Config()
 {
 	ano_matching_tim1 = pwm_param.pulse_width;
 	cat_matching_tim1 = ano_matching_tim1 + pwm_param.dead_time;
 	cat_matching_tim2 = (ano_matching_tim1 * 2) + pwm_param.dead_time;
-	LL_TIM_OC_SetCompareCH1(htim2.Instance, ano_matching_tim1);
+	TIM2->CCR1 = ano_matching_tim1;
 	if (gPulse_high == false)
 	{
-		LL_TIM_OC_SetCompareCH2(htim2.Instance, cat_matching_tim2);
+		TIM2->CCR2 = cat_matching_tim2;
 		//gPulse_high = true;
 	}
 	else
 	{
-		LL_TIM_OC_SetCompareCH2(htim2.Instance, cat_matching_tim1);
+		TIM2->CCR2 = cat_matching_tim1;
 		//gPulse_high = false;
 	}
 }
@@ -230,8 +237,9 @@ void Echo_Stim_Start()
 	ano_matching_tim1 = pwm_param.pulse_width;
 	cat_matching_tim1 = ano_matching_tim1 + pwm_param.dead_time;
 	cat_matching_tim2 = (ano_matching_tim1 * 2) + pwm_param.dead_time;
-	LL_TIM_OC_SetCompareCH1(htim2.Instance, ano_matching_tim1);
-	LL_TIM_OC_SetCompareCH2(htim2.Instance, cat_matching_tim1);
+	TIM2->CCR1 = ano_matching_tim1;
+	TIM2->CCR2 = cat_matching_tim1;
+
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_2);
 
@@ -251,7 +259,7 @@ void Echo_StepUP_Stop()
 
 void Echo_StepUP_Start()
 {
-	LL_TIM_OC_SetCompareCH1(htim1.Instance, v_step);
+	TIM1->CCR1 = v_step;
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 }
 /****************************************/

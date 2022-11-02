@@ -6,7 +6,6 @@
  */
 #include <echo_stim_setting.h>
 #include "main.h"
-#include "stm32l4xx_ll_tim.h"
 #include "echo_flash_memory.h"
 
 extern TIM_HandleTypeDef htim2;
@@ -31,12 +30,12 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			if (gPulse_high == false)
 			{
-				LL_TIM_OC_SetCompareCH2(htim2.Instance, cat_matching_tim2);
+				TIM2->CCR2 = cat_matching_tim2;
 				gPulse_high = true;
 			}
 			else
 			{
-				LL_TIM_OC_SetCompareCH2(htim2.Instance, cat_matching_tim1);
+				TIM2->CCR2 = cat_matching_tim1;
 				gPulse_high = false;
 			}
 			//HAL_GPIO_WritePin(GPIOA, AUL_GPIO_TP1_Pin, GPIO_PIN_SET);

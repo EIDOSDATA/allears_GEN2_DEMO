@@ -32,10 +32,10 @@ Core/Src/app/echo_btn.o: ../Core/Src/app/echo_btn.c ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_shell.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h \
- C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_btn.h
+ C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_private.h \
+ C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_shell.h \
+ C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_private.h \
+ C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_btn.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -70,7 +70,7 @@ Core/Src/app/echo_btn.o: ../Core/Src/app/echo_btn.c ../Core/Inc/main.h \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_shell.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_private.h:
-C:/Users/eidos/STM32CubeIDE/workspace_1.10.1/allears_GEN2/Core/Inc/app/echo_btn.h:
+C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_private.h:
+C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_shell.h:
+C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_private.h:
+C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_btn.h:

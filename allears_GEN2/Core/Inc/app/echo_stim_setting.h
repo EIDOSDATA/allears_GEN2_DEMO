@@ -44,7 +44,7 @@ void Echo_StepUP_Stop(void);
 void Echo_StepUP_Start(void);
 
 // PULSE DT, PW CONFIG
-void Echo_Pulse_DT_PW_Config(void);
+void Echo_Pulse_Prm_Config(void);
 // PULSE VOLTAGE PW CONFIG
 void Echo_Pulse_V_PW_Config(void);
 
