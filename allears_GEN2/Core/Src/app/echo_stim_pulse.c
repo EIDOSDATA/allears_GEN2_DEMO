@@ -9,6 +9,8 @@
 #include "main.h"
 #include "echo_flash_memory.h"
 
+#define PULSE_DEBOUNCING_TIME			5
+
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim16;
 extern DMA_HandleTypeDef hdma_tim2_ch2_ch4;
@@ -20,31 +22,52 @@ extern uint32_t cat_matching_tim2;
 
 extern int v_step_tv;
 extern int v_step_val;
-bool gPulse_high = false;
+
 #if 1
+bool gPulse_high = false;
+int dac_procedure_cnt = 0;
+
 /* TIM2 OC Interrupt handler */
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim->Instance == TIM2)
 	{
-		//ano_matching_tim1 = pwm_param.pulse_width;
-		//cat_matching_tim1 = ano_matching_tim1 + pwm_param.dead_time;
-		//cat_matching_tim2 = (ano_matching_tim1 * 2) + pwm_param.dead_time;
 		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
 		{
 			if (gPulse_high == false)
 			{
 				TIM2->CCR2 = cat_matching_tim2;
-				TIM2->CCR4 = cat_matching_tim2;
 				gPulse_high = true;
 			}
 			else
 			{
 				TIM2->CCR2 = cat_matching_tim1;
-				TIM2->CCR4 = cat_matching_tim1;
 				gPulse_high = false;
 			}
-			//HAL_GPIO_WritePin(GPIOA, AUL_GPIO_TP1_Pin, GPIO_PIN_SET);
+		}
+
+		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
+		{
+			if (dac_procedure_cnt == 0)
+			{
+				TIM2->CCR4 = ano_matching_tim1 - PULSE_DEBOUNCING_TIME;
+				dac_procedure_cnt = 1;
+			}
+			else if (dac_procedure_cnt == 1)
+			{
+				TIM2->CCR4 = cat_matching_tim1 + PULSE_DEBOUNCING_TIME;
+				dac_procedure_cnt = 2;
+			}
+			else if (dac_procedure_cnt == 2)
+			{
+				TIM2->CCR4 = cat_matching_tim2 - PULSE_DEBOUNCING_TIME;
+				dac_procedure_cnt = 3;
+			}
+			else if (dac_procedure_cnt == 3)
+			{
+				TIM2->CCR4 = PULSE_DEBOUNCING_TIME;
+				dac_procedure_cnt = 0;
+			}
 		}
 	}
 }

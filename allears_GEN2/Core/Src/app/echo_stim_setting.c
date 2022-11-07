@@ -37,6 +37,7 @@ volatile uint32_t pwm_arr[2];
 int v_step_tv = 5000;
 int v_step_val = 0;
 extern bool gPulse_high;
+extern bool gPulse_high1;
 
 /****************************************/
 
@@ -238,7 +239,7 @@ void Echo_Pulse_Prm_Config()
 	else
 	{
 		TIM2->CCR2 = cat_matching_tim1;
-		TIM2->CCR1 = cat_matching_tim1;
+		TIM2->CCR4 = cat_matching_tim1;
 		//gPulse_high = false;
 	}
 }
@@ -258,11 +259,11 @@ void Echo_Stim_Start()
 	cat_matching_tim2 = (ano_matching_tim1 * 2) + pwm_param.dead_time;
 	TIM2->CCR1 = ano_matching_tim1;
 	TIM2->CCR2 = cat_matching_tim1;
-	//TIM2->CCR4 = cat_matching_tim1;
+	TIM2->CCR4 = 5;
 
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_2);
-	//HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_4);
+	HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_4);
 
 	Echo_StepUP_Start();
 }
