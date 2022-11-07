@@ -1,5 +1,6 @@
 Core/Src/app/echo_stim_pulse.o: ../Core/Src/app/echo_stim_pulse.c \
  C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_stim_setting.h \
+ C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_state.h \
  ../Core/Inc/main.h ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
@@ -38,6 +39,7 @@ Core/Src/app/echo_stim_pulse.o: ../Core/Src/app/echo_stim_pulse.c \
  C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_private.h \
  C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_flash_memory.h
 C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_stim_setting.h:
+C:/Users/eidos/GitHub/allears_GEN2_DEMO/allears_GEN2/Core/Inc/app/echo_state.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:

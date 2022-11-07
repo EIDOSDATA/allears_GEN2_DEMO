@@ -4,17 +4,22 @@
  *  Created on: Oct 26, 2022
  *      Author: ECHO
  */
-#include <echo_stim_setting.h>
+#include "echo_stim_setting.h"
+#include "echo_state.h"
 #include "main.h"
 #include "echo_flash_memory.h"
 
 extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim16;
 extern DMA_HandleTypeDef hdma_tim2_ch2_ch4;
 
 extern pwm_pulse_param_t pwm_param;
 extern uint32_t ano_matching_tim1;
 extern uint32_t cat_matching_tim1;
 extern uint32_t cat_matching_tim2;
+
+extern int v_step_tv;
+extern int v_step_val;
 
 #if 0
 bool gPulse_high = false;
@@ -43,3 +48,27 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 }
 #endif
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim->Instance == TIM16)
+	{
+		if (Echo_Get_FSM_State() == ECHO_STATE_RUN)
+		{
+			if (v_step_val < v_step_tv)
+			{
+				v_step_val += 10;
+				Echo_Pulse_V_PW_Config();
+			}
+			else if (v_step_val > v_step_tv)
+			{
+				v_step_val = v_step_tv;
+				Echo_Pulse_V_PW_Config();
+			}
+			else if (v_step_val == v_step_tv)
+			{
+				HAL_TIM_Base_Stop_IT(&htim16);
+			}
+		}
+	}
+}

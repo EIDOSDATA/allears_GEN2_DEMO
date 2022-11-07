@@ -55,6 +55,7 @@ DMA_HandleTypeDef hdma_adc1;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
+TIM_HandleTypeDef htim16;
 DMA_HandleTypeDef hdma_tim2_ch2_ch4;
 
 UART_HandleTypeDef huart1;
@@ -73,6 +74,7 @@ static void MX_TIM2_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_ADC1_Init(void);
+static void MX_TIM16_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -116,6 +118,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   MX_ADC1_Init();
+  MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
 
 	Echo_PCI_State_Init();
@@ -130,6 +133,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
 		Echo_Shell_CMD_Handle();
 
 		if (HAL_GetTick() - schdule_tick >= ECHO_SCHED_HANDLE_PERIOD)
@@ -143,6 +147,8 @@ int main(void)
 			//HAL_Delay(1000);
 			schdule_tick = HAL_GetTick();
 		}
+
+		HAL_Delay(10);
 
 		/*
 		 * POWER SLEEP MODE
@@ -234,7 +240,7 @@ static void MX_ADC1_Init(void)
   /** Common config
   */
   hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV2;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
@@ -263,9 +269,9 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_8;
+  sConfig.Channel = ADC_CHANNEL_11;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_47CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_12CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -276,7 +282,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_9;
+  sConfig.Channel = ADC_CHANNEL_12;
   sConfig.Rank = ADC_REGULAR_RANK_2;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
@@ -322,7 +328,7 @@ static void MX_TIM1_Init(void)
   htim1.Init.Period = 9999;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
-  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
   {
     Error_Handler();
@@ -420,10 +426,48 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
+  sConfigOC.OCMode = TIM_OCMODE_TIMING;
+  sConfigOC.Pulse = 0;
+  if (HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN TIM2_Init 2 */
 
   /* USER CODE END TIM2_Init 2 */
   HAL_TIM_MspPostInit(&htim2);
+
+}
+
+/**
+  * @brief TIM16 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM16_Init(void)
+{
+
+  /* USER CODE BEGIN TIM16_Init 0 */
+
+  /* USER CODE END TIM16_Init 0 */
+
+  /* USER CODE BEGIN TIM16_Init 1 */
+
+  /* USER CODE END TIM16_Init 1 */
+  htim16.Instance = TIM16;
+  htim16.Init.Prescaler = 79;
+  htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim16.Init.Period = 99;
+  htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim16.Init.RepetitionCounter = 0;
+  htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim16) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM16_Init 2 */
+
+  /* USER CODE END TIM16_Init 2 */
 
 }
 
@@ -531,33 +575,39 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, TP0_Pin|TP1_Pin|BIPHASIC_SW_Pin|PEAK_DISCHG_SW_Pin
-                          |CATHODE_DISCHARGE_Pin|ANODE_DISCHARGE_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, QCC_CRTL0_Pin|QCC_CRTL1_Pin|LED_Pin|BIPHASIC_SW_Pin
+                          |PEAK_DISCHG_SW_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, QCC_CRTL0_Pin|QCC_CRTL1_Pin|LD3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, DAC0_Pin|DAC1_Pin|DAC2_Pin|DAC3_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : TP0_Pin TP1_Pin BIPHASIC_SW_Pin PEAK_DISCHG_SW_Pin
-                           CATHODE_DISCHARGE_Pin ANODE_DISCHARGE_Pin */
-  GPIO_InitStruct.Pin = TP0_Pin|TP1_Pin|BIPHASIC_SW_Pin|PEAK_DISCHG_SW_Pin
-                          |CATHODE_DISCHARGE_Pin|ANODE_DISCHARGE_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  /*Configure GPIO pin : START_BTN_Pin */
+  GPIO_InitStruct.Pin = START_BTN_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(START_BTN_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : QCC_CRTL0_Pin QCC_CRTL1_Pin LD3_Pin */
-  GPIO_InitStruct.Pin = QCC_CRTL0_Pin|QCC_CRTL1_Pin|LD3_Pin;
+  /*Configure GPIO pin : PEAK_DETECTION_Pin */
+  GPIO_InitStruct.Pin = PEAK_DETECTION_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(PEAK_DETECTION_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : QCC_CRTL0_Pin QCC_CRTL1_Pin LED_Pin BIPHASIC_SW_Pin
+                           PEAK_DISCHG_SW_Pin */
+  GPIO_InitStruct.Pin = QCC_CRTL0_Pin|QCC_CRTL1_Pin|LED_Pin|BIPHASIC_SW_Pin
+                          |PEAK_DISCHG_SW_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : START_BTN_Pin */
-  GPIO_InitStruct.Pin = START_BTN_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(START_BTN_GPIO_Port, &GPIO_InitStruct);
+  /*Configure GPIO pins : DAC0_Pin DAC1_Pin DAC2_Pin DAC3_Pin */
+  GPIO_InitStruct.Pin = DAC0_Pin|DAC1_Pin|DAC2_Pin|DAC3_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 

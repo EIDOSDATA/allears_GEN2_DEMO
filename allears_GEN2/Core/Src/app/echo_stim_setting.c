@@ -34,7 +34,8 @@ uint32_t cat_matching_tim2 = 0;
 
 volatile uint32_t pwm_arr[2];
 
-int v_step = 1000;
+int v_step_tv = 5000;
+int v_step_val = 0;
 extern bool gPulse_high;
 
 /****************************************/
@@ -101,8 +102,12 @@ void Echo_Set_HZ(uint8_t *data, uint16_t len)
 }
 void Echo_Set_V_PW(uint8_t *data, uint16_t len)
 {
-	sscanf((const char*) data, (const char*) "#setVPW,%d%*[^\r]", &v_step);
-	Echo_Pulse_V_PW_Config();
+	sscanf((const char*) data, (const char*) "#setVPW,%d%*[^\r]", &v_step_tv);
+	if (Echo_Get_FSM_State() == ECHO_STATE_RUN)
+	{
+		HAL_TIM_Base_Start_IT(&htim16);
+	}
+	//Echo_Pulse_V_PW_Config();
 	Echo_Get_Res_Data(RESPONSE_VOLTAGE_PW);
 }
 /****************************************/
@@ -135,7 +140,7 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 		break;
 	case RESPONSE_VOLTAGE_PW:
 		sprintf((char*) res_msg, (const char*) "%s %d us\r\n\r\n", mes_head,
-				v_step);
+				v_step_tv);
 		break;
 	case RESPONSE_ALLPRM:
 		sprintf((char*) res_msg, (const char*) "%s\r\n"
@@ -143,7 +148,7 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 				"PW: %d us\r\n"
 				"HZ: %d Hz\r\n"
 				"VPW: %d us\r\n\r\n", mes_head, pwm_param.dead_time,
-				pwm_param.pulse_width, pwm_param.pulse_freq, v_step);
+				pwm_param.pulse_width, pwm_param.pulse_freq, v_step_tv);
 		break;
 	default:
 		break;
@@ -173,7 +178,7 @@ void Echo_Pulse_Prm_Config()
 
 void Echo_Pulse_V_PW_Config()
 {
-	TIM1->CCR1 = v_step;
+	TIM1->CCR1 = v_step_val;
 }
 
 /*
@@ -184,7 +189,7 @@ void Echo_Factory_Reset()
 	pwm_param.dead_time = 10;
 	pwm_param.pulse_width = 1000;
 	pwm_param.pulse_freq = 1;
-	v_step = 1000;
+	v_step_tv = 5000;
 	Echo_Flash_Write();
 }
 /****************************************/
@@ -259,12 +264,14 @@ void Echo_Stim_Start()
 void Echo_StepUP_Stop()
 {
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_Base_Stop_IT(&htim16);
 }
 
 void Echo_StepUP_Start()
 {
-	TIM1->CCR1 = v_step;
+	TIM1->CCR1 = v_step_val;
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_Base_Start_IT(&htim16);
 }
 /****************************************/
 

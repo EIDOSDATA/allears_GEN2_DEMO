@@ -37,7 +37,7 @@ extern void MX_TIM6_Init();
 /**********************/
 
 extern pwm_pulse_param_t pwm_param;
-extern int v_step;
+extern int v_step_tv;
 
 /*
  * NOT USAGE
@@ -72,7 +72,7 @@ void Echo_PCI_State_Init()
 		pwm_param.dead_time = 10;
 		pwm_param.pulse_width = 1000;
 		pwm_param.pulse_freq = 1;
-		v_step = 1000;
+		v_step_tv = 5000;
 	}
 
 	Echo_Print_Version();
