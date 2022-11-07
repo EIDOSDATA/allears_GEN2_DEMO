@@ -161,6 +161,7 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 /*
  * PWM VALUE WRITE TO REGISTOR
  * */
+#if 0
 void Echo_Pulse_Prm_Config()
 {
 	uint32_t arr_data;
@@ -175,6 +176,7 @@ void Echo_Pulse_Prm_Config()
 	pwm_arr[0] = cat_matching_tim2;
 	pwm_arr[1] = cat_matching_tim1;
 }
+#endif
 
 void Echo_Pulse_V_PW_Config()
 {
@@ -197,10 +199,12 @@ void Echo_Factory_Reset()
 /*
  * Stimulation Start AND Stop
  */
+#if 0
 void Echo_Stim_Stop()
 {
 	HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
 	HAL_TIM_OC_Stop_DMA(&htim2, TIM_CHANNEL_2);
+	HAL_TIM_OC_Stop_DMA(&htim2, TIM_CHANNEL_4);
 	Echo_StepUP_Stop();
 }
 
@@ -208,15 +212,17 @@ void Echo_Stim_Start()
 {
 	Echo_Pulse_Prm_Config();
 
-	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
-	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_2, (uint32_t*) pwm_arr, 2);
-	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_4, (uint32_t*) pwm_arr, 2);
-	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
+	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1); // PA5 ANODE
+	//HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_2, (uint32_t*) pwm_arr, 2); // PA1 CATHODE
+	//__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
+	//HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_4, (uint32_t*) pwm_arr, 2); // PA3 DAC_ON
+	//__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
 
 	Echo_StepUP_Start();
 }
+#endif
 
-#if 0
+#if 1
 void Echo_Pulse_Prm_Config()
 {
 	ano_matching_tim1 = pwm_param.pulse_width;
@@ -226,11 +232,13 @@ void Echo_Pulse_Prm_Config()
 	if (gPulse_high == false)
 	{
 		TIM2->CCR2 = cat_matching_tim2;
+		TIM2->CCR4 = cat_matching_tim2;
 		//gPulse_high = true;
 	}
 	else
 	{
 		TIM2->CCR2 = cat_matching_tim1;
+		TIM2->CCR1 = cat_matching_tim1;
 		//gPulse_high = false;
 	}
 }
@@ -239,6 +247,7 @@ void Echo_Stim_Stop()
 {
 	HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
 	HAL_TIM_OC_Stop_IT(&htim2, TIM_CHANNEL_2);
+	HAL_TIM_OC_Stop_IT(&htim2, TIM_CHANNEL_4);
 	Echo_StepUP_Stop();
 }
 
@@ -249,9 +258,11 @@ void Echo_Stim_Start()
 	cat_matching_tim2 = (ano_matching_tim1 * 2) + pwm_param.dead_time;
 	TIM2->CCR1 = ano_matching_tim1;
 	TIM2->CCR2 = cat_matching_tim1;
+	//TIM2->CCR4 = cat_matching_tim1;
 
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_2);
+	//HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_4);
 
 	Echo_StepUP_Start();
 }

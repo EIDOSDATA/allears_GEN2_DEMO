@@ -20,9 +20,8 @@ extern uint32_t cat_matching_tim2;
 
 extern int v_step_tv;
 extern int v_step_val;
-
-#if 0
 bool gPulse_high = false;
+#if 1
 /* TIM2 OC Interrupt handler */
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -36,11 +35,13 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 			if (gPulse_high == false)
 			{
 				TIM2->CCR2 = cat_matching_tim2;
+				TIM2->CCR4 = cat_matching_tim2;
 				gPulse_high = true;
 			}
 			else
 			{
 				TIM2->CCR2 = cat_matching_tim1;
+				TIM2->CCR4 = cat_matching_tim1;
 				gPulse_high = false;
 			}
 			//HAL_GPIO_WritePin(GPIOA, AUL_GPIO_TP1_Pin, GPIO_PIN_SET);
