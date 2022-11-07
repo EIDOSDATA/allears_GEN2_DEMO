@@ -210,6 +210,7 @@ void Echo_Stim_Start()
 
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_2, (uint32_t*) pwm_arr, 2);
+	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_4, (uint32_t*) pwm_arr, 2);
 	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
 
 	Echo_StepUP_Start();

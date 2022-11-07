@@ -73,17 +73,17 @@ const echo_led_state_ind_t echo_led_indication_table[ECHO_LED_STATE_MAX] =
 
 __STATIC_INLINE void Echo_LED_Green_Off(void)
 {
-	HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 }
 
 __STATIC_INLINE void Echo_LED_Green_On(void)
 {
-	HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET);
+	HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_SET);
 }
 
 __STATIC_INLINE void Echo_LED_Off_All(void)
 {
-	HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(LED_GPIO_Port, LED_Pin, GPIO_PIN_RESET);
 }
 
 __STATIC_INLINE void Echo_LED_State_Reset(void)

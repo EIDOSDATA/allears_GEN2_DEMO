@@ -6,7 +6,7 @@
 ../Core/Src/app/echo_stim_setting.c:84:6:Echo_Set_HZ	8	static
 ../Core/Src/app/echo_stim_setting.c:179:6:Echo_Pulse_V_PW_Config	0	static
 ../Core/Src/app/echo_stim_setting.c:187:6:Echo_Factory_Reset	0	static
-../Core/Src/app/echo_stim_setting.c:264:6:Echo_StepUP_Stop	8	static
+../Core/Src/app/echo_stim_setting.c:265:6:Echo_StepUP_Stop	8	static
 ../Core/Src/app/echo_stim_setting.c:200:6:Echo_Stim_Stop	8	static
-../Core/Src/app/echo_stim_setting.c:270:6:Echo_StepUP_Start	8	static
+../Core/Src/app/echo_stim_setting.c:271:6:Echo_StepUP_Start	8	static
 ../Core/Src/app/echo_stim_setting.c:207:6:Echo_Stim_Start	8	static
