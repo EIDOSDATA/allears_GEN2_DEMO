@@ -60,16 +60,16 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define STIM_CATHODE_Pin GPIO_PIN_1
-#define STIM_CATHODE_GPIO_Port GPIOA
+#define STIM_ANODE_Pin GPIO_PIN_1
+#define STIM_ANODE_GPIO_Port GPIOA
 #define VCP_TX_Pin GPIO_PIN_2
 #define VCP_TX_GPIO_Port GPIOA
-#define STIM_CTRL_DAC_Pin GPIO_PIN_3
-#define STIM_CTRL_DAC_GPIO_Port GPIOA
+#define STIM_CATHODE_Pin GPIO_PIN_3
+#define STIM_CATHODE_GPIO_Port GPIOA
 #define START_BTN_Pin GPIO_PIN_4
 #define START_BTN_GPIO_Port GPIOA
-#define STIM_ANODE_Pin GPIO_PIN_5
-#define STIM_ANODE_GPIO_Port GPIOA
+#define STIM_CURRENT_CTRL_Pin GPIO_PIN_5
+#define STIM_CURRENT_CTRL_GPIO_Port GPIOA
 #define VDDH_FEEDBACK_Pin GPIO_PIN_6
 #define VDDH_FEEDBACK_GPIO_Port GPIOA
 #define PEAK_DETECTION_Pin GPIO_PIN_7

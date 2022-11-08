@@ -12,15 +12,11 @@
 #include "echo_stim_setting.h"
 #include "echo_state.h"
 
-#define MASTER_CLK_FREQ					80000000
-#define MASTER_PSC						80
-#define MASTER_ARR						1000000
-#define ECHO_SET_HZ_PERIOD				10
-
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim16;
 extern DMA_HandleTypeDef hdma_tim2_ch2_ch4;
+extern DMA_HandleTypeDef hdma_tim2_ch1;
 
 /*
  * PWM Parameter
@@ -28,16 +24,12 @@ extern DMA_HandleTypeDef hdma_tim2_ch2_ch4;
 pwm_pulse_param_t pwm_param;
 uint64_t *p64_pwm_param = (uint64_t*) &pwm_param;
 
-uint32_t ano_matching_tim1 = 0;
-uint32_t cat_matching_tim1 = 0;
-uint32_t cat_matching_tim2 = 0;
+volatile uint32_t cathode_pwm_arr[2];
+volatile uint32_t current_ctrl_proc_arr[4];
 
-volatile uint32_t pwm_arr[2];
-
-int v_step_tv = 5000;
+int v_step_tv = VOLTAGE_STEP_TARGET_VALUE;
 int v_step_val = 0;
 extern bool gPulse_high;
-extern bool gPulse_high1;
 
 /****************************************/
 
@@ -160,31 +152,6 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 /****************************************/
 
 /*
- * PWM VALUE WRITE TO REGISTOR
- * */
-#if 0
-void Echo_Pulse_Prm_Config()
-{
-	uint32_t arr_data;
-	ano_matching_tim1 = pwm_param.pulse_width;
-	cat_matching_tim1 = ano_matching_tim1 + pwm_param.dead_time;
-	cat_matching_tim2 = (ano_matching_tim1 * 2) + pwm_param.dead_time;
-
-	arr_data = MASTER_ARR / pwm_param.pulse_freq;
-	TIM2->CNT = 0;
-	TIM2->ARR = arr_data - 1;
-	TIM2->CCR1 = ano_matching_tim1;
-	pwm_arr[0] = cat_matching_tim2;
-	pwm_arr[1] = cat_matching_tim1;
-}
-#endif
-
-void Echo_Pulse_V_PW_Config()
-{
-	TIM1->CCR1 = v_step_val;
-}
-
-/*
  * FACTORY RESET
  * */
 void Echo_Factory_Reset()
@@ -192,20 +159,92 @@ void Echo_Factory_Reset()
 	pwm_param.dead_time = 10;
 	pwm_param.pulse_width = 1000;
 	pwm_param.pulse_freq = 1;
-	v_step_tv = 5000;
+	v_step_tv = VOLTAGE_STEP_TARGET_VALUE;
 	Echo_Flash_Write();
+}
+/****************************************/
+
+#ifdef ECHO_PULSE_DMA
+/*
+ * PWM VALUE WRITE TO REGISTOR
+ * */
+void Echo_Pulse_Prm_Config()
+{
+
+	/* HZ SETTING */
+
+	uint32_t arr_data;
+	arr_data = MASTER_ARR / pwm_param.pulse_freq;
+	TIM2->CNT = 0;
+	TIM2->ARR = arr_data - 1;
+
+	/* PULSE and DEAD TIME SETTING */
+	TIM2->CCR2 = ANODE_PULSE_TIME;
+	cathode_pwm_arr[0] = CATHODE_PULSE_TIME0;
+	cathode_pwm_arr[1] = CATHODE_PULSE_TIME1;
+	current_ctrl_proc_arr[0] = CURRENT_CTRL_TIME0;
+	current_ctrl_proc_arr[1] = CURRENT_CTRL_TIME1;
+	current_ctrl_proc_arr[2] = CURRENT_CTRL_TIME2;
+	current_ctrl_proc_arr[3] = CURRENT_CTRL_TIME3;
 }
 /****************************************/
 
 /*
  * Stimulation Start AND Stop
  */
-#if 0
 void Echo_Stim_Stop()
 {
-	HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
-	HAL_TIM_OC_Stop_DMA(&htim2, TIM_CHANNEL_2);
-	HAL_TIM_OC_Stop_DMA(&htim2, TIM_CHANNEL_4);
+	HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2); // ANODE
+	HAL_TIM_OC_Stop_DMA(&htim2, TIM_CHANNEL_4); // CATHODE
+	HAL_TIM_OC_Stop_DMA(&htim2, TIM_CHANNEL_1); // CURRENT
+	Echo_StepUP_Stop();
+	HAL_TIM_OC_DeInit(&htim2);
+}
+
+void Echo_Stim_Start()
+{
+	if (HAL_TIM_OC_Init(&htim2) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	Echo_Pulse_Prm_Config();
+	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2); // PA1 TIM2 CH_2 ANODE
+
+	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_4, (uint32_t*) cathode_pwm_arr, 2); // PA3 TIM2 CH_4 CATHODE
+
+	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_1,
+			(uint32_t*) current_ctrl_proc_arr, 4); // PA3 TIM2 CH_1 CURRENT CONTROL
+
+	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
+	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch1, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
+
+	Echo_StepUP_Start();
+}
+#endif
+
+#ifdef ECHO_PULSE_INTERRUPTx
+void Echo_Pulse_Prm_Config()
+{
+	TIM2->CCR2 = ANODE_PULSE_TIME;
+	TIM2->CCR4 = CATHODE_PULSE_TIME0;
+	TIM2->CCR1 = CURRENT_CTRL_TIME0;
+	if (gPulse_high == false)
+	{
+		TIM2->CCR4 = CATHODE_PULSE_TIME1;
+		//gPulse_high = true;
+	}
+	else
+	{
+		TIM2->CCR4 = CATHODE_PULSE_TIME0;
+		//gPulse_high = false;
+	}
+}
+
+void Echo_Stim_Stop()
+{
+	HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2); // ANODE
+	HAL_TIM_OC_Stop_IT(&htim2, TIM_CHANNEL_4); // CATHODE
+	HAL_TIM_OC_Stop_IT(&htim2, TIM_CHANNEL_1); // CURRENT
 	Echo_StepUP_Stop();
 }
 
@@ -213,57 +252,9 @@ void Echo_Stim_Start()
 {
 	Echo_Pulse_Prm_Config();
 
-	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1); // PA5 ANODE
-	//HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_2, (uint32_t*) pwm_arr, 2); // PA1 CATHODE
-	//__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
-	//HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_4, (uint32_t*) pwm_arr, 2); // PA3 DAC_ON
-	//__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
-
-	Echo_StepUP_Start();
-}
-#endif
-
-#if 1
-void Echo_Pulse_Prm_Config()
-{
-	ano_matching_tim1 = pwm_param.pulse_width;
-	cat_matching_tim1 = ano_matching_tim1 + pwm_param.dead_time;
-	cat_matching_tim2 = (ano_matching_tim1 * 2) + pwm_param.dead_time;
-	TIM2->CCR1 = ano_matching_tim1;
-	if (gPulse_high == false)
-	{
-		TIM2->CCR2 = cat_matching_tim2;
-		TIM2->CCR4 = cat_matching_tim2;
-		//gPulse_high = true;
-	}
-	else
-	{
-		TIM2->CCR2 = cat_matching_tim1;
-		TIM2->CCR4 = cat_matching_tim1;
-		//gPulse_high = false;
-	}
-}
-
-void Echo_Stim_Stop()
-{
-	HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
-	HAL_TIM_OC_Stop_IT(&htim2, TIM_CHANNEL_2);
-	HAL_TIM_OC_Stop_IT(&htim2, TIM_CHANNEL_4);
-	Echo_StepUP_Stop();
-}
-
-void Echo_Stim_Start()
-{
-	ano_matching_tim1 = pwm_param.pulse_width;
-	cat_matching_tim1 = ano_matching_tim1 + pwm_param.dead_time;
-	cat_matching_tim2 = (ano_matching_tim1 * 2) + pwm_param.dead_time;
-	TIM2->CCR1 = ano_matching_tim1;
-	TIM2->CCR2 = cat_matching_tim1;
-	TIM2->CCR4 = 5;
-
-	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
-	HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_2);
-	HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_4);
+	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2); // ANODE
+	HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_4); // CATHODE
+	HAL_TIM_OC_Start_IT(&htim2, TIM_CHANNEL_1); // CURRENT
 
 	Echo_StepUP_Start();
 }
@@ -272,7 +263,16 @@ void Echo_Stim_Start()
 /****************************************/
 
 /*
- * Stimulation Voltage Setting
+ * STEP UP PWM VALUE WRITE TO REGISTOR
+ * */
+void Echo_Pulse_V_PW_Config()
+{
+	TIM1->CCR1 = v_step_val;
+}
+/****************************************/
+
+/*
+ * Stimulation Voltage Setting Start AND Stop
  * */
 void Echo_StepUP_Stop()
 {

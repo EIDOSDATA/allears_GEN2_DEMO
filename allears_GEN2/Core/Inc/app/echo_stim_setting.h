@@ -54,4 +54,21 @@ void Echo_Factory_Reset(void);
 // PULSE HZ CONFIG
 void Echo_Pulse_FREQ_Config(void);
 
+#define MASTER_CLK_FREQ					80000000
+#define MASTER_PSC						80
+#define MASTER_ARR						1000000
+#define ECHO_SET_HZ_PERIOD				10
+
+#define ANODE_PULSE_TIME				pwm_param.pulse_width
+#define CATHODE_PULSE_TIME0				pwm_param.pulse_width + pwm_param.dead_time
+#define CATHODE_PULSE_TIME1				(pwm_param.pulse_width * 2) + pwm_param.dead_time
+
+#define CURRENT_CTRL_TIME0				PULSE_DEBOUNCING_TIME
+#define CURRENT_CTRL_TIME1				ANODE_PULSE_TIME - PULSE_DEBOUNCING_TIME
+#define CURRENT_CTRL_TIME2				CATHODE_PULSE_TIME0 + PULSE_DEBOUNCING_TIME
+#define CURRENT_CTRL_TIME3				CATHODE_PULSE_TIME1 - PULSE_DEBOUNCING_TIME
+
+#define PULSE_DEBOUNCING_TIME			5
+#define VOLTAGE_STEP_TARGET_VALUE		5000
+
 #endif /* INC_APP_ECHO_STIM_SETTING_H_ */

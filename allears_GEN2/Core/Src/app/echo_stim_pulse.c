@@ -9,64 +9,61 @@
 #include "main.h"
 #include "echo_flash_memory.h"
 
-#define PULSE_DEBOUNCING_TIME			5
-
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim16;
 extern DMA_HandleTypeDef hdma_tim2_ch2_ch4;
 
 extern pwm_pulse_param_t pwm_param;
-extern uint32_t ano_matching_tim1;
-extern uint32_t cat_matching_tim1;
-extern uint32_t cat_matching_tim2;
 
 extern int v_step_tv;
 extern int v_step_val;
 
-#if 1
+
+#ifdef ECHO_PULSE_INTERRUPTx
+
 bool gPulse_high = false;
-int dac_procedure_cnt = 0;
+int current_ctrl_proc = 0;
 
 /* TIM2 OC Interrupt handler */
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim->Instance == TIM2)
 	{
-		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2)
+		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
 		{
 			if (gPulse_high == false)
 			{
-				TIM2->CCR2 = cat_matching_tim2;
+				TIM2->CCR4 = CATHODE_PULSE_TIME1;
 				gPulse_high = true;
 			}
 			else
 			{
-				TIM2->CCR2 = cat_matching_tim1;
+				TIM2->CCR4 = CATHODE_PULSE_TIME0;
 				gPulse_high = false;
 			}
 		}
 
-		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
+		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
 		{
-			if (dac_procedure_cnt == 0)
+			if (current_ctrl_proc == 0)
 			{
-				TIM2->CCR4 = ano_matching_tim1 - PULSE_DEBOUNCING_TIME;
-				dac_procedure_cnt = 1;
+				TIM2->CCR1 = CURRENT_CTRL_TIME1;
+				current_ctrl_proc = 1;
 			}
-			else if (dac_procedure_cnt == 1)
+			else if (current_ctrl_proc == 1)
 			{
-				TIM2->CCR4 = cat_matching_tim1 + PULSE_DEBOUNCING_TIME;
-				dac_procedure_cnt = 2;
+				TIM2->CCR1 = CURRENT_CTRL_TIME2;
+				current_ctrl_proc = 2;
 			}
-			else if (dac_procedure_cnt == 2)
+			else if (current_ctrl_proc == 2)
 			{
-				TIM2->CCR4 = cat_matching_tim2 - PULSE_DEBOUNCING_TIME;
-				dac_procedure_cnt = 3;
+				TIM2->CCR1 = CURRENT_CTRL_TIME3;
+				current_ctrl_proc = 3;
 			}
-			else if (dac_procedure_cnt == 3)
+			else if (current_ctrl_proc == 3)
 			{
-				TIM2->CCR4 = PULSE_DEBOUNCING_TIME;
-				dac_procedure_cnt = 0;
+				TIM2->CCR1 = CURRENT_CTRL_TIME0;
+				current_ctrl_proc = 0;
 			}
 		}
 	}
