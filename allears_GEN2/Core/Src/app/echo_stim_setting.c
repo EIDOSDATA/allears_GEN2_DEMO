@@ -172,11 +172,12 @@ void Echo_Pulse_Prm_Config()
 {
 
 	/* HZ SETTING */
-
-	uint32_t arr_data;
-	arr_data = MASTER_ARR / pwm_param.pulse_freq;
-	TIM2->CNT = 0;
-	TIM2->ARR = arr_data - 1;
+	/*
+	 uint32_t arr_data;
+	 arr_data = MASTER_ARR / pwm_param.pulse_freq;
+	 TIM2->CNT = 0;
+	 TIM2->ARR = arr_data - 1;
+	 */
 
 	/* PULSE and DEAD TIME SETTING */
 	TIM2->CCR2 = ANODE_PULSE_TIME;
