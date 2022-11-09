@@ -1,1 +1,2 @@
-../Core/Src/app/echo_stim_pulse.c:73:6:HAL_TIM_PeriodElapsedCallback	8	static
+../Core/Src/app/echo_stim_pulse.c:27:6:HAL_TIM_OC_DelayElapsedCallback	8	static
+../Core/Src/app/echo_stim_pulse.c:72:6:HAL_TIM_PeriodElapsedCallback	8	static

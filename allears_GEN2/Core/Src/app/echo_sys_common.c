@@ -69,7 +69,7 @@ void Echo_PCI_State_Init()
 	// FLASH READ
 	if (Echo_Flash_Read() != HAL_OK)
 	{
-		pwm_param.dead_time = 10;
+		pwm_param.dead_time = 20;
 		pwm_param.pulse_width = 1000;
 		pwm_param.pulse_freq = 1;
 		v_step_tv = 5000;

@@ -18,8 +18,7 @@ extern pwm_pulse_param_t pwm_param;
 extern int v_step_tv;
 extern int v_step_val;
 
-
-#ifdef ECHO_PULSE_INTERRUPTx
+#ifdef ECHO_PULSE_INTERRUPT
 
 bool gPulse_high = false;
 int current_ctrl_proc = 0;
@@ -33,12 +32,12 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			if (gPulse_high == false)
 			{
-				TIM2->CCR4 = CATHODE_PULSE_TIME1;
+				TIM2->CCR4 = CATHODE_PULSE_TIME0;
 				gPulse_high = true;
 			}
 			else
 			{
-				TIM2->CCR4 = CATHODE_PULSE_TIME0;
+				TIM2->CCR4 = CATHODE_PULSE_TIME1;
 				gPulse_high = false;
 			}
 		}
@@ -47,22 +46,22 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			if (current_ctrl_proc == 0)
 			{
-				TIM2->CCR1 = CURRENT_CTRL_TIME1;
+				TIM2->CCR1 = CURRENT_CTRL_TIME0;
 				current_ctrl_proc = 1;
 			}
 			else if (current_ctrl_proc == 1)
 			{
-				TIM2->CCR1 = CURRENT_CTRL_TIME2;
+				TIM2->CCR1 = CURRENT_CTRL_TIME1;
 				current_ctrl_proc = 2;
 			}
 			else if (current_ctrl_proc == 2)
 			{
-				TIM2->CCR1 = CURRENT_CTRL_TIME3;
+				TIM2->CCR1 = CURRENT_CTRL_TIME2;
 				current_ctrl_proc = 3;
 			}
 			else if (current_ctrl_proc == 3)
 			{
-				TIM2->CCR1 = CURRENT_CTRL_TIME0;
+				TIM2->CCR1 = CURRENT_CTRL_TIME3;
 				current_ctrl_proc = 0;
 			}
 		}

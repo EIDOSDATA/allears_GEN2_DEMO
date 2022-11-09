@@ -156,7 +156,7 @@ void Echo_Get_Res_Data(uint8_t select_msg)
  * */
 void Echo_Factory_Reset()
 {
-	pwm_param.dead_time = 10;
+	pwm_param.dead_time = 20;
 	pwm_param.pulse_width = 1000;
 	pwm_param.pulse_freq = 1;
 	v_step_tv = VOLTAGE_STEP_TARGET_VALUE;
@@ -164,7 +164,7 @@ void Echo_Factory_Reset()
 }
 /****************************************/
 
-#ifdef ECHO_PULSE_DMA
+#ifdef ECHO_PULSE_DMAx
 /*
  * PWM VALUE WRITE TO REGISTOR
  * */
@@ -195,40 +195,116 @@ void Echo_Pulse_Prm_Config()
  */
 void Echo_Stim_Stop()
 {
+#if 0
+	HAL_TIM_PWM_DeInit(&htim2);
+	HAL_TIM_OC_DeInit(&htim2);
+	HAL_DMA_DeInit(&hdma_tim2_ch1);
+	HAL_DMA_DeInit(&hdma_tim2_ch2_ch4);
+#endif
+
 	HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2); // ANODE
 	HAL_TIM_OC_Stop_DMA(&htim2, TIM_CHANNEL_4); // CATHODE
 	HAL_TIM_OC_Stop_DMA(&htim2, TIM_CHANNEL_1); // CURRENT
 	Echo_StepUP_Stop();
-	HAL_TIM_OC_DeInit(&htim2);
 }
 
 void Echo_Stim_Start()
 {
+#if 0
+	TIM_ClearInputConfigTypeDef sClearInputConfig =
+	{ 0 };
+	TIM_MasterConfigTypeDef sMasterConfig =
+	{ 0 };
+	TIM_OC_InitTypeDef sConfigOC =
+	{ 0 };
+
+	/* USER CODE BEGIN TIM2_Init 1 */
+
+	/* USER CODE END TIM2_Init 1 */
+	htim2.Instance = TIM2;
+	htim2.Init.Prescaler = 79;
+	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim2.Init.Period = 9999;
+	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 	if (HAL_TIM_OC_Init(&htim2) != HAL_OK)
 	{
 		Error_Handler();
 	}
+	if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	sClearInputConfig.ClearInputState = ENABLE;
+	sClearInputConfig.ClearInputSource = TIM_CLEARINPUTSOURCE_OCREFCLR;
+	if (HAL_TIM_ConfigOCrefClear(&htim2, &sClearInputConfig, TIM_CHANNEL_1)
+			!= HAL_OK)
+	{
+		Error_Handler();
+	}
+	if (HAL_TIM_ConfigOCrefClear(&htim2, &sClearInputConfig, TIM_CHANNEL_2)
+			!= HAL_OK)
+	{
+		Error_Handler();
+	}
+	if (HAL_TIM_ConfigOCrefClear(&htim2, &sClearInputConfig, TIM_CHANNEL_4)
+			!= HAL_OK)
+	{
+		Error_Handler();
+	}
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+	if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	sConfigOC.OCMode = TIM_OCMODE_TOGGLE;
+	sConfigOC.Pulse = 5;
+	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+	if (HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	sConfigOC.OCMode = TIM_OCMODE_PWM1;
+	sConfigOC.Pulse = 1010;
+	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	__HAL_TIM_DISABLE_OCxPRELOAD(&htim2, TIM_CHANNEL_2);
+	sConfigOC.OCMode = TIM_OCMODE_TOGGLE;
+	sConfigOC.Pulse = 1040;
+	if (HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	/* USER CODE BEGIN TIM2_Init 2 */
+
+	/* USER CODE END TIM2_Init 2 */
+	HAL_TIM_MspPostInit(&htim2);
+#endif
+
 	Echo_Pulse_Prm_Config();
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2); // PA1 TIM2 CH_2 ANODE
 
-	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_4, (uint32_t*) cathode_pwm_arr, 2); // PA3 TIM2 CH_4 CATHODE
-
 	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_1,
 			(uint32_t*) current_ctrl_proc_arr, 4); // PA3 TIM2 CH_1 CURRENT CONTROL
-
-	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
 	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch1, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
+
+	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_4, (uint32_t*) cathode_pwm_arr, 2); // PA3 TIM2 CH_4 CATHODE
+	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
 
 	Echo_StepUP_Start();
 }
 #endif
 
-#ifdef ECHO_PULSE_INTERRUPTx
+#ifdef ECHO_PULSE_INTERRUPT
 void Echo_Pulse_Prm_Config()
 {
 	TIM2->CCR2 = ANODE_PULSE_TIME;
-	TIM2->CCR4 = CATHODE_PULSE_TIME0;
-	TIM2->CCR1 = CURRENT_CTRL_TIME0;
+	TIM2->CCR4 = CATHODE_PULSE_TIME1;
+	TIM2->CCR1 = CURRENT_CTRL_TIME3;
 	if (gPulse_high == false)
 	{
 		TIM2->CCR4 = CATHODE_PULSE_TIME1;
