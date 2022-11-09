@@ -71,7 +71,7 @@ void Echo_PCI_State_Init()
 	{
 		pwm_param.dead_time = 20;
 		pwm_param.pulse_width = 1000;
-		pwm_param.pulse_freq = 1;
+		pwm_param.pulse_freq = 100;
 		v_step_tv = 5000;
 	}
 

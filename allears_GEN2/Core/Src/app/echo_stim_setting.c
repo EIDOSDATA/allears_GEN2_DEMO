@@ -112,8 +112,6 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 {
 	char mes_head[11] =
 	{ '\0', };
-
-	//get_prm_cmd_str_table[admin_cmd_cnt].str
 	strcpy((char*) mes_head,
 			(const char*) get_prm_cmd_str_table[select_msg].str);
 
@@ -158,13 +156,13 @@ void Echo_Factory_Reset()
 {
 	pwm_param.dead_time = 20;
 	pwm_param.pulse_width = 1000;
-	pwm_param.pulse_freq = 1;
+	pwm_param.pulse_freq = 100;
 	v_step_tv = VOLTAGE_STEP_TARGET_VALUE;
 	Echo_Flash_Write();
 }
 /****************************************/
 
-#ifdef ECHO_PULSE_DMAx
+#ifdef ECHO_PULSE_DMA
 /*
  * PWM VALUE WRITE TO REGISTOR
  * */
@@ -172,12 +170,10 @@ void Echo_Pulse_Prm_Config()
 {
 
 	/* HZ SETTING */
-	/*
-	 uint32_t arr_data;
-	 arr_data = MASTER_ARR / pwm_param.pulse_freq;
-	 TIM2->CNT = 0;
-	 TIM2->ARR = arr_data - 1;
-	 */
+	uint32_t arr_data;
+	arr_data = MASTER_ARR / pwm_param.pulse_freq;
+	TIM2->CNT = 0;
+	TIM2->ARR = arr_data - 1;
 
 	/* PULSE and DEAD TIME SETTING */
 	TIM2->CCR2 = ANODE_PULSE_TIME;
@@ -195,60 +191,31 @@ void Echo_Pulse_Prm_Config()
  */
 void Echo_Stim_Stop()
 {
-#if 0
-	HAL_TIM_PWM_DeInit(&htim2);
-	HAL_TIM_OC_DeInit(&htim2);
-	HAL_DMA_DeInit(&hdma_tim2_ch1);
-	HAL_DMA_DeInit(&hdma_tim2_ch2_ch4);
-#endif
-
 	HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2); // ANODE
-	HAL_TIM_OC_Stop_DMA(&htim2, TIM_CHANNEL_4); // CATHODE
 	HAL_TIM_OC_Stop_DMA(&htim2, TIM_CHANNEL_1); // CURRENT
+	HAL_TIM_OC_Stop_DMA(&htim2, TIM_CHANNEL_4); // CATHODE
 	Echo_StepUP_Stop();
 }
 
 void Echo_Stim_Start()
 {
-#if 0
-	TIM_ClearInputConfigTypeDef sClearInputConfig =
-	{ 0 };
+#if 1
 	TIM_MasterConfigTypeDef sMasterConfig =
 	{ 0 };
 	TIM_OC_InitTypeDef sConfigOC =
 	{ 0 };
 
-	/* USER CODE BEGIN TIM2_Init 1 */
-
-	/* USER CODE END TIM2_Init 1 */
 	htim2.Instance = TIM2;
 	htim2.Init.Prescaler = 79;
 	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
 	htim2.Init.Period = 9999;
 	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
 	if (HAL_TIM_OC_Init(&htim2) != HAL_OK)
 	{
 		Error_Handler();
 	}
 	if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
-	{
-		Error_Handler();
-	}
-	sClearInputConfig.ClearInputState = ENABLE;
-	sClearInputConfig.ClearInputSource = TIM_CLEARINPUTSOURCE_OCREFCLR;
-	if (HAL_TIM_ConfigOCrefClear(&htim2, &sClearInputConfig, TIM_CHANNEL_1)
-			!= HAL_OK)
-	{
-		Error_Handler();
-	}
-	if (HAL_TIM_ConfigOCrefClear(&htim2, &sClearInputConfig, TIM_CHANNEL_2)
-			!= HAL_OK)
-	{
-		Error_Handler();
-	}
-	if (HAL_TIM_ConfigOCrefClear(&htim2, &sClearInputConfig, TIM_CHANNEL_4)
-			!= HAL_OK)
 	{
 		Error_Handler();
 	}
@@ -279,17 +246,15 @@ void Echo_Stim_Start()
 	{
 		Error_Handler();
 	}
-	/* USER CODE BEGIN TIM2_Init 2 */
-
-	/* USER CODE END TIM2_Init 2 */
 	HAL_TIM_MspPostInit(&htim2);
 #endif
 
 	Echo_Pulse_Prm_Config();
+
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2); // PA1 TIM2 CH_2 ANODE
 
 	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_1,
-			(uint32_t*) current_ctrl_proc_arr, 4); // PA3 TIM2 CH_1 CURRENT CONTROL
+			(uint32_t*) current_ctrl_proc_arr, 4); // PA5 TIM2 CH_1 CURRENT CONTROL
 	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch1, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
 
 	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_4, (uint32_t*) cathode_pwm_arr, 2); // PA3 TIM2 CH_4 CATHODE
@@ -299,7 +264,7 @@ void Echo_Stim_Start()
 }
 #endif
 
-#ifdef ECHO_PULSE_INTERRUPT
+#ifdef ECHO_PULSE_INTERRUPTx
 void Echo_Pulse_Prm_Config()
 {
 	TIM2->CCR2 = ANODE_PULSE_TIME;

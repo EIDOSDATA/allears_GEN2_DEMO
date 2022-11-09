@@ -56,7 +56,8 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim);
+void HAL_TIM_OC_MspDeInit(TIM_HandleTypeDef *htim);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

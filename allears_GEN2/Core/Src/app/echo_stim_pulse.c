@@ -18,7 +18,7 @@ extern pwm_pulse_param_t pwm_param;
 extern int v_step_tv;
 extern int v_step_val;
 
-#ifdef ECHO_PULSE_INTERRUPT
+#ifdef ECHO_PULSE_INTERRUPTx
 
 bool gPulse_high = false;
 int current_ctrl_proc = 0;

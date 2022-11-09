@@ -13,6 +13,8 @@
 #define ECHO_CUR_STATE								echo_fsm_state.state
 #define ECHO_BUTTON_STATE 1
 
+uint8_t stop_flag = 0;
+
 typedef struct
 {
 	echo_state_t state;
@@ -24,7 +26,7 @@ echo_state_t cur_state = ECHO_STATE_IDLE;
 void Echo_FSM_State_Init(void)
 {
 	ECHO_CUR_STATE = echo_state_max;
-	//ECHO_BUTTON_STATE = Echo_Button_NoPressed(); //  aulGpio_hallSensor_Closed();
+	//ECHO_BUTTON_STATE = Echo_Button_NoPressed();
 	Echo_Set_FSM_State(ECHO_STATE_INIT);
 }
 
@@ -45,30 +47,19 @@ void Echo_Set_FSM_State_Stop()
 
 void Echo_FSM_State_Handle(void)
 {
-	//bool state_led_change = 0;
-
-	/* VOLTAGE FEED BACK */
-
-	/*
-	 Guess current state
-	 */
 	/* BUTTON PRESSED FLAG */
 	if (Echo_Btn_isHandled() == true)
 	{
 		if (cur_state == ECHO_STATE_IDLE)
 		{
+			stop_flag = 0;
 			cur_state = ECHO_STATE_RUN;
-			//state_led_change = true;
 		}
 		else if (cur_state == ECHO_STATE_RUN)
 		{
+			stop_flag = 1;
 			cur_state = ECHO_STATE_IDLE;
-			//state_led_change = true;
 		}
-	}
-	else if (Echo_Btn_isHandled() == false)
-	{
-		cur_state = cur_state;
 	}
 
 	if (ECHO_CUR_STATE != cur_state)
@@ -92,6 +83,7 @@ void Echo_FSM_State_Handle(void)
 	 Echo_Shell_Handled_clear();
 	 }
 	 */
+
 	/*
 	 if (state_led_change == true)
 	 {
@@ -99,46 +91,62 @@ void Echo_FSM_State_Handle(void)
 	 Echo_LED_State_Refresh();
 	 }
 	 */
-
-	/*
-	 If cover state is changed, activate LED indication.
-	 If low battery, cover change event for LED is ingnored.
-	 */
 }
 
 void Echo_Set_FSM_State(echo_state_t state)
 {
-	if (ECHO_CUR_STATE == state || state >= echo_state_max)
-		return;
+	/*
+	 if (ECHO_CUR_STATE == state || state >= echo_state_max)
+	 return;
+	 */
 
 	switch (state)
 	{
+
 	case ECHO_STATE_INIT:
+#ifdef DEBUG
+#ifdef ECHO_PULSE_INTERRUPT
 		ECHO_SHELL_PRINT(("ECHO STATE INIT\r\n"));
+#endif
+#endif
 		break;
 
 	case ECHO_STATE_IDLE:
-		ECHO_SHELL_PRINT(("ECHO STATE IDLE\r\n"));
-		Echo_LED_StateSet(ECHO_LED_IDLE);
 		Echo_Stim_Stop();
+		Echo_LED_StateSet(ECHO_LED_IDLE);
+#ifdef DEBUG
+#ifdef ECHO_PULSE_INTERRUPT
+		ECHO_SHELL_PRINT(("ECHO STATE IDLE\r\n"));
+#endif
+#endif
 		break;
 
 	case ECHO_STATE_RUN:
-		ECHO_SHELL_PRINT(("ECHO STATE RUN\r\n"));
-		Echo_LED_StateSet(ECHO_LED_RUN);
 		Echo_Stim_Start();
+		Echo_LED_StateSet(ECHO_LED_RUN);
+#ifdef DEBUG
+#ifdef ECHO_PULSE_INTERRUPT
+		ECHO_SHELL_PRINT(("ECHO STATE RUN\r\n"));
+#endif
+#endif
 		break;
 
 	case ECHO_STATE_ERROR:
-		ECHO_SHELL_PRINT(("ECHO STATE ERROR\r\n"));
 		Echo_LED_StateSet(ECHO_LED_IDLE);
+#ifdef DEBUG
+#ifdef ECHO_PULSE_INTERRUPT
+		ECHO_SHELL_PRINT(("ECHO STATE ERROR\r\n"));
+#endif
+#endif
 		break;
 
 	default:
-		/* Cannot be here */
+		// Cannot be here
+#ifdef DEBUG
 		ECHO_SHELL_PRINT(("UNKNOWN ECHO STATE: %d\n", state));
-		//Echo_LedStateSet(ECHO_LED_NONE);
+#endif
 		break;
+
 	}
 	ECHO_CUR_STATE = state;
 }

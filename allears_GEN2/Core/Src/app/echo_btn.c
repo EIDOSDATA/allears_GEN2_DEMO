@@ -62,7 +62,7 @@ void Echo_Btn_handle(void)
 		if (ECHO_BTN_STATE_PRESSED == false)
 		{
 			/* Only when cover is closed, send signal */
-			//aulLed_enable();
+
 		}
 		else
 		{
@@ -80,9 +80,6 @@ void Echo_Btn_handle(void)
 			sprintf((char*) res_msg, (const char*) "BTN: %d\r\n", pressed);
 			ECHO_SHELL_PRINT(("%s\n",res_msg));
 #endif
-			//aulLed_enable();
-			//aulLed_stateSet(aul_led_btn_pairing);
-
 			ECHO_BTN_STATE_HELD_TICK++;
 		}
 		else if (ECHO_BTN_STATE_HELD_TICK < ECHO_BTN_HELD_TIME)
