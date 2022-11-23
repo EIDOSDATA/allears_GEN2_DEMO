@@ -61,8 +61,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define START_BTN_Pin GPIO_PIN_13
 #define START_BTN_GPIO_Port GPIOC
-#define MCO_Pin GPIO_PIN_0
-#define MCO_GPIO_Port GPIOH
 #define STIM_ANODE_Pin GPIO_PIN_1
 #define STIM_ANODE_GPIO_Port GPIOA
 #define USART_TX_Pin GPIO_PIN_2

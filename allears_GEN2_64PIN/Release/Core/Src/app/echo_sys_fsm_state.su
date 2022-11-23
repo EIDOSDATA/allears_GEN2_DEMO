@@ -1,0 +1,6 @@
+../Core/Src/app/echo_sys_fsm_state.c:25:6:Echo_Sys_FSM_State_Init	0	static
+../Core/Src/app/echo_sys_fsm_state.c:32:18:Echo_Get_Sys_FSM_State	0	static
+../Core/Src/app/echo_sys_fsm_state.c:37:6:Echo_Set_Sys_FSM_State_Start	0	static
+../Core/Src/app/echo_sys_fsm_state.c:42:6:Echo_Set_Sys_FSM_State_Stop	0	static
+../Core/Src/app/echo_sys_fsm_state.c:93:6:Echo_Set_Sys_FSM_State	8	static
+../Core/Src/app/echo_sys_fsm_state.c:47:6:Echo_Sys_FSM_State_Handle	8	static
