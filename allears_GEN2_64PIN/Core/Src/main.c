@@ -135,17 +135,18 @@ int main(void)
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
-
-		Echo_Shell_CMD_Handle();
-		if (HAL_GetTick() - schdule_tick >= ECHO_SCHED_HANDLE_PERIOD)
-		{
-			Echo_Sys_FSM_State_Handle();
-			Echo_Btn_Handle();
-			Echo_LED_Handle();
-			Echo_ADC_Handle();
-			Echo_Shell_Input_Print();
-			schdule_tick = HAL_GetTick();
-		}
+		/*
+		 Echo_Shell_CMD_Handle();
+		 if (HAL_GetTick() - schdule_tick >= ECHO_SCHED_HANDLE_PERIOD)
+		 {
+		 Echo_Sys_FSM_State_Handle();
+		 Echo_Btn_Handle();
+		 Echo_LED_Handle();
+		 Echo_ADC_Handle();
+		 Echo_Shell_Input_Print();
+		 schdule_tick = HAL_GetTick();
+		 }
+		 */
 
 	}
 	/* USER CODE END 3 */

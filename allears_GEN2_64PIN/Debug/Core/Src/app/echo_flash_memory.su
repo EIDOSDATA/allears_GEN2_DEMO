@@ -1,4 +1,4 @@
-../Core/Src/app/echo_flash_memory.c:32:17:GetPage	24	static
-../Core/Src/app/echo_flash_memory.c:50:17:GetBank	16	static
-../Core/Src/app/echo_flash_memory.c:55:19:Echo_Flash_Write	8	static
-../Core/Src/app/echo_flash_memory.c:100:19:Echo_Flash_Read	4	static
+../Core/Src/app/echo_flash_memory.c:32:17:GetPage	0	static
+../Core/Src/app/echo_flash_memory.c:50:17:GetBank	0	static
+../Core/Src/app/echo_flash_memory.c:55:19:Echo_Flash_Write	16	static
+../Core/Src/app/echo_flash_memory.c:100:19:Echo_Flash_Read	0	static

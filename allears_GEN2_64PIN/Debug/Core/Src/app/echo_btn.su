@@ -1,4 +1,4 @@
-../Core/Src/app/echo_btn.c:30:6:Echo_Btn_IsHandled	4	static
-../Core/Src/app/echo_btn.c:35:6:Echo_Btn_Handled_Clear	4	static
-../Core/Src/app/echo_btn.c:40:6:Echo_Btn_HandleEnable	16	static
+../Core/Src/app/echo_btn.c:30:6:Echo_Btn_IsHandled	0	static
+../Core/Src/app/echo_btn.c:35:6:Echo_Btn_Handled_Clear	0	static
+../Core/Src/app/echo_btn.c:40:6:Echo_Btn_HandleEnable	0	static
 ../Core/Src/app/echo_btn.c:45:6:Echo_Btn_Handle	24	static
