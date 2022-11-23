@@ -2239,20 +2239,20 @@ LOAD c:/st/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools
  .text.Error_Handler
                 0x00000000080019b0        0x4 ./Core/Src/main.o
                 0x00000000080019b0                Error_Handler
- .text.MX_USART2_UART_Init
-                0x00000000080019b4       0x38 ./Core/Src/main.o
- .text.MX_ADC1_Init
-                0x00000000080019ec       0x98 ./Core/Src/main.o
- .text.MX_ADC2_Init
-                0x0000000008001a84       0x88 ./Core/Src/main.o
  .text.MX_TIM1_Init
-                0x0000000008001b0c       0xc4 ./Core/Src/main.o
+                0x00000000080019b4       0xc4 ./Core/Src/main.o
  .text.MX_TIM2_Init
-                0x0000000008001bd0       0xd0 ./Core/Src/main.o
+                0x0000000008001a78       0xd0 ./Core/Src/main.o
  .text.MX_TIM16_Init
-                0x0000000008001ca0       0x34 ./Core/Src/main.o
+                0x0000000008001b48       0x34 ./Core/Src/main.o
+ .text.MX_USART2_UART_Init
+                0x0000000008001b7c       0x38 ./Core/Src/main.o
  .text.MX_USART1_UART_Init
-                0x0000000008001cd4       0x38 ./Core/Src/main.o
+                0x0000000008001bb4       0x38 ./Core/Src/main.o
+ .text.MX_ADC1_Init
+                0x0000000008001bec       0x98 ./Core/Src/main.o
+ .text.MX_ADC2_Init
+                0x0000000008001c84       0x88 ./Core/Src/main.o
  .text.SystemClock_Config
                 0x0000000008001d0c       0x84 ./Core/Src/main.o
                 0x0000000008001d0c                SystemClock_Config

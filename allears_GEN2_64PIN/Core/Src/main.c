@@ -71,13 +71,13 @@ UART_HandleTypeDef huart2;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
-static void MX_USART2_UART_Init(void);
-static void MX_ADC1_Init(void);
-static void MX_ADC2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM16_Init(void);
+static void MX_USART2_UART_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_ADC1_Init(void);
+static void MX_ADC2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -116,13 +116,13 @@ int main(void)
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
 	MX_DMA_Init();
-	MX_USART2_UART_Init();
-	MX_ADC1_Init();
-	MX_ADC2_Init();
 	MX_TIM1_Init();
 	MX_TIM2_Init();
 	MX_TIM16_Init();
+	MX_USART2_UART_Init();
 	MX_USART1_UART_Init();
+	MX_ADC1_Init();
+	MX_ADC2_Init();
 	/* USER CODE BEGIN 2 */
 	static uint32_t schdule_tick = 0;
 	Echo_PCI_State_Init();
@@ -135,18 +135,17 @@ int main(void)
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
-		/*
-		 Echo_Shell_CMD_Handle();
-		 if (HAL_GetTick() - schdule_tick >= ECHO_SCHED_HANDLE_PERIOD)
-		 {
-		 Echo_Sys_FSM_State_Handle();
-		 Echo_Btn_Handle();
-		 Echo_LED_Handle();
-		 Echo_ADC_Handle();
-		 Echo_Shell_Input_Print();
-		 schdule_tick = HAL_GetTick();
-		 }
-		 */
+
+		Echo_Shell_CMD_Handle();
+		if (HAL_GetTick() - schdule_tick >= ECHO_SCHED_HANDLE_PERIOD)
+		{
+			Echo_Sys_FSM_State_Handle();
+			Echo_Btn_Handle();
+			Echo_LED_Handle();
+			Echo_ADC_Handle();
+			Echo_Shell_Input_Print();
+			schdule_tick = HAL_GetTick();
+		}
 
 	}
 	/* USER CODE END 3 */
