@@ -615,8 +615,8 @@ static void MX_GPIO_Init(void)
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOA,
-	SMPS_EN_Pin | SMPS_V1_Pin | DAC0_Pin | DAC1_Pin | DAC2_Pin | DAC3_Pin,
-			GPIO_PIN_RESET);
+			SMPS_EN_Pin | SMPS_V1_Pin | DAC0_Pin | DAC1_Pin | DAC2_Pin
+					| DAC3_Pin, GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOB,
@@ -625,8 +625,8 @@ static void MX_GPIO_Init(void)
 
 	/*Configure GPIO pin : START_BTN_Pin */
 	GPIO_InitStruct.Pin = START_BTN_Pin;
-	GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 	HAL_GPIO_Init(START_BTN_GPIO_Port, &GPIO_InitStruct);
 
 	/*Configure GPIO pins : SMPS_EN_Pin SMPS_V1_Pin DAC0_Pin DAC1_Pin

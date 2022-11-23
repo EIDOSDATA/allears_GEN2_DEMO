@@ -9,7 +9,8 @@
 #include "echo_shell.h"
 
 #define ECHO_BTN_HELD_TIME						1000	/* 100ms */
-#define ECHO_BTN_IS_PRESSED()					(HAL_GPIO_ReadPin(START_BTN_GPIO_Port, START_BTN_Pin) == GPIO_PIN_RESET)
+/* NUCLEO-64 BOARD BTN IS PULL-DOWN */
+#define ECHO_BTN_IS_PRESSED()					(HAL_GPIO_ReadPin(START_BTN_GPIO_Port, START_BTN_Pin) == GPIO_PIN_SET)
 
 #define ECHO_BTN_STATE_PRESSED					echo_btn_state.pressed
 #define ECHO_BTN_STATE_HANDLE_ENABLE			echo_btn_state.handle_enable

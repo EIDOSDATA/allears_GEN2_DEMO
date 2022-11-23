@@ -1,0 +1,7 @@
+../Core/Src/app/echo_uart2.c:32:22:Echo_Uart2_RCV_Q_Put_INLINE	16	static
+../Core/Src/app/echo_uart2.c:42:22:Echo_Uart2_State_Init_INLINE	4	static
+../Core/Src/app/echo_uart2.c:51:6:Echo_Uart2_Init	8	static
+../Core/Src/app/echo_uart2.c:74:6:Echo_Uart2_DeInit	8	static
+../Core/Src/app/echo_uart2.c:85:6:Echo_Uart2_INTERRUPT_ENA	8	static
+../Core/Src/app/echo_uart2.c:97:6:HAL_UART_RxCpltCallback	16	static
+../Core/Src/app/echo_uart2.c:110:6:Echo_Uart2_Get_RCV_Q	24	static
