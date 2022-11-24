@@ -1,9 +1,9 @@
+../Core/Src/app/echo_adc.c:53:6:HAL_ADC_ConvCpltCallback	32	static
 ../Core/Src/app/echo_adc.c:92:6:HAL_ADC_ErrorCallback	0	static
 ../Core/Src/app/echo_adc.c:103:6:Echo_ADC1_Enable	8	static
 ../Core/Src/app/echo_adc.c:111:6:Echo_ADC2_Enable	8	static
 ../Core/Src/app/echo_adc.c:123:6:Echo_ADC_State_Init	8	static
 ../Core/Src/app/echo_adc.c:137:6:Echo_Start_ADC1_Conv	8	static
-../Core/Src/app/echo_adc.c:53:6:HAL_ADC_ConvCpltCallback	32	static
 ../Core/Src/app/echo_adc.c:146:6:Echo_Start_ADC2_Conv	8	static
 ../Core/Src/app/echo_adc.c:159:6:Echo_Stop_ADC1_Conv	8	static
 ../Core/Src/app/echo_adc.c:167:6:Echo_Stop_ADC2_Conv	8	static

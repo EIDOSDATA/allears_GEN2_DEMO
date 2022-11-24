@@ -64,8 +64,7 @@ void Echo_Btn_Handle(void)
 		if (ECHO_BTN_STATE_PRESSED == false)
 		{
 			/* Only when cover is closed, send signal */
-			ECHO_BTN_STATE_HANDLED = false;
-
+			Echo_Btn_Handled_Clear();
 		}
 		else
 		{

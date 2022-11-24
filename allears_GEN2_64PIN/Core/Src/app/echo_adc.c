@@ -72,8 +72,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 #if 0
 		ADC1_CONV_OK = true;
 #endif
-		Echo_Start_ADC1_Conv();
-		//adc1_cur_state = ECHO_ADC1_CONV_OK; //Echo_Set_ADC1_State(ECHO_ADC1_CONV_OK);
+		//Echo_Start_ADC1_Conv();
+		adc1_cur_state = ECHO_ADC1_CONV_OK; //Echo_Set_ADC1_State(ECHO_ADC1_CONV_OK);
 	}
 
 	if (hadc->Instance == hadc2.Instance)
@@ -205,7 +205,7 @@ float Echo_Peak_Detection_ADC2_AVG()
 float Echo_ADC_Calc_Stepup_V(uint16_t in_adc_val, float r1, float r2)
 {
 	float f_adc_val;
-	uint32_t vdda = 3300UL;
+	uint32_t vdda = 1800UL;
 	float v_ref = (float) (vdda * 0.001);
 	float v_out;
 
