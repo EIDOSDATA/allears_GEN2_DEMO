@@ -6,7 +6,7 @@ typedef enum
 	ECHO_SYS_STATE_INIT = 0x00,
 	ECHO_SYS_STATE_IDLE,
 	ECHO_SYS_STATE_RUN,
-	ECHO_sys_STATE_ERROR,
+	ECHO_SYS_STATE_ERROR,
 	echo_sys_state_max
 } echo_sys_state_t;
 

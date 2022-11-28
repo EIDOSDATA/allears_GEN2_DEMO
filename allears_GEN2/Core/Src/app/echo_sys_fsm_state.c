@@ -25,7 +25,6 @@ extern echo_adc1_state_t adc1_cur_state;
 void Echo_Sys_FSM_State_Init(void)
 {
 	ECHO_CUR_SYS_STATE = echo_sys_state_max;
-	//ECHO_BUTTON_STATE = Echo_Button_NoPressed();
 	Echo_Set_Sys_FSM_State(ECHO_SYS_STATE_INIT);
 }
 
@@ -64,23 +63,6 @@ void Echo_Sys_FSM_State_Handle(void)
 		Echo_Set_Sys_FSM_State(cur_state);
 		Echo_Btn_Handled_Clear();
 	}
-
-	/* SHELL COMMAND FLAG */
-	/*
-	 if (Echo_Shell_isHandled() == true)
-	 {
-	 if (cur_state == ECHO_STATE_IDLE)
-	 {
-	 cur_state = ECHO_STATE_RUN;
-	 }
-	 else if (cur_state == ECHO_STATE_RUN)
-	 {
-	 cur_state = ECHO_STATE_IDLE;
-	 }
-	 Echo_Shell_Handled_clear();
-	 }
-	 */
-
 	/*
 	 if (state_led_change == true)
 	 {
@@ -130,9 +112,9 @@ void Echo_Set_Sys_FSM_State(echo_sys_state_t state)
 #endif
 		break;
 
-	case ECHO_sys_STATE_ERROR:
+	case ECHO_SYS_STATE_ERROR:
 		Echo_Set_LED_State(ECHO_LED_IDLE);
-		//Echo_ADC_StateSet(ECHO_ADC_IDLE);
+		adc1_cur_state = ECHO_ADC1_ERROR;
 #ifdef DEBUG
 #ifdef ECHO_PULSE_INTERRUPT
 		ECHO_SHELL_PRINT(("ECHO STATE ERROR\r\n"));

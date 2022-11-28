@@ -194,7 +194,7 @@ void Echo_LED_State_Refresh(void)
 	switch (Echo_Get_Sys_FSM_State())
 	{
 	case ECHO_SYS_STATE_IDLE:
-	case ECHO_sys_STATE_ERROR:
+	case ECHO_SYS_STATE_ERROR:
 		Echo_Set_LED_State(ECHO_LED_IDLE);
 		break;
 
