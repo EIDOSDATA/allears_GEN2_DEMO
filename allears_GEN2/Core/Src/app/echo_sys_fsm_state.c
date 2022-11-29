@@ -25,7 +25,6 @@ extern echo_adc1_state_t adc1_cur_state;
 void Echo_Sys_FSM_State_Init(void)
 {
 	ECHO_CUR_SYS_STATE = echo_sys_state_max;
-	//ECHO_BUTTON_STATE = Echo_Button_NoPressed();
 	Echo_Set_Sys_FSM_State(ECHO_SYS_STATE_INIT);
 }
 
