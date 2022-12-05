@@ -1,4 +1,0 @@
-../Core/Src/app/echo_sys_common.c:46:6:Echo_HAL_Init	8	static
-../Core/Src/app/echo_sys_common.c:64:6:Echo_PCI_State_Init	64	static
-../Core/Src/app/echo_sys_common.c:91:6:Echo_Clock_Config	0	static
-../Core/Src/app/echo_sys_common.c:97:6:Echo_Exception_Handle	0	static
