@@ -1,4 +1,4 @@
-** Check Points of Qualcomm QCC Bluetooth chips
+** Check Points
 
 1. Detect In case and Out of case
 	1) See phy_state.c, appPhyStateHandleMessage(), CHARGER_MESSAGE_ATTACHED and CHARGER_MESSAGE_DETACHED
