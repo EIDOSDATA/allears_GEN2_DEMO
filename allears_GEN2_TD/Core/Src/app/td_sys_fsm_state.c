@@ -10,8 +10,6 @@
 #include <td_sys_fsm_state.h>
 #include "main.h"
 
-#define TD_CUR_SYS_STATE								td_sys_fsm_state.state
-#define TD_BUTTON_STATE 1
 typedef struct
 {
 	td_sys_state_t state;
@@ -123,4 +121,3 @@ void td_Set_Sys_FSM_State(td_sys_state_t state)
 	}
 	TD_CUR_SYS_STATE = state;
 }
-

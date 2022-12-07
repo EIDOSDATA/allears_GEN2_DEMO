@@ -68,7 +68,6 @@ void Echo_Set_Sys_FSM_State(echo_sys_state_t state)
 	 if (ECHO_CUR_STATE == state || state >= echo_sys_state_max)
 	 return;
 	 */
-
 	switch (state)
 	{
 
@@ -122,4 +121,3 @@ void Echo_Set_Sys_FSM_State(echo_sys_state_t state)
 	}
 	ECHO_CUR_SYS_STATE = state;
 }
-

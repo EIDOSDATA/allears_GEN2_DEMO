@@ -24,4 +24,3 @@ void Echo_Sys_FSM_State_Handle(void);
 void Echo_Set_Sys_FSM_State(echo_sys_state_t state);
 
 #endif	/* AUL_STATE_H */
-

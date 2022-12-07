@@ -10,6 +10,9 @@ typedef enum
 	td_sys_state_max
 } td_sys_state_t;
 
+#define TD_CUR_SYS_STATE								td_sys_fsm_state.state
+#define TD_BUTTON_STATE 1
+
 void td_Sys_FSM_State_Init(void);
 
 td_sys_state_t td_Get_Sys_FSM_State(void);

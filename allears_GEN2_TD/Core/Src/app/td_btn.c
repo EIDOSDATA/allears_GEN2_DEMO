@@ -8,14 +8,6 @@
 #include <td_shell.h>
 #include "main.h"
 
-#define TD_BTN_HELD_TIME						1000	/* 100ms */
-#define TD_BTN_IS_PRESSED()						(HAL_GPIO_ReadPin(START_BTN_GPIO_Port, START_BTN_Pin) == GPIO_PIN_RESET)
-
-#define TD_BTN_STATE_PRESSED					td_btn_state.pressed
-#define TD_BTN_STATE_HANDLE_ENABLE				td_btn_state.handle_enable
-#define TD_BTN_STATE_HANDLED					td_btn_state.handled
-#define TD_BTN_STATE_HELD_TICK					td_btn_state.held_tick
-
 typedef struct
 {
 	bool pressed;
@@ -93,4 +85,3 @@ void td_Btn_Handle(void)
 		}
 	}
 }
-

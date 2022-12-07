@@ -104,4 +104,3 @@ void td_Exception_Handle()
 	HAL_NVIC_SystemReset();
 #endif
 }
-

@@ -91,4 +91,3 @@ void Echo_ParameterCMD_Check(uint8_t *data, uint16_t len);
 #endif	/* ECHO_SHELL_ENABLED */
 
 #endif	/* ECHO_SHELL_H */
-

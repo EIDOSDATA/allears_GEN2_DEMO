@@ -51,8 +51,7 @@ bool peak_print_f = false;
 void Echo_ADC_Voltage_Feedback()
 {
 	fdbk_adc_avg_data = Echo_Stepup_ADC1_AVG();
-	fdbk_adc_voltage = Echo_ADC_Calc_Stepup_V(fdbk_adc_avg_data,
-	R1_Vstup,
+	fdbk_adc_voltage = Echo_ADC_Calc_Stepup_V(fdbk_adc_avg_data, R1_Vstup,
 	R2_Vstup);
 	Echo_Voltage_Config(fdbk_adc_voltage);
 	timer16_cnt = 0;

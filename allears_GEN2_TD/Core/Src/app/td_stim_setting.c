@@ -34,7 +34,8 @@ uint64_t *ex_p64_pwm_param = (uint64_t*) &ex_pwm_param;
 volatile uint32_t cathode_pwm_arr[2];
 volatile uint32_t current_ctrl_proc_arr[4];
 
-__IO int ex_voltage_r_pw = 0, ex_voltage_val_output = 0;
+__IO int ex_voltage_r_pw = 0;
+__IO int ex_voltage_val_output = 0;
 __IO bool ex_slope_ctrl_end_f = false;
 extern bool ex_gPulse_high;
 

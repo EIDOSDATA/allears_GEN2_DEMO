@@ -11,10 +11,10 @@
 #endif
 
 #define ECHO_DELAY_50MS									50			/* 50ms */
-#define ECHO_DELAY_100MS									100			/* 100ms */
-#define ECHO_DELAY_200MS									200			/* 200ms */
-#define ECHO_DELAY_300MS									300			/* 300ms */
-#define ECHO_DELAY_500MS									500			/* 500ms */
+#define ECHO_DELAY_100MS								100			/* 100ms */
+#define ECHO_DELAY_200MS								200			/* 200ms */
+#define ECHO_DELAY_300MS								300			/* 300ms */
+#define ECHO_DELAY_500MS								500			/* 500ms */
 #define ECHO_DELAY_1SEC									1000		/* 1000ms */
 #define ECHO_DELAY_2SEC									2000		/* 2000ms */
 #define ECHO_DELAY_3SEC									3000		/* 3000ms */

@@ -21,7 +21,6 @@ extern DMA_HandleTypeDef hdma_adc2;
 extern __IO int ex_voltage_r_pw;
 
 /* REFERENCE TABLE */
-#define VREFINT_CAL									(*(volatile uint16_t*) 0x1FFF75AA)
 #define ECHO_REF_VOLTAGE_TABLE						ref_voltage_table
 #define ECHO_REF_ADC_VALUE_TABLE					ref_adc_value_table
 #define ECHO_REF_ADC_VOLTAGE_TABLE					ref_adc_voltage_table

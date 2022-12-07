@@ -13,17 +13,8 @@
 #ifdef	ECHO_SHELL_ENABLED
 
 extern pwm_pulse_param_t ex_pwm_param;
-
-#define TD_SHELL_MSG_RCV_FLUSH_TIMEOUT				2000
-#define TD_SHELL_MSG_RCV_HANDSHAKING_TIMEOUT		(TD_DELAY_1SEC * 10)					/* 10s */
-
-#define SHELL_MSG_RCV_BUF_SIZE					256
-#define SHELL_MSG_RCV_POS						td_shell_msg_state.pos
-#define SHELL_MSG_RCV_BUF						td_shell_msg_state.buf
-#define SHELL_MSG_RCV_FLUSH_CHK_TIME			td_shell_msg_state.flush_chk_time
-#define SHELL_MSG_RCV_HANDSHAKING_TIME			td_shell_msg_state.handshaking_time
-
 extern uint8_t ex_td_uart2_rcv_byte;
+
 typedef struct
 {
 	uint8_t pos;
@@ -121,7 +112,6 @@ void td_ShellPrint_Char(uint8_t *data, uint16_t len)
 	{
 		TD_SHELL_PRINT(("%c", data[i]));
 	}
-
 	TD_SHELL_PRINT(("\n"));
 }
 
@@ -136,7 +126,6 @@ void td_ShellPrint_Hex(uint8_t *data, uint16_t len)
 	{
 		TD_SHELL_PRINT(("%02x ", data[i]));
 	}
-
 	TD_SHELL_PRINT(("\n"));
 }
 

@@ -51,10 +51,6 @@ uint16_t get_adc2_buf[ADC2_CHK_CH_NUM * ADC2_RCV_SIZE];
 uint16_t ex_setpup_adc[ADC1_RCV_SIZE]; // ADC1
 uint16_t ex_peak_adc[ADC2_RCV_SIZE]; // ADC2
 
-/* ADC FSM STATE */
-#define TD_ADC1_CUR_STATE		td_adc1_fsm_state.state
-#define TD_ADC2_CUR_STATE		td_adc2_fsm_state.state
-
 /* ADC1 STATE */
 typedef struct
 {

@@ -54,6 +54,15 @@ typedef enum
 #define TD_SHELL_PRINT_HEX(data, len)							td_ShellPrint_Hex(data, len)
 #define TD_SHELL_RCV_POLL()										td_Shell_RxPoll()
 
+#define TD_SHELL_MSG_RCV_FLUSH_TIMEOUT				2000
+#define TD_SHELL_MSG_RCV_HANDSHAKING_TIMEOUT		(TD_DELAY_1SEC * 10)					/* 10s */
+
+#define SHELL_MSG_RCV_BUF_SIZE						256
+#define SHELL_MSG_RCV_POS							td_shell_msg_state.pos
+#define SHELL_MSG_RCV_BUF							td_shell_msg_state.buf
+#define SHELL_MSG_RCV_FLUSH_CHK_TIME				td_shell_msg_state.flush_chk_time
+#define SHELL_MSG_RCV_HANDSHAKING_TIME				td_shell_msg_state.handshaking_time
+
 void td_Shell_RxPoll(void);
 void td_ShellPrint_Char(uint8_t *data, uint16_t len);
 void td_ShellPrint_Hex(uint8_t *data, uint16_t len);
@@ -82,4 +91,3 @@ void td_ParameterCMD_Check(uint8_t *data, uint16_t len);
 #endif	/* ECHO_SHELL_ENABLED */
 
 #endif	/* ECHO_SHELL_H */
-

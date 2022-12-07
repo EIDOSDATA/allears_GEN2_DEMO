@@ -26,28 +26,28 @@ __IO uint64_t data64 = 0;
 
 static FLASH_EraseInitTypeDef EraseInitStruct;
 
-static uint32_t td_GetPage(uint32_t Address);
-static uint32_t td_GetBank(uint32_t Address);
+static uint32_t td_GetPage(uint32_t addr);
+static uint32_t td_GetBank(uint32_t addr);
 
-static uint32_t td_GetPage(uint32_t Addr)
+static uint32_t td_GetPage(uint32_t addr)
 {
 	uint32_t page = 0;
 
-	if (Addr < (FLASH_BASE + FLASH_BANK_SIZE))
+	if (addr < (FLASH_BASE + FLASH_BANK_SIZE))
 	{
 		/* Bank 1 */
-		page = (Addr - FLASH_BASE) / FLASH_PAGE_SIZE;
+		page = (addr - FLASH_BASE) / FLASH_PAGE_SIZE;
 	}
 	else
 	{
 		/* Bank 2 */
-		page = (Addr - (FLASH_BASE + FLASH_BANK_SIZE)) / FLASH_PAGE_SIZE;
+		page = (addr - (FLASH_BASE + FLASH_BANK_SIZE)) / FLASH_PAGE_SIZE;
 	}
 
 	return page;
 }
 
-static uint32_t td_GetBank(uint32_t Addr)
+static uint32_t td_GetBank(uint32_t addr)
 {
 	return FLASH_BANK_1;
 }

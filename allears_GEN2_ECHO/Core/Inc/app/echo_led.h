@@ -13,14 +13,18 @@
 typedef enum
 {
 	/* State LED */
-	echo_led_state_none = 0x00, echo_led_idle, echo_led_run, echo_led_state_max
+	echo_led_state_none = 0x00,
+	echo_led_idle,
+	echo_led_run,
+	echo_led_state_max
 } echo_led_sate_t;
 
 typedef enum
 {
-	echo_led_color_none = 0x00, echo_led_red = (1 << 0), echo_led_green = (1
-			<< 1), echo_led_blue = (1 << 2)
-//ECHO_LED_WHITE = (aul_led_red| aul_led_green | aul_led_blue)
+	echo_led_color_none = 0x00,
+	echo_led_red = (1 << 0),
+	echo_led_green = (1	<< 1),
+	echo_led_blue = (1 << 2)
 } echo_led_color_t;
 
 /*

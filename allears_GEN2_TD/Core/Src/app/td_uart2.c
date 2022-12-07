@@ -11,12 +11,6 @@
 #include <td_uart2.h>
 #include "main.h"
 
-#define TD_USART2_RCV_Q_SIZE						256
-#define TD_USART2_MUTEX_LOCK						HAL_NVIC_DisableIRQ(USART2_IRQn);
-#define TD_USART2_MUTEX_UNLOCK						HAL_NVIC_EnableIRQ(USART2_IRQn);
-
-#define TD_USART2_STATE_RESET()						{td_uart2_state.q_front = 0; td_uart2_state.q_rear = 0; td_uart2_state.item_num = 0;}
-
 typedef struct
 {
 	uint16_t q_front; /* Q front */

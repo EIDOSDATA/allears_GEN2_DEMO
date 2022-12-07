@@ -386,8 +386,7 @@ int Echo_Voltage_Config(uint64_t adc_voltage)
 		return HAL_OK;
 	}
 
-	else if (abs(
-			voltage_scaleup_val - adc_voltage) > VOLTAGE_ERROR_RANGE_VALUE)
+	else if (abs(voltage_scaleup_val - adc_voltage) > VOLTAGE_ERROR_RANGE_VALUE)
 	{
 		if (voltage_scaleup_val > adc_voltage)
 		{

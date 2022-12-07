@@ -32,29 +32,46 @@ typedef enum
 	td_adc2_state_max
 } td_adc2_state_t;
 
+/* REFERENCE VALUE1 */
 #define ADC_VDDA									3000			/* 3.0 V */
 #define ADC_MAX_VAL									4096			/* ADC is 12bit resolution */
 #define ADC_CONV_WAIT_TIME_MAX						10				/* ms */
 #define PWR_HANDLE_PERIOD							1				/* ms */
 
+/* REFERENCE VALUE2 */
 #define R1_Vstup		3600.f //680.f;
 #define R2_Vstup		110.f //22.f;
 #define R1_Ved			18.f
 #define R2_Ved			1.f
 
+/* REFERENCE TABLE */
+/*
+ #define ECHO_REF_VOLTAGE_TABLE						ref_voltage_table
+ #define ECHO_REF_ADC_VALUE_TABLE					ref_adc_value_table
+ #define ECHO_REF_ADC_VOLTAGE_TABLE					ref_adc_voltage_table
+ */
+
+/* ERROR RANGE */
 /* Voltage Scale : 1 uV */
 #define PEAKDETECTION_VOLTAGE_SCALE					1000
 #define STEPUP_VOLTAGE_SCALE						1000000
 #define VOLTAGE_ERROR_RANGE_VALUE					1.8 * STEPUP_VOLTAGE_SCALE
 
+/* NUMBER OF ADC CHANNEL */
 #define ADC1_CHK_CH_NUM								1
 #define ADC2_CHK_CH_NUM								1
 
+/* ADC READING SIZE */
 #define ADC1_RCV_SIZE								10
 #define ADC2_RCV_SIZE								10
 
-#define TD_ADC1_CONV_BUF								get_adc1_buf
-#define TD_ADC2_CONV_BUF								get_adc2_buf
+/* ADC CONVERSION BUFFER SIZE*/
+#define TD_ADC1_CONV_BUF							get_adc1_buf
+#define TD_ADC2_CONV_BUF							get_adc2_buf
+
+/* ADC FSM STATE */
+#define TD_ADC1_CUR_STATE		td_adc1_fsm_state.state
+#define TD_ADC2_CUR_STATE		td_adc2_fsm_state.state
 
 void td_ADC1_Enable(void);
 void td_ADC2_Enable(void);
