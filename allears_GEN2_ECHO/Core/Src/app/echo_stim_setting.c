@@ -74,9 +74,9 @@ void Echo_Set_DT(uint8_t *data, uint16_t len)
 	sscanf((const char*) data, (const char*) "#setDT,%hd%*[^\r]",
 			&ex_pwm_param.dead_time);
 	/* ERROR CONTROL */
-	if (ex_pwm_param.dead_time < (GLICH_DEBOUNCING_TIME * 2))
+	if (ex_pwm_param.dead_time < (ECHO_GLICH_DEBOUNCING_TIME * 2))
 	{
-		ex_pwm_param.dead_time = GLICH_DEBOUNCING_TIME * 2;
+		ex_pwm_param.dead_time = ECHO_GLICH_DEBOUNCING_TIME * 2;
 	}
 	Echo_Pulse_Prm_Config();
 	Echo_Get_Res_Data(response_deadtime);
@@ -94,7 +94,7 @@ void Echo_Set_HZ(uint8_t *data, uint16_t len)
 			&ex_pwm_param.pulse_freq);
 
 	/* ERROR CONTROL */
-	if (PULSE_FREQ_ARR <= (TOTAL_PULSE_WIDTH_TIME * 2))
+	if (ECHO_PULSE_FREQ_ARR <= (ECHO_TOTAL_PULSE_WIDTH_TIME * 2))
 	{
 		ex_pwm_param.pulse_freq = 1;
 	}
@@ -116,7 +116,7 @@ void Echo_Set_HZ(uint8_t *data, uint16_t len)
 void Echo_Set_V_PW(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setVPW,%d%*[^\r]",
-			&VOLTAGE_RELATED_PULSE_WIDTH);
+			&ECHO_VOLTAGE_RELATED_PULSE_WIDTH);
 	if (Echo_Get_Sys_FSM_State() == echo_sys_state_run)
 	{
 		HAL_TIM_Base_Start_IT(&htim16);
@@ -128,7 +128,7 @@ void Echo_Set_V_PW(uint8_t *data, uint16_t len)
 void Echo_Set_Voltage_Output(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setVOL,%d%*[^\r]",
-			&VOLTAGE_VALUE_OUTPUT);
+			&ECHO_VOLTAGE_VALUE_OUTPUT);
 	if (Echo_Get_Sys_FSM_State() == echo_sys_state_run)
 	{
 		HAL_TIM_Base_Start_IT(&htim16);
@@ -167,12 +167,12 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 
 	case response_voltage_pw:
 		sprintf((char*) res_msg, (const char*) "%s %d step\r\n", mes_head,
-		VOLTAGE_RELATED_PULSE_WIDTH);
+		ECHO_VOLTAGE_RELATED_PULSE_WIDTH);
 		break;
 
 	case response_voltage_value_to_output:
 		sprintf((char*) res_msg, (const char*) "%s %d v\r\n", mes_head,
-		VOLTAGE_VALUE_OUTPUT);
+		ECHO_VOLTAGE_VALUE_OUTPUT);
 		break;
 
 	case response_allprm:
@@ -183,7 +183,7 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 				"VPW: %d\r\n"
 				"Voltage: %d", mes_head, ex_pwm_param.dead_time,
 				ex_pwm_param.pulse_width, ex_pwm_param.pulse_freq,
-				VOLTAGE_RELATED_PULSE_WIDTH, VOLTAGE_VALUE_OUTPUT);
+				ECHO_VOLTAGE_RELATED_PULSE_WIDTH, ECHO_VOLTAGE_VALUE_OUTPUT);
 		break;
 	default:
 		break;
@@ -201,8 +201,8 @@ void Echo_Factory_Reset()
 	ex_pwm_param.dead_time = 20;
 	ex_pwm_param.pulse_width = 1000;
 	ex_pwm_param.pulse_freq = 100;
-	VOLTAGE_RELATED_PULSE_WIDTH = 0;
-	VOLTAGE_VALUE_OUTPUT = 0;
+	ECHO_VOLTAGE_RELATED_PULSE_WIDTH = 0;
+	ECHO_VOLTAGE_VALUE_OUTPUT = 0;
 	Echo_Flash_Write();
 }
 /****************************************/
@@ -215,16 +215,16 @@ void Echo_Pulse_Prm_Config()
 {
 	/* HZ SETTING */
 	TIM2->CNT = 0;
-	TIM2->ARR = PULSE_FREQ_ARR - 1;
+	TIM2->ARR = ECHO_PULSE_FREQ_ARR - 1;
 
 	/* PULSE and DEAD TIME SETTING */
-	TIM2->CCR2 = ANODE_PULSE_TIME;
-	cathode_pwm_arr[0] = CATHODE_PULSE_TIME0;
-	cathode_pwm_arr[1] = CATHODE_PULSE_TIME1;
-	current_ctrl_proc_arr[0] = CURRENT_CTRL_TIME0;
-	current_ctrl_proc_arr[1] = CURRENT_CTRL_TIME1;
-	current_ctrl_proc_arr[2] = CURRENT_CTRL_TIME2;
-	current_ctrl_proc_arr[3] = CURRENT_CTRL_TIME3;
+	TIM2->CCR2 = ECHO_ANODE_PULSE_TIME;
+	cathode_pwm_arr[0] = ECHO_CATHODE_PULSE_TIME0;
+	cathode_pwm_arr[1] = ECHO_CATHODE_PULSE_TIME1;
+	current_ctrl_proc_arr[0] = ECHO_CURRENT_CTRL_TIME0;
+	current_ctrl_proc_arr[1] = ECHO_CURRENT_CTRL_TIME1;
+	current_ctrl_proc_arr[2] = ECHO_CURRENT_CTRL_TIME2;
+	current_ctrl_proc_arr[3] = ECHO_CURRENT_CTRL_TIME3;
 }
 /****************************************/
 
@@ -323,17 +323,17 @@ void Echo_Stim_Start()
 #ifdef ECHO_PULSE_INTERRUPTx
 void Echo_Pulse_Prm_Config()
 {
-	TIM2->CCR2 = ANODE_PULSE_TIME;
-	TIM2->CCR4 = CATHODE_PULSE_TIME1;
-	TIM2->CCR1 = CURRENT_CTRL_TIME3;
+	TIM2->CCR2 = ECHO_ANODE_PULSE_TIME;
+	TIM2->CCR4 = ECHO_CATHODE_PULSE_TIME1;
+	TIM2->CCR1 = ECHO_CURRENT_CTRL_TIME3;
 	if (ex_gPulse_high == false)
 	{
-		TIM2->CCR4 = CATHODE_PULSE_TIME1;
+		TIM2->CCR4 = ECHO_CATHODE_PULSE_TIME1;
 		//gPulse_high = true;
 	}
 	else
 	{
-		TIM2->CCR4 = CATHODE_PULSE_TIME0;
+		TIM2->CCR4 = ECHO_CATHODE_PULSE_TIME0;
 		//gPulse_high = false;
 	}
 }
@@ -365,24 +365,24 @@ void Echo_Stim_Start()
  * */
 void Echo_Pulse_V_PW_Config()
 {
-	TIM1->CCR1 = VOLTAGE_RELATED_PULSE_WIDTH;
+	TIM1->CCR1 = ECHO_VOLTAGE_RELATED_PULSE_WIDTH;
 }
 
 int Echo_Voltage_Config(uint64_t adc_voltage)
 {
-	uint64_t voltage_scaleup_val = VOLTAGE_VALUE_OUTPUT * STEPUP_VOLTAGE_SCALE;
+	uint64_t voltage_scaleup_val = ECHO_VOLTAGE_VALUE_OUTPUT * STEPUP_VOLTAGE_SCALE;
 	if (abs(voltage_scaleup_val - adc_voltage) < VOLTAGE_ERROR_RANGE_VALUE)
 	{
 		if (voltage_scaleup_val > adc_voltage)
 		{
-			VOLTAGE_RELATED_PULSE_WIDTH++;
+			ECHO_VOLTAGE_RELATED_PULSE_WIDTH++;
 		}
 		else if (voltage_scaleup_val < adc_voltage)
 		{
-			VOLTAGE_RELATED_PULSE_WIDTH--;
+			ECHO_VOLTAGE_RELATED_PULSE_WIDTH--;
 		}
-		SLOPE_CONTROL_END_FLAG = true;
-		TIM1->CCR1 = VOLTAGE_RELATED_PULSE_WIDTH;
+		ECHO_SLOPE_CONTROL_END_FLAG = true;
+		TIM1->CCR1 = ECHO_VOLTAGE_RELATED_PULSE_WIDTH;
 		return HAL_OK;
 	}
 
@@ -390,30 +390,30 @@ int Echo_Voltage_Config(uint64_t adc_voltage)
 	{
 		if (voltage_scaleup_val > adc_voltage)
 		{
-			VOLTAGE_RELATED_PULSE_WIDTH++;
-			SLOPE_CONTROL_END_FLAG = false;
+			ECHO_VOLTAGE_RELATED_PULSE_WIDTH++;
+			ECHO_SLOPE_CONTROL_END_FLAG = false;
 		}
 		else if (voltage_scaleup_val < adc_voltage)
 		{
-			VOLTAGE_RELATED_PULSE_WIDTH--;
-			SLOPE_CONTROL_END_FLAG = true;
-			if (VOLTAGE_RELATED_PULSE_WIDTH <= 0)
+			ECHO_VOLTAGE_RELATED_PULSE_WIDTH--;
+			ECHO_SLOPE_CONTROL_END_FLAG = true;
+			if (ECHO_VOLTAGE_RELATED_PULSE_WIDTH <= 0)
 			{
-				VOLTAGE_RELATED_PULSE_WIDTH = 0;
+				ECHO_VOLTAGE_RELATED_PULSE_WIDTH = 0;
 			}
 		}
-		TIM1->CCR1 = VOLTAGE_RELATED_PULSE_WIDTH;
+		TIM1->CCR1 = ECHO_VOLTAGE_RELATED_PULSE_WIDTH;
 		return HAL_OK;
 	}
 
 	else if (voltage_scaleup_val == adc_voltage)
 	{
-		SLOPE_CONTROL_END_FLAG = true;
+		ECHO_SLOPE_CONTROL_END_FLAG = true;
 	}
 
 	else
 	{
-		SLOPE_CONTROL_END_FLAG = true;
+		ECHO_SLOPE_CONTROL_END_FLAG = true;
 	}
 
 	return HAL_OK;
@@ -425,14 +425,14 @@ int Echo_Voltage_Config(uint64_t adc_voltage)
  * */
 void Echo_StepUP_Stop()
 {
-	VOLTAGE_RELATED_PULSE_WIDTH = 0;
+	ECHO_VOLTAGE_RELATED_PULSE_WIDTH = 0;
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
 	HAL_TIM_Base_Stop_IT(&htim16);
 }
 
 void Echo_StepUP_Start()
 {
-	TIM1->CCR1 = VOLTAGE_RELATED_PULSE_WIDTH;
+	TIM1->CCR1 = ECHO_VOLTAGE_RELATED_PULSE_WIDTH;
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 	HAL_TIM_Base_Start_IT(&htim16);
 }

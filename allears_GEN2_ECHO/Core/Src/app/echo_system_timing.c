@@ -68,8 +68,8 @@ void Echo_Stepup_ADC_Data_Print()
 		ECHO_SHELL_PRINT(("ADC1 SUM DATA: %ld\n",fdbk_adc_avg_data));
 		ECHO_SHELL_PRINT(("VOLTAGE : %ld.%ld\n",n_number,dec_point));
 
-		ECHO_SHELL_PRINT(("SETTING VOLTAGE : %d\n",VOLTAGE_VALUE_OUTPUT));
-		ECHO_SHELL_PRINT(("STEPUP PW : %d\n",VOLTAGE_RELATED_PULSE_WIDTH));
+		ECHO_SHELL_PRINT(("SETTING VOLTAGE : %d\n",ECHO_VOLTAGE_VALUE_OUTPUT));
+		ECHO_SHELL_PRINT(("STEPUP PW : %d\n",ECHO_VOLTAGE_RELATED_PULSE_WIDTH));
 
 		ECHO_SHELL_PRINT(("----------\r\n"));
 	}
@@ -166,12 +166,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		if (Echo_Get_ADC1_State() == echo_adc1_conv_ok)
 		{
 			/* SLOPE VOLTAGE RISE CONTROL */
-			if (timer16_cnt == 10 && SLOPE_CONTROL_END_FLAG == false)
+			if (timer16_cnt == 10 && ECHO_SLOPE_CONTROL_END_FLAG == false)
 			{
 				Echo_ADC_Voltage_Feedback();
 			}
 			/* VOLTAGE RANGE KEEPING CONTROL */
-			else if (timer16_cnt == 2 && SLOPE_CONTROL_END_FLAG == true)
+			else if (timer16_cnt == 2 && ECHO_SLOPE_CONTROL_END_FLAG == true)
 			{
 				Echo_ADC_Voltage_Feedback();
 			}

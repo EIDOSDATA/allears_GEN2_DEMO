@@ -72,8 +72,8 @@ void Echo_PCI_State_Init()
 		ex_pwm_param.dead_time = 20;
 		ex_pwm_param.pulse_width = 1000;
 		ex_pwm_param.pulse_freq = 100;
-		VOLTAGE_RELATED_PULSE_WIDTH = 0;
-		VOLTAGE_VALUE_OUTPUT = 0;
+		ECHO_VOLTAGE_RELATED_PULSE_WIDTH = 0;
+		ECHO_VOLTAGE_VALUE_OUTPUT = 0;
 	}
 
 	Echo_Print_Version();
