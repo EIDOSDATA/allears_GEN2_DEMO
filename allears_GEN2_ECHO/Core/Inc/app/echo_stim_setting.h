@@ -55,7 +55,7 @@ void Echo_Pulse_Prm_Config(void);
 
 /* PULSE VOLTAGE PW CONFIG */
 void Echo_Pulse_V_PW_Config(void);
-int Echo_Voltage_Config(uint64_t adc_voltage);
+uint32_t Echo_Voltage_Config(uint64_t adc_voltage);
 
 /* Factory RESET */
 void Echo_Factory_Reset(void);

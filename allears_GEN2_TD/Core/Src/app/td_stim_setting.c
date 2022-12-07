@@ -368,7 +368,7 @@ void td_Pulse_V_PW_Config()
 	TIM1->CCR1 = TD_VOLTAGE_RELATED_PULSE_WIDTH;
 }
 
-uint32_t td_Voltage_Config(uint32_t adc_voltage)
+uint32_t td_Voltage_Config(uint64_t adc_voltage)
 {
 	uint32_t voltage_scaleup_val = TD_VOLTAGE_VALUE_OUTPUT * STEPUP_VOLTAGE_SCALE;
 	if (abs(voltage_scaleup_val - adc_voltage) < VOLTAGE_ERROR_RANGE_VALUE)

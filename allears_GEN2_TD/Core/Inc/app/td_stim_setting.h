@@ -55,7 +55,7 @@ void td_Pulse_Prm_Config(void);
 
 /* PULSE VOLTAGE PW CONFIG */
 void td_Pulse_V_PW_Config(void);
-uint32_t td_Voltage_Config(uint32_t adc_voltage);
+uint32_t td_Voltage_Config(uint64_t adc_voltage);
 
 /* Factory RESET */
 void td_Factory_Reset(void);

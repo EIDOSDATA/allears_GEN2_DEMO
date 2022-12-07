@@ -368,7 +368,7 @@ void Echo_Pulse_V_PW_Config()
 	TIM1->CCR1 = ECHO_VOLTAGE_RELATED_PULSE_WIDTH;
 }
 
-int Echo_Voltage_Config(uint64_t adc_voltage)
+uint32_t Echo_Voltage_Config(uint64_t adc_voltage)
 {
 	uint64_t voltage_scaleup_val = ECHO_VOLTAGE_VALUE_OUTPUT * STEPUP_VOLTAGE_SCALE;
 	if (abs(voltage_scaleup_val - adc_voltage) < VOLTAGE_ERROR_RANGE_VALUE)

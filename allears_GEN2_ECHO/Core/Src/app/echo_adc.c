@@ -104,7 +104,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 #if 0
 	ADC2_CONV_OK = true;
 #endif
-		ex_adc2_cur_state = echo_adc2_conv_ok; //Echo_Set_ADC2_State(ECHO_ADC2_CONV_OK);
+		ex_adc2_cur_state = echo_adc2_conv_ok;
 	}
 }
 
