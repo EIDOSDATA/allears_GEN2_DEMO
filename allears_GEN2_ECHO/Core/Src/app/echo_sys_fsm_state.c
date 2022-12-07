@@ -22,7 +22,6 @@ extern echo_adc1_state_t ex_adc1_cur_state;
 void Echo_Sys_FSM_State_Init(void)
 {
 	ECHO_CUR_SYS_STATE = echo_sys_state_max;
-	//ECHO_BUTTON_STATE = Echo_Button_NoPressed();
 	Echo_Set_Sys_FSM_State(echo_sys_state_init);
 }
 
@@ -61,36 +60,12 @@ void Echo_Sys_FSM_State_Handle(void)
 		Echo_Set_Sys_FSM_State(cur_state);
 		Echo_Btn_Handled_Clear();
 	}
-
-	/* SHELL COMMAND FLAG */
-	/*
-	 if (Echo_Shell_isHandled() == true)
-	 {
-	 if (cur_state == ECHO_STATE_IDLE)
-	 {
-	 cur_state = ECHO_STATE_RUN;
-	 }
-	 else if (cur_state == ECHO_STATE_RUN)
-	 {
-	 cur_state = ECHO_STATE_IDLE;
-	 }
-	 Echo_Shell_Handled_clear();
-	 }
-	 */
-
-	/*
-	 if (state_led_change == true)
-	 {
-	 Echo_LED_Enable();
-	 Echo_LED_State_Refresh();
-	 }
-	 */
 }
 
 void Echo_Set_Sys_FSM_State(echo_sys_state_t state)
 {
 	/*
-	 if (ECHO_CUR_STATE == state || state >= echo_state_max)
+	 if (ECHO_CUR_STATE == state || state >= echo_sys_state_max)
 	 return;
 	 */
 

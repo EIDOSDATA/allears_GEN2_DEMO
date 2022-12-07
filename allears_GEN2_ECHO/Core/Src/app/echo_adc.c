@@ -279,23 +279,6 @@ uint32_t Echo_ADC_Calc_Peak_V(uint32_t in_adc_val)
  * */
 void Echo_ADC_Handle(void)
 {
-#if 0
-/* NONE FSM ADC */
-if (Echo_Get_Sys_FSM_State()
-		== ECHO_SYS_STATE_RUN&& ADC1_BUFFER_FULL != true)
-//if (Echo_Get_FSM_State() == ECHO_STATE_RUN && ADC2_BUFFER_FULL != true)
-{
-	static uint32_t st_handle_tick = 0;
-
-	if (HAL_GetTick() - st_handle_tick >= PWR_HANDLE_PERIOD)
-	{
-		Echo_Start_ADC1_Conv();
-		//Echo_Start_ADC2_Conv();
-		st_handle_tick = HAL_GetTick();
-	}
-}
-#endif
-
 	/* FSM ADC */
 	if (ECHO_ADC1_CUR_STATE != ex_adc1_cur_state)
 	{
