@@ -90,15 +90,15 @@ void Echo_Shell_RxPoll(void)
 {
 	static uint8_t st_rcv_byte;
 
-	while (!(TD_SHELL_UART->ISR & UART_FLAG_RXNE))
+	while (!(ECHO_SHELL_UART->ISR & UART_FLAG_RXNE))
 		;
 
-	st_rcv_byte = TD_SHELL_UART->RDR;
+	st_rcv_byte = ECHO_SHELL_UART->RDR;
 
-	while (!(TD_SHELL_UART->ISR & UART_FLAG_TXE))
+	while (!(ECHO_SHELL_UART->ISR & UART_FLAG_TXE))
 		;
 
-	TD_SHELL_UART->TDR = st_rcv_byte;
+	ECHO_SHELL_UART->TDR = st_rcv_byte;
 }
 
 void Echo_ShellPrint_Char(uint8_t *data, uint16_t len)

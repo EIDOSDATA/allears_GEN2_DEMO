@@ -1,7 +1,7 @@
 #ifndef INC_APP_ECHO_SHELL_H_
 #define INC_APP_ECHO_SHELL_H_
 
-#define TD_SHELL_UART											USART2
+#define ECHO_SHELL_UART											USART2
 
 #ifdef	ECHO_SHELL_ENABLED
 #include <stdio.h>

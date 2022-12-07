@@ -32,7 +32,7 @@ typedef enum
 #define ECHO_LED_STEADY_OFF_TIME						0xFFFF
 #define ECHO_LED_STEADY_ON_TIME							0
 
-#define ECHO_LED_IND_TIMEOUT							0xFFFF // ((TD_DELAY_3SEC * 10) / TD_SCHED_HANDLE_PERIOD) 	/* 10s */
+#define ECHO_LED_IND_TIMEOUT							0xFFFF // ((ECHO_DELAY_3SEC * 10) / ECHO_SCHED_HANDLE_PERIOD) 	/* 10s */
 #define ECHO_LED_COLOR_ALL								(echo_led_red | echo_led_green | echo_led_blue)
 
 #define ECHO_LED_STATE_IS_EVENT(param)					(echo_led_low_batt <= param && param < echo_led_state_max)
