@@ -7,8 +7,8 @@
 #include <stdbool.h>
 #include "main.h"
 
-#ifndef INC_APP_ECHO_UART2_H_
-#define INC_APP_ECHO_UART2_H_
+#ifndef INC_APP_TD_UART2_H_
+#define INC_APP_TD_UART2_H_
 
 void td_Uart2_Init(void);
 void td_Uart2_DeInit(void);
@@ -26,4 +26,4 @@ extern UART_HandleTypeDef huart1;
 #define TD_USART2_HANDLE			huart2
 extern UART_HandleTypeDef huart2;
 
-#endif /* INC_APP_ECHO_UART2_H_ */
+#endif /* INC_APP_TD_UART2_H_ */

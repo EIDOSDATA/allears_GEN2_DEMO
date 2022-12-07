@@ -313,7 +313,7 @@ void Echo_Stim_Start()
 
 	Echo_StepUP_Start();
 
-#if 1//#if NOT_USEAGE_TRGO
+#if NOT_USEAGE_TRGO
 	Echo_Start_ADC2_Conv();
 	HAL_TIM_Base_Start_IT(&htim2);
 #endif

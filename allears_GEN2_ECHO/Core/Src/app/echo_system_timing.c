@@ -98,6 +98,7 @@ void Echo_PeakDetection_ADC_Data_Print()
 }
 
 #ifdef ECHO_PULSE_INTERRUPTx
+
 bool ex_gPulse_high = false;
 int current_ctrl_proc = 0;
 
@@ -149,7 +150,7 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-#if 1//#if NOT_USEAGE_TRGO
+#if NOT_USEAGE_TRGO
 	if (htim->Instance == TIM2)
 	{
 		/* ADC2 TRGO SIGNAL */

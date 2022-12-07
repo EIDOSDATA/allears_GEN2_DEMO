@@ -78,9 +78,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 		for (int index = 0; index < ADC1_RCV_SIZE; index++)
 		{
 			/* ADC FILTER */
-			if (fabs(
-			ECHO_ADC1_CONV_BUF[index] - ECHO_ADC1_CONV_BUF[(index + 1) % 10])
-					< 200)
+			if (fabs(ECHO_ADC1_CONV_BUF[index] - ECHO_ADC1_CONV_BUF[(index + 1) % 10]) < 200)
 			{
 				ex_setpup_adc[index] = ECHO_ADC1_CONV_BUF[index]; // STEPUP_FEEDBACK
 			}
@@ -94,7 +92,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 		ADC1_CONV_OK = true;
 #endif
 		//Echo_Start_ADC1_Conv();
-		ex_adc1_cur_state = echo_adc1_conv_ok; //Echo_Set_ADC1_State(ECHO_ADC1_CONV_OK);
+		ex_adc1_cur_state = echo_adc1_conv_ok;
 	}
 
 	if (hadc->Instance == hadc2.Instance)
@@ -223,7 +221,7 @@ uint32_t Echo_Peak_Detection_ADC2_AVG()
 /*
  * VOLTAGE CALC FUNCTION
  * */
-uint32_t Echo_ADC_Calc_Stepup_V(uint32_t in_adc_val, float r1, float r2)
+uint32_t Echo_ADC_Calc_Stepup_V(uint32_t in_adc_val, uint32_t r1, uint32_t r2)
 {
 	/*
 	 40v == 1065 ADC

@@ -96,7 +96,8 @@ void td_PeakDetection_ADC_Data_Print()
 	}
 	peak_print_f = false;
 }
-#ifdef ECHO_PULSE_INTERRUPTx
+
+#ifdef TD_PULSE_INTERRUPTx
 
 bool ex_gPulse_high = false;
 int current_ctrl_proc = 0;
@@ -152,6 +153,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 #if NOT_USEAGE_TRGO
 	if (htim->Instance == TIM2)
 	{
+		/* ADC2 TRGO SIGNAL */
 		td_ADC_PeakDetection();
 		td_PeakDetection_ADC_Data_Print();
 	}
@@ -168,7 +170,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			{
 				td_ADC_Voltage_Feedback();
 			}
-
 			/* VOLTAGE RANGE KEEPING CONTROL */
 			else if (timer16_cnt == 2 && TD_SLOPE_CONTROL_END_FLAG == true)
 			{

@@ -10,7 +10,7 @@
 #include <td_uart2.h>
 #include "main.h"
 
-#ifdef	ECHO_SHELL_ENABLED
+#ifdef	TD_SHELL_ENABLED
 
 extern pwm_pulse_param_t ex_pwm_param;
 extern uint8_t ex_td_uart2_rcv_byte;

@@ -86,7 +86,7 @@ void Echo_Stop_ADC2_Conv(void);
 uint32_t Echo_Stepup_ADC1_AVG(void);
 uint32_t Echo_Peak_Detection_ADC2_AVG(void);
 
-uint32_t Echo_ADC_Calc_Stepup_V(uint32_t in_adc_val, float r1, float r2);
+uint32_t Echo_ADC_Calc_Stepup_V(uint32_t in_adc_val, uint32_t r1, uint32_t r2);
 uint32_t Echo_ADC_Calc_Peak_V(uint32_t in_adc_val);
 
 void Echo_ADC_Handle(void);

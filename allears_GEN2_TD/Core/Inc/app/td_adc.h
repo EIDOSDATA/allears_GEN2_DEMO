@@ -46,9 +46,9 @@ typedef enum
 
 /* REFERENCE TABLE */
 /*
- #define ECHO_REF_VOLTAGE_TABLE						ref_voltage_table
- #define ECHO_REF_ADC_VALUE_TABLE					ref_adc_value_table
- #define ECHO_REF_ADC_VOLTAGE_TABLE					ref_adc_voltage_table
+ #define TD_REF_VOLTAGE_TABLE						ref_voltage_table
+ #define TD_REF_ADC_VALUE_TABLE					ref_adc_value_table
+ #define TD_REF_ADC_VOLTAGE_TABLE					ref_adc_voltage_table
  */
 
 /* ERROR RANGE */
@@ -86,7 +86,7 @@ void td_Stop_ADC2_Conv(void);
 uint32_t td_Stepup_ADC1_AVG(void);
 uint32_t td_Peak_Detection_ADC2_AVG(void);
 
-uint32_t td_ADC_Calc_Stepup_V(uint32_t in_adc_val, float r1, float r2);
+uint32_t td_ADC_Calc_Stepup_V(uint32_t in_adc_val, uint32_t r1, uint32_t r2);
 uint32_t td_ADC_Calc_Peak_V(uint32_t in_adc_val);
 
 void td_ADC_Handle(void);

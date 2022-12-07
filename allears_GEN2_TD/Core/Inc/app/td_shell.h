@@ -3,7 +3,7 @@
 
 #define TD_SHELL_UART											USART2
 
-#ifdef	ECHO_SHELL_ENABLED
+#ifdef	TD_SHELL_ENABLED
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -88,6 +88,6 @@ void td_ParameterCMD_Check(uint8_t *data, uint16_t len);
 #define	TD_SHELL_PRINT_HEX(data, len)
 #define TD_SHELL_RCV_POLL()
 
-#endif	/* ECHO_SHELL_ENABLED */
+#endif	/* TD_SHELL_ENABLED */
 
-#endif	/* ECHO_SHELL_H */
+#endif	/* TD_SHELL_H */

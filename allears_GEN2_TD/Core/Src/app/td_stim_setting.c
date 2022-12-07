@@ -207,7 +207,7 @@ void td_Factory_Reset()
 }
 /****************************************/
 
-#ifdef ECHO_PULSE_DMA
+#ifdef TD_PULSE_DMA
 /*
  * PWM VALUE WRITE TO REGISTOR
  * */
@@ -320,7 +320,7 @@ void td_Stim_Start()
 }
 #endif
 
-#ifdef ECHO_PULSE_INTERRUPTx
+#ifdef TD_PULSE_INTERRUPTx
 void td_Pulse_Prm_Config()
 {
 	TIM2->CCR2 = TD_ANODE_PULSE_TIME;

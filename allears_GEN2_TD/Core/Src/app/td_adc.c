@@ -20,6 +20,7 @@ extern DMA_HandleTypeDef hdma_adc2;
 /* STEPUP VOLTAGE TABLE */
 extern __IO int ex_voltage_r_pw;
 
+/* REFERENCE TABLE */
 #define TD_REF_VOLTAGE_TABLE				ref_voltage_table
 #define TD_REF_ADC_VALUE_TABLE				ref_adc_value_table
 #define TD_REF_ADC_VOLTAGE_TABLE			ref_adc_voltage_table
@@ -77,8 +78,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 		for (int index = 0; index < ADC1_RCV_SIZE; index++)
 		{
 			/* ADC FILTER */
-			if (fabs(TD_ADC1_CONV_BUF[index] - TD_ADC1_CONV_BUF[(index + 1) % 10])
-					< 200)
+			if (fabs(TD_ADC1_CONV_BUF[index] - TD_ADC1_CONV_BUF[(index + 1) % 10]) < 200)
 			{
 				ex_setpup_adc[index] = TD_ADC1_CONV_BUF[index]; // STEPUP_FEEDBACK
 			}
@@ -221,7 +221,7 @@ uint32_t td_Peak_Detection_ADC2_AVG()
 /*
  * VOLTAGE CALC FUNCTION
  * */
-uint32_t td_ADC_Calc_Stepup_V(uint32_t in_adc_val, float r1, float r2)
+uint32_t td_ADC_Calc_Stepup_V(uint32_t in_adc_val, uint32_t r1, uint32_t r2)
 {
 	/*
 	 40v == 1065 ADC
@@ -262,13 +262,10 @@ uint32_t td_ADC_Calc_Stepup_V(uint32_t in_adc_val, float r1, float r2)
 
 uint32_t td_ADC_Calc_Peak_V(uint32_t in_adc_val)
 {
-	float f_adc_val;
-	uint32_t vdda = 3300UL;
-	float v_ref = (float) (vdda * 0.001);
-	float v_out;
+	uint32_t vdda = 1800UL;
+	uint32_t v_out;
 
-	f_adc_val = in_adc_val / 4095.f;
-	v_out = v_ref * f_adc_val;
+	v_out = (vdda * in_adc_val) / 4095;
 
 	return v_out;
 }
