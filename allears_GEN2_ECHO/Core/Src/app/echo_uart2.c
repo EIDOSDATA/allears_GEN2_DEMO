@@ -104,7 +104,7 @@ bool Echo_Uart2_Get_RCV_Q(uint8_t *item)
 {
 	bool data_valid;
 #ifdef DEBUG
-	TD_SHELL_PRINT(("aulUsart1GetRcvQ()\n"));
+	ECHO_SHELL_PRINT(("aulUsart1GetRcvQ()\n"));
 #endif
 	data_valid = false;
 

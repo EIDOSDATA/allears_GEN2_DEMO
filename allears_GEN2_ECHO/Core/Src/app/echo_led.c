@@ -99,7 +99,7 @@ void Echo_LED_Init(void)
 void Echo_LED_Enable(void)
 {
 #ifdef DEBUG
-	TD_SHELL_PRINT(("Echo_LED_Enable()\r\n"));
+	ECHO_SHELL_PRINT(("Echo_LED_Enable()\r\n"));
 #endif
 	Echo_LED_State_Reset();
 	ECHO_LED_STATE_IND_TIMEOUT_RESET();
@@ -114,7 +114,7 @@ void Echo_Set_LED_State(echo_led_sate_t led_state)
 {
 	echo_led_state_ind_t led_ind;
 #ifdef DEBUG
-	TD_SHELL_PRINT(("Echo_LED_StateSet()\r\n"));
+	ECHO_SHELL_PRINT(("Echo_LED_StateSet()\r\n"));
 #endif
 	Echo_LED_Enable();
 
@@ -196,7 +196,7 @@ void Echo_LED_Handle(void)
 	if (ECHO_LED_TIMEOUT_TICK == ECHO_LED_IND_TIMEOUT)
 	{
 #ifdef DEBUG
-		TD_SHELL_PRINT(("LED IND Timeout\r\n"));
+		ECHO_SHELL_PRINT(("LED IND Timeout\r\n"));
 #endif
 		Echo_LED_State_Reset();
 		ECHO_LED_TIMED_OUT = true;

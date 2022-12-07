@@ -49,7 +49,7 @@ void Echo_Btn_Handle(void)
 		ECHO_BTN_STATE_PRESSED = pressed;
 #ifdef DEBUG
 		sprintf((char*) res_msg, (const char*) "BTN: %d\r\n", pressed);
-		TD_SHELL_PRINT(("%s\n",res_msg));
+		ECHO_SHELL_PRINT(("%s\n",res_msg));
 #endif
 
 		if (ECHO_BTN_STATE_PRESSED == false)
@@ -71,7 +71,7 @@ void Echo_Btn_Handle(void)
 		{
 #ifdef DEBUG
 			sprintf((char*) res_msg, (const char*) "BTN: %d\r\n", pressed);
-			TD_SHELL_PRINT(("%s\n",res_msg));
+			ECHO_SHELL_PRINT(("%s\n",res_msg));
 #endif
 			ECHO_BTN_STATE_HELD_TICK++;
 		}
