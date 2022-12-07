@@ -40,12 +40,14 @@ const char *help_manual = "\r\n----------   MANUAL   ----------\r\n"
 		"#setHZ		:	Pulse Frequency Setting\r\n"
 		"#setVPW		:	Directly sets the voltage-related pulse width\r\n"
 		"#setVOL		:	Set the voltage value to output\r\n"
+		"#setDAC		:	Adjust the strength of the current.\r\n"
 
 		"#getDT		:	Get Dead Time\r\n"
 		"#getPW		:	Get Pulse Width\r\n"
 		"#getHZ		:	Get Pulse Frequency\r\n"
 		"#getVPW		:	Outputs the voltage-related pulse width\r\n"
 		"#getVOL		:	Get the voltage value to output\r\n"
+		"#getDAC		:	Check the strength of the current.\r\n"
 		"#getALLPRM	:	Get Period\r\n\r\n";
 
 /* ADMIN COMMAND */
@@ -78,12 +80,14 @@ const parameter_cmd_str_t parameter_cmd_str_table[parameter_cmd_max] =
 { (unsigned char*) "#setHZ", 6 },
 { (unsigned char*) "#setVPW", 7 },
 { (unsigned char*) "#setVOL", 7 },
+{ (unsigned char*) "#setDAC", 7 },
 
 { (unsigned char*) "#getDT", 6 },
 { (unsigned char*) "#getPW", 6 },
 { (unsigned char*) "#getHZ", 6 },
 { (unsigned char*) "#getVPW", 7 },
 { (unsigned char*) "#getVOL", 7 },
+{ (unsigned char*) "#getDAC", 7 },
 { (unsigned char*) "#getALLPRM", 10 } };
 
 void td_Shell_RxPoll(void)

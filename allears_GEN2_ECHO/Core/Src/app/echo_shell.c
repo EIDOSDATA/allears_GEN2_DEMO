@@ -47,7 +47,7 @@ const char *help_manual = "\r\n----------   MANUAL   ----------\r\n"
 		"#getHZ		:	Get Pulse Frequency\r\n"
 		"#getVPW		:	Outputs the voltage-related pulse width\r\n"
 		"#getVOL		:	Get the voltage value to output\r\n"
-		"#setDAC		:	Check the strength of the current.\r\n"
+		"#getDAC		:	Check the strength of the current.\r\n"
 		"#getALLPRM	:	Get Period\r\n\r\n";
 
 /* ADMIN COMMAND */

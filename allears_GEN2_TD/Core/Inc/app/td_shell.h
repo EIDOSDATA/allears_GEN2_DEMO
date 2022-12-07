@@ -22,12 +22,14 @@ typedef enum
 	set_stim_frequency,
 	set_voltage_pulse_width,
 	set_target_voltage_value,
+	set_current_strength,
 
 	get_stim_deadtime,
 	get_stim_pulse_width,
 	get_stim_frequency,
 	get_voltage_pulse_width,
 	get_target_voltage_value,
+	get_current_strength,
 	get_allprm,
 
 	parameter_cmd_max
@@ -40,7 +42,9 @@ typedef enum
 	res_stim_frequency,
 	res_voltage_pulse_width,
 	res_target_voltage_value,
+	res_current_strength,
 	res_allprm,
+
 	res_prm_cmd_max
 } response_prm_command_t;
 
