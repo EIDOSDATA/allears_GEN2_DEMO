@@ -36,6 +36,7 @@ volatile uint32_t current_ctrl_proc_arr[4];
 
 __IO int ex_voltage_r_pw = 0;
 __IO int ex_voltage_val_output = 0;
+__IO int ex_current_strength_step = 0;
 __IO bool ex_slope_ctrl_end_f = false;
 extern bool ex_gPulse_high;
 
@@ -49,7 +50,7 @@ timer_param_t tim2_param; // MASTER CLOCK >> PWM
 timer_param_t tim16_param; // STEP UP CLOCK >> PWM
 /****************************************/
 
-/* RESPONSE PARAMETER STRING */
+/****** RESPONSE PARAMETER STRING ******/
 typedef struct
 {
 	char *str;
@@ -63,12 +64,17 @@ const get_prm_cmd_str_t get_prm_cmd_str_table[res_prm_cmd_max] =
 { "\r\n#resHZ:", 9 },
 { "\r\n#resVPW:", 10 },
 { "\r\n#resVOL:", 10 },
+{ "\r\n#resDAC:", 10 },
 { "\r\n#resALLPRM:", 13 } };
 /****************************************/
 
-/* DATA PARSER */
+/****** DATA PARSER ******/
 char res_msg[256] =
 { '\0', };
+
+/*
+ * SET STIMULATE DEADTIME
+ * */
 void td_Set_DT(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setDT,%hd%*[^\r]",
@@ -81,6 +87,10 @@ void td_Set_DT(uint8_t *data, uint16_t len)
 	td_Pulse_Prm_Config();
 	td_Get_Res_Data(res_stim_deadtime);
 }
+
+/*
+ * SET STIMULATE PULSE WIDTH
+ * */
 void td_Set_PW(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setPW,%hd%*[^\r]",
@@ -88,6 +98,10 @@ void td_Set_PW(uint8_t *data, uint16_t len)
 	td_Pulse_Prm_Config();
 	td_Get_Res_Data(res_stim_pulse_width);
 }
+
+/*
+ * SET STIMULATE FREQUENCY
+ * */
 void td_Set_HZ(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setHZ,%hd%*[^\r]",
@@ -113,6 +127,10 @@ void td_Set_HZ(uint8_t *data, uint16_t len)
 	td_Get_Res_Data(res_stim_frequency);
 
 }
+
+/*
+ * SET VOLTAGE PULSE WIDTH
+ * */
 void td_Set_V_PW(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setVPW,%d%*[^\r]",
@@ -125,6 +143,9 @@ void td_Set_V_PW(uint8_t *data, uint16_t len)
 	td_Get_Res_Data(res_voltage_pulse_width);
 }
 
+/*
+ * SET TARGET VOLTAGE
+ * */
 void td_Set_Voltage_Output(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setVOL,%d%*[^\r]",
@@ -134,6 +155,32 @@ void td_Set_Voltage_Output(uint8_t *data, uint16_t len)
 		HAL_TIM_Base_Start_IT(&htim16);
 	}
 	td_Get_Res_Data(res_target_voltage_value);
+}
+
+/*
+ * CURRENT CONTROL
+ * */
+void td_Set_Current_Strength(uint8_t *data, uint16_t len)
+{
+	sscanf((const char*) data, (const char*) "#setDAC,%d%*[^\r]",
+			&TD_CURRENT_STRENGTH_STEP);
+	if (td_Get_Sys_FSM_State() == td_sys_state_run)
+	{
+		HAL_TIM_Base_Start_IT(&htim16);
+	}
+
+	if (TD_CURRENT_STRENGTH_STEP > 15 || TD_CURRENT_STRENGTH_STEP < 0)
+	{
+		TD_CURRENT_STRENGTH_STEP = 0;
+		TD_CURRENT_DAC_ALL_OFF;
+	}
+	else
+	{
+		TD_CURRENT_DAC_ALL_OFF;
+		TD_CURRENT_DAC_CONTROL;
+	}
+
+	td_Get_Res_Data(res_current_strength);
 }
 
 /****************************************/
@@ -175,15 +222,22 @@ void td_Get_Res_Data(uint8_t select_msg)
 		TD_VOLTAGE_VALUE_OUTPUT);
 		break;
 
+	case res_current_strength:
+		sprintf((char*) res_msg, (const char*) "%s %d step\r\n", mes_head,
+		TD_CURRENT_STRENGTH_STEP);
+		break;
+
 	case res_allprm:
 		sprintf((char*) res_msg, (const char*) "%s\r\n"
 				"DT: %d us\r\n"
 				"PW: %d us\r\n"
 				"HZ: %d Hz\r\n"
 				"VPW: %d\r\n"
-				"Voltage: %d\r\n", mes_head, ex_pwm_param.dead_time,
+				"VOL: %d\r\n"
+				"DAC: %d step", mes_head, ex_pwm_param.dead_time,
 				ex_pwm_param.pulse_width, ex_pwm_param.pulse_freq,
-				TD_VOLTAGE_RELATED_PULSE_WIDTH, TD_VOLTAGE_VALUE_OUTPUT);
+				TD_VOLTAGE_RELATED_PULSE_WIDTH, TD_VOLTAGE_VALUE_OUTPUT,
+				TD_CURRENT_STRENGTH_STEP);
 		break;
 	default:
 		break;
@@ -370,7 +424,8 @@ void td_Pulse_V_PW_Config()
 
 uint32_t td_Voltage_Config(uint64_t adc_voltage)
 {
-	uint32_t voltage_scaleup_val = TD_VOLTAGE_VALUE_OUTPUT * STEPUP_VOLTAGE_SCALE;
+	uint32_t voltage_scaleup_val = TD_VOLTAGE_VALUE_OUTPUT
+			* STEPUP_VOLTAGE_SCALE;
 	if (abs(voltage_scaleup_val - adc_voltage) < VOLTAGE_ERROR_RANGE_VALUE)
 	{
 		if (voltage_scaleup_val > adc_voltage)

@@ -33,6 +33,7 @@ void td_Set_PW(uint8_t *data, uint16_t len);
 void td_Set_HZ(uint8_t *data, uint16_t len);
 void td_Set_V_PW(uint8_t *data, uint16_t len);
 void td_Set_Voltage_Output(uint8_t *data, uint16_t len);
+void td_Set_Current_Strength(uint8_t *data, uint16_t len);
 
 /*TEST*/
 #define td_VPW_SET_TP_ON()				HAL_GPIO_WritePin(DAC0_GPIO_Port, DAC0_Pin, GPIO_PIN_SET)
@@ -86,8 +87,13 @@ void td_Pulse_FREQ_Config(void);
 #define TD_PULSE_FREQ_ARR					TD_MASTER_ARR / TD_PULSE_HZ_FREQ
 #define TD_TOTAL_PULSE_WIDTH_TIME			(2*TD_GLICH_DEBOUNCING_TIME) + (2*TD_PULSE_WIDTH_TIME) + TD_PULSE_DEAD_TIME
 
+#define TD_CURRENT_DAC_ALL_OFF				HAL_GPIO_WritePin(GPIOA, 0x1E00, GPIO_PIN_RESET)
+#define TD_CURRENT_DAC_ALL_ON				HAL_GPIO_WritePin(GPIOA, 0x1E00, GPIO_PIN_SET)
+#define TD_CURRENT_DAC_CONTROL				HAL_GPIO_WritePin(GPIOA, TD_CURRENT_STRENGTH_STEP << 9, GPIO_PIN_SET)
+
 #define TD_VOLTAGE_RELATED_PULSE_WIDTH		ex_voltage_r_pw
 #define TD_VOLTAGE_VALUE_OUTPUT				ex_voltage_val_output
+#define TD_CURRENT_STRENGTH_STEP			ex_current_strength_step
 #define TD_SLOPE_CONTROL_END_FLAG			ex_slope_ctrl_end_f
 
 #endif /* INC_APP_TD_STIM_SETTING_H_ */

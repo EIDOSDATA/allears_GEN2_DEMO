@@ -328,11 +328,16 @@ void td_ParameterCMD_Check(uint8_t *data, uint16_t len)
 		td_Set_Voltage_Output(data, len);
 		break;
 
+	case set_current_strength:
+		td_Set_Current_Strength(data, len);
+		break;
+
 	case get_stim_deadtime:
 	case get_stim_pulse_width:
 	case get_stim_frequency:
 	case get_voltage_pulse_width:
 	case get_target_voltage_value:
+	case get_current_strength:
 	case get_allprm:
 		td_Get_Res_Data(param_cmd_cnt - get_stim_deadtime);
 		break;

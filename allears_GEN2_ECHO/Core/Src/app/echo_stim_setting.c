@@ -72,7 +72,9 @@ const get_prm_cmd_str_t get_prm_cmd_str_table[res_prm_cmd_max] =
 char res_msg[256] =
 { '\0', };
 
-/* SET STIMULATE DEADTIME */
+/*
+ * SET STIMULATE DEADTIME
+ * */
 void Echo_Set_DT(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setDT,%hd%*[^\r]",
@@ -86,7 +88,9 @@ void Echo_Set_DT(uint8_t *data, uint16_t len)
 	Echo_Get_Res_Data(res_stim_deadtime);
 }
 
-/* SET STIMULATE PULSE WIDTH */
+/*
+ * SET STIMULATE PULSE WIDTH
+ * */
 void Echo_Set_PW(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setPW,%hd%*[^\r]",
@@ -95,7 +99,9 @@ void Echo_Set_PW(uint8_t *data, uint16_t len)
 	Echo_Get_Res_Data(res_stim_pulse_width);
 }
 
-/* SET STIMULATE FREQUENCY */
+/*
+ * SET STIMULATE FREQUENCY
+ * */
 void Echo_Set_HZ(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setHZ,%hd%*[^\r]",
@@ -120,7 +126,9 @@ void Echo_Set_HZ(uint8_t *data, uint16_t len)
 	Echo_Get_Res_Data(res_stim_frequency);
 }
 
-/* SET VOLTAGE PULSE WIDTH */
+/*
+ * SET VOLTAGE PULSE WIDTH
+ * */
 void Echo_Set_V_PW(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setVPW,%d%*[^\r]",
@@ -133,7 +141,9 @@ void Echo_Set_V_PW(uint8_t *data, uint16_t len)
 	Echo_Get_Res_Data(res_voltage_pulse_width);
 }
 
-/* SET TARGET VOLTAGE */
+/*
+ * SET TARGET VOLTAGE
+ * */
 void Echo_Set_Voltage_Output(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setVOL,%d%*[^\r]",
@@ -145,7 +155,9 @@ void Echo_Set_Voltage_Output(uint8_t *data, uint16_t len)
 	Echo_Get_Res_Data(res_target_voltage_value);
 }
 
-/* CURRENT CONTROL */
+/*
+ * CURRENT CONTROL
+ * */
 void Echo_Set_Current_Strength(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setDAC,%d%*[^\r]",
@@ -154,8 +166,18 @@ void Echo_Set_Current_Strength(uint8_t *data, uint16_t len)
 	{
 		HAL_TIM_Base_Start_IT(&htim16);
 	}
-	ECHO_CURRENT_DAC_ALL_OFF;
-	HAL_GPIO_WritePin(GPIOA, ECHO_CURRENT_DAC_CTRL_PIN, GPIO_PIN_SET);
+
+	if (ECHO_CURRENT_STRENGTH_STEP > 15 || ECHO_CURRENT_STRENGTH_STEP < 0)
+	{
+		ECHO_CURRENT_STRENGTH_STEP = 0;
+		ECHO_CURRENT_DAC_ALL_OFF;
+	}
+	else
+	{
+		ECHO_CURRENT_DAC_ALL_OFF;
+		ECHO_CURRENT_DAC_CONTROL;
+	}
+
 	Echo_Get_Res_Data(res_current_strength);
 }
 
@@ -210,7 +232,7 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 				"HZ: %d Hz\r\n"
 				"VPW: %d step\r\n"
 				"VOL: %d v\r\n"
-				"DAC: %d step\r\n", mes_head, ex_pwm_param.dead_time,
+				"DAC: %d step", mes_head, ex_pwm_param.dead_time,
 				ex_pwm_param.pulse_width, ex_pwm_param.pulse_freq,
 				ECHO_VOLTAGE_RELATED_PULSE_WIDTH, ECHO_VOLTAGE_VALUE_OUTPUT,
 				ECHO_CURRENT_STRENGTH_STEP);
