@@ -33,6 +33,7 @@ void Echo_Set_PW(uint8_t *data, uint16_t len);
 void Echo_Set_HZ(uint8_t *data, uint16_t len);
 void Echo_Set_V_PW(uint8_t *data, uint16_t len);
 void Echo_Set_Voltage_Output(uint8_t *data, uint16_t len);
+void Echo_Set_Current_Strength(uint8_t *data, uint16_t len);
 
 /*TEST*/
 #define Echo_VPW_SET_TP_ON()				HAL_GPIO_WritePin(DAC0_GPIO_Port, DAC0_Pin, GPIO_PIN_SET)
@@ -86,8 +87,13 @@ void Echo_Pulse_FREQ_Config(void);
 #define ECHO_PULSE_FREQ_ARR						ECHO_MASTER_ARR / ECHO_PULSE_HZ_FREQ
 #define ECHO_TOTAL_PULSE_WIDTH_TIME				(2*ECHO_GLICH_DEBOUNCING_TIME) + (2*ECHO_PULSE_WIDTH_TIME) + ECHO_PULSE_DEAD_TIME
 
+#define ECHO_CURRENT_DAC_ALL_OFF				HAL_GPIO_WritePin(GPIOA, 0x1E00, GPIO_PIN_RESET)
+#define ECHO_CURRENT_DAC_ALL_ON					HAL_GPIO_WritePin(GPIOA, 0x1E00, GPIO_PIN_SET)
+#define ECHO_CURRENT_DAC_CTRL_PIN				ECHO_CURRENT_STRENGTH_STEP << 9
+
 #define ECHO_VOLTAGE_RELATED_PULSE_WIDTH		ex_voltage_r_pw
 #define ECHO_VOLTAGE_VALUE_OUTPUT				ex_voltage_val_output
+#define ECHO_CURRENT_STRENGTH_STEP				ex_current_strength_step
 #define ECHO_SLOPE_CONTROL_END_FLAG				ex_slope_ctrl_end_f
 
 #endif /* INC_APP_ECHO_STIM_SETTING_H_ */

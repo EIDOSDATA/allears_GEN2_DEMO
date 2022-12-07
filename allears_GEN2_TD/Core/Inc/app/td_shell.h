@@ -17,17 +17,17 @@ typedef enum
 
 typedef enum
 {
-	set_deadtime = 0x00,
-	set_pulsewidth,
-	set_period,
-	set_voltage_pw,
-	set_voltage_value_to_output,
+	set_stim_deadtime = 0x00,
+	set_stim_pulse_width,
+	set_stim_frequency,
+	set_voltage_pulse_width,
+	set_target_voltage_value,
 
-	get_deadtime,
-	get_pulsewidth,
-	get_frequency,
-	get_voltage_pw,
-	get_voltage_value_to_output,
+	get_stim_deadtime,
+	get_stim_pulse_width,
+	get_stim_frequency,
+	get_voltage_pulse_width,
+	get_target_voltage_value,
 	get_allprm,
 
 	parameter_cmd_max
@@ -35,14 +35,13 @@ typedef enum
 
 typedef enum
 {
-	response_deadtime = 0x00,
-	response_pulsewidth,
-	response_frequency,
-	response_voltage_pw,
-	response_voltage_value_to_output,
-	response_allprm,
-
-	response_prm_cmd_max
+	res_stim_deadtime = 0x00,
+	res_stim_pulse_width,
+	res_stim_frequency,
+	res_voltage_pulse_width,
+	res_target_voltage_value,
+	res_allprm,
+	res_prm_cmd_max
 } response_prm_command_t;
 
 /* Enable debug print as each module in here */

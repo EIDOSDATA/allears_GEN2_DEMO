@@ -40,12 +40,14 @@ const char *help_manual = "\r\n----------   MANUAL   ----------\r\n"
 		"#setHZ		:	Pulse Frequency Setting\r\n"
 		"#setVPW		:	Directly sets the voltage-related pulse width\r\n"
 		"#setVOL		:	Set the voltage value to output\r\n"
+		"#setDAC		:	Adjust the strength of the current.\r\n"
 
 		"#getDT		:	Get Dead Time\r\n"
 		"#getPW		:	Get Pulse Width\r\n"
 		"#getHZ		:	Get Pulse Frequency\r\n"
 		"#getVPW		:	Outputs the voltage-related pulse width\r\n"
 		"#getVOL		:	Get the voltage value to output\r\n"
+		"#setDAC		:	Check the strength of the current.\r\n"
 		"#getALLPRM	:	Get Period\r\n\r\n";
 
 /* ADMIN COMMAND */
@@ -78,12 +80,14 @@ const parameter_cmd_str_t parameter_cmd_str_table[parameter_cmd_max] =
 { (unsigned char*) "#setHZ", 6 },
 { (unsigned char*) "#setVPW", 7 },
 { (unsigned char*) "#setVOL", 7 },
+{ (unsigned char*) "#setDAC", 7 },
 
 { (unsigned char*) "#getDT", 6 },
 { (unsigned char*) "#getPW", 6 },
 { (unsigned char*) "#getHZ", 6 },
 { (unsigned char*) "#getVPW", 7 },
 { (unsigned char*) "#getVOL", 7 },
+{ (unsigned char*) "#getDAC", 7 },
 { (unsigned char*) "#getALLPRM", 10 } };
 
 void Echo_Shell_RxPoll(void)
@@ -303,34 +307,39 @@ void Echo_ParameterCMD_Check(uint8_t *data, uint16_t len)
 
 	switch (param_cmd_cnt)
 	{
-	case set_deadtime:
+	case set_stim_deadtime:
 		Echo_Set_DT(data, len);
 		break;
 
-	case set_pulsewidth:
+	case set_stim_pulse_width:
 		Echo_Set_PW(data, len);
 		break;
 
-	case set_period:
+	case set_stim_frequency:
 		Echo_Set_Sys_FSM_State_Stop();
 		Echo_Set_HZ(data, len);
 		break;
 
-	case set_voltage_pw:
+	case set_voltage_pulse_width:
 		Echo_Set_V_PW(data, len);
 		break;
 
-	case set_voltage_value_to_output:
+	case set_target_voltage_value:
 		Echo_Set_Voltage_Output(data, len);
 		break;
 
-	case get_deadtime:
-	case get_pulsewidth:
-	case get_frequency:
-	case get_voltage_pw:
-	case get_voltage_value_to_output:
+	case set_current_strength:
+		Echo_Set_Current_Strength(data, len);
+		break;
+
+	case get_stim_deadtime:
+	case get_stim_pulse_width:
+	case get_stim_frequency:
+	case get_voltage_pulse_width:
+	case get_target_voltage_value:
+	case get_current_strength:
 	case get_allprm:
-		Echo_Get_Res_Data(param_cmd_cnt - get_deadtime);
+		Echo_Get_Res_Data(param_cmd_cnt - get_stim_deadtime);
 		break;
 
 	default:

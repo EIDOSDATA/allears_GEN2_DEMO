@@ -36,6 +36,7 @@ volatile uint32_t current_ctrl_proc_arr[4];
 
 __IO int ex_voltage_r_pw = 0;
 __IO int ex_voltage_val_output = 0;
+__IO int ex_current_strength_step = 0;
 __IO bool ex_slope_ctrl_end_f = false;
 extern bool ex_gPulse_high;
 
@@ -56,19 +57,22 @@ typedef struct
 	uint8_t len;
 } get_prm_cmd_str_t;
 
-const get_prm_cmd_str_t get_prm_cmd_str_table[response_prm_cmd_max] =
+const get_prm_cmd_str_t get_prm_cmd_str_table[res_prm_cmd_max] =
 {
 { "\r\n#resDT:", 9 },
 { "\r\n#resPW:", 9 },
 { "\r\n#resHZ:", 9 },
 { "\r\n#resVPW:", 10 },
 { "\r\n#resVOL:", 10 },
+{ "\r\n#resDAC:", 10 },
 { "\r\n#resALLPRM:", 13 } };
 /****************************************/
 
 /* DATA PARSER */
 char res_msg[256] =
 { '\0', };
+
+/* SET STIMULATE DEADTIME */
 void Echo_Set_DT(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setDT,%hd%*[^\r]",
@@ -79,15 +83,19 @@ void Echo_Set_DT(uint8_t *data, uint16_t len)
 		ex_pwm_param.dead_time = ECHO_GLICH_DEBOUNCING_TIME * 2;
 	}
 	Echo_Pulse_Prm_Config();
-	Echo_Get_Res_Data(response_deadtime);
+	Echo_Get_Res_Data(res_stim_deadtime);
 }
+
+/* SET STIMULATE PULSE WIDTH */
 void Echo_Set_PW(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setPW,%hd%*[^\r]",
 			&ex_pwm_param.pulse_width);
 	Echo_Pulse_Prm_Config();
-	Echo_Get_Res_Data(response_pulsewidth);
+	Echo_Get_Res_Data(res_stim_pulse_width);
 }
+
+/* SET STIMULATE FREQUENCY */
 void Echo_Set_HZ(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setHZ,%hd%*[^\r]",
@@ -109,10 +117,10 @@ void Echo_Set_HZ(uint8_t *data, uint16_t len)
 	{
 		Echo_Pulse_Prm_Config();
 	}
-
-	Echo_Get_Res_Data(response_frequency);
-
+	Echo_Get_Res_Data(res_stim_frequency);
 }
+
+/* SET VOLTAGE PULSE WIDTH */
 void Echo_Set_V_PW(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setVPW,%d%*[^\r]",
@@ -122,9 +130,10 @@ void Echo_Set_V_PW(uint8_t *data, uint16_t len)
 		HAL_TIM_Base_Start_IT(&htim16);
 	}
 	Echo_Pulse_V_PW_Config();
-	Echo_Get_Res_Data(response_voltage_pw);
+	Echo_Get_Res_Data(res_voltage_pulse_width);
 }
 
+/* SET TARGET VOLTAGE */
 void Echo_Set_Voltage_Output(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setVOL,%d%*[^\r]",
@@ -133,7 +142,21 @@ void Echo_Set_Voltage_Output(uint8_t *data, uint16_t len)
 	{
 		HAL_TIM_Base_Start_IT(&htim16);
 	}
-	Echo_Get_Res_Data(response_voltage_value_to_output);
+	Echo_Get_Res_Data(res_target_voltage_value);
+}
+
+/* CURRENT CONTROL */
+void Echo_Set_Current_Strength(uint8_t *data, uint16_t len)
+{
+	sscanf((const char*) data, (const char*) "#setDAC,%d%*[^\r]",
+			&ECHO_CURRENT_STRENGTH_STEP);
+	if (Echo_Get_Sys_FSM_State() == echo_sys_state_run)
+	{
+		HAL_TIM_Base_Start_IT(&htim16);
+	}
+	ECHO_CURRENT_DAC_ALL_OFF;
+	HAL_GPIO_WritePin(GPIOA, ECHO_CURRENT_DAC_CTRL_PIN, GPIO_PIN_SET);
+	Echo_Get_Res_Data(res_current_strength);
 }
 
 /****************************************/
@@ -150,40 +173,47 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 
 	switch (select_msg)
 	{
-	case response_deadtime:
+	case res_stim_deadtime:
 		sprintf((char*) res_msg, (const char*) "%s %d us\r\n", mes_head,
 				ex_pwm_param.dead_time);
 		break;
 
-	case response_pulsewidth:
+	case res_stim_pulse_width:
 		sprintf((char*) res_msg, (const char*) "%s %d us\r\n", mes_head,
 				ex_pwm_param.pulse_width);
 		break;
 
-	case response_frequency:
+	case res_stim_frequency:
 		sprintf((char*) res_msg, (const char*) "%s %d Hz\r\n", mes_head,
 				ex_pwm_param.pulse_freq);
 		break;
 
-	case response_voltage_pw:
+	case res_voltage_pulse_width:
 		sprintf((char*) res_msg, (const char*) "%s %d step\r\n", mes_head,
 		ECHO_VOLTAGE_RELATED_PULSE_WIDTH);
 		break;
 
-	case response_voltage_value_to_output:
+	case res_target_voltage_value:
 		sprintf((char*) res_msg, (const char*) "%s %d v\r\n", mes_head,
 		ECHO_VOLTAGE_VALUE_OUTPUT);
 		break;
 
-	case response_allprm:
+	case res_current_strength:
+		sprintf((char*) res_msg, (const char*) "%s %d step\r\n", mes_head,
+		ECHO_CURRENT_STRENGTH_STEP);
+		break;
+
+	case res_allprm:
 		sprintf((char*) res_msg, (const char*) "%s\r\n"
 				"DT: %d us\r\n"
 				"PW: %d us\r\n"
 				"HZ: %d Hz\r\n"
-				"VPW: %d\r\n"
-				"Voltage: %d", mes_head, ex_pwm_param.dead_time,
+				"VPW: %d step\r\n"
+				"VOL: %d v\r\n"
+				"DAC: %d step\r\n", mes_head, ex_pwm_param.dead_time,
 				ex_pwm_param.pulse_width, ex_pwm_param.pulse_freq,
-				ECHO_VOLTAGE_RELATED_PULSE_WIDTH, ECHO_VOLTAGE_VALUE_OUTPUT);
+				ECHO_VOLTAGE_RELATED_PULSE_WIDTH, ECHO_VOLTAGE_VALUE_OUTPUT,
+				ECHO_CURRENT_STRENGTH_STEP);
 		break;
 	default:
 		break;
@@ -370,7 +400,8 @@ void Echo_Pulse_V_PW_Config()
 
 uint32_t Echo_Voltage_Config(uint64_t adc_voltage)
 {
-	uint64_t voltage_scaleup_val = ECHO_VOLTAGE_VALUE_OUTPUT * STEPUP_VOLTAGE_SCALE;
+	uint64_t voltage_scaleup_val = ECHO_VOLTAGE_VALUE_OUTPUT
+			* STEPUP_VOLTAGE_SCALE;
 	if (abs(voltage_scaleup_val - adc_voltage) < VOLTAGE_ERROR_RANGE_VALUE)
 	{
 		if (voltage_scaleup_val > adc_voltage)

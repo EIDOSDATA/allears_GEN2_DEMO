@@ -56,7 +56,7 @@ typedef struct
 	uint8_t len;
 } get_prm_cmd_str_t;
 
-const get_prm_cmd_str_t get_prm_cmd_str_table[response_prm_cmd_max] =
+const get_prm_cmd_str_t get_prm_cmd_str_table[res_prm_cmd_max] =
 {
 { "\r\n#resDT:", 9 },
 { "\r\n#resPW:", 9 },
@@ -79,14 +79,14 @@ void td_Set_DT(uint8_t *data, uint16_t len)
 		ex_pwm_param.dead_time = TD_GLICH_DEBOUNCING_TIME * 2;
 	}
 	td_Pulse_Prm_Config();
-	td_Get_Res_Data(response_deadtime);
+	td_Get_Res_Data(res_stim_deadtime);
 }
 void td_Set_PW(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setPW,%hd%*[^\r]",
 			&ex_pwm_param.pulse_width);
 	td_Pulse_Prm_Config();
-	td_Get_Res_Data(response_pulsewidth);
+	td_Get_Res_Data(res_stim_pulse_width);
 }
 void td_Set_HZ(uint8_t *data, uint16_t len)
 {
@@ -110,7 +110,7 @@ void td_Set_HZ(uint8_t *data, uint16_t len)
 		td_Pulse_Prm_Config();
 	}
 
-	td_Get_Res_Data(response_frequency);
+	td_Get_Res_Data(res_stim_frequency);
 
 }
 void td_Set_V_PW(uint8_t *data, uint16_t len)
@@ -122,7 +122,7 @@ void td_Set_V_PW(uint8_t *data, uint16_t len)
 		HAL_TIM_Base_Start_IT(&htim16);
 	}
 	td_Pulse_V_PW_Config();
-	td_Get_Res_Data(response_voltage_pw);
+	td_Get_Res_Data(res_voltage_pulse_width);
 }
 
 void td_Set_Voltage_Output(uint8_t *data, uint16_t len)
@@ -133,7 +133,7 @@ void td_Set_Voltage_Output(uint8_t *data, uint16_t len)
 	{
 		HAL_TIM_Base_Start_IT(&htim16);
 	}
-	td_Get_Res_Data(response_voltage_value_to_output);
+	td_Get_Res_Data(res_target_voltage_value);
 }
 
 /****************************************/
@@ -150,32 +150,32 @@ void td_Get_Res_Data(uint8_t select_msg)
 
 	switch (select_msg)
 	{
-	case response_deadtime:
+	case res_stim_deadtime:
 		sprintf((char*) res_msg, (const char*) "%s %d us\r\n", mes_head,
 				ex_pwm_param.dead_time);
 		break;
 
-	case response_pulsewidth:
+	case res_stim_pulse_width:
 		sprintf((char*) res_msg, (const char*) "%s %d us\r\n", mes_head,
 				ex_pwm_param.pulse_width);
 		break;
 
-	case response_frequency:
+	case res_stim_frequency:
 		sprintf((char*) res_msg, (const char*) "%s %d Hz\r\n", mes_head,
 				ex_pwm_param.pulse_freq);
 		break;
 
-	case response_voltage_pw:
+	case res_voltage_pulse_width:
 		sprintf((char*) res_msg, (const char*) "%s %d step\r\n", mes_head,
 		TD_VOLTAGE_RELATED_PULSE_WIDTH);
 		break;
 
-	case response_voltage_value_to_output:
+	case res_target_voltage_value:
 		sprintf((char*) res_msg, (const char*) "%s %d v\r\n", mes_head,
 		TD_VOLTAGE_VALUE_OUTPUT);
 		break;
 
-	case response_allprm:
+	case res_allprm:
 		sprintf((char*) res_msg, (const char*) "%s\r\n"
 				"DT: %d us\r\n"
 				"PW: %d us\r\n"

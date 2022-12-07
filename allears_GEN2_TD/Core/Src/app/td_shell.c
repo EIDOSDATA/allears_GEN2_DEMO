@@ -303,34 +303,34 @@ void td_ParameterCMD_Check(uint8_t *data, uint16_t len)
 
 	switch (param_cmd_cnt)
 	{
-	case set_deadtime:
+	case set_stim_deadtime:
 		td_Set_DT(data, len);
 		break;
 
-	case set_pulsewidth:
+	case set_stim_pulse_width:
 		td_Set_PW(data, len);
 		break;
 
-	case set_period:
+	case set_stim_frequency:
 		td_Set_Sys_FSM_State_Stop();
 		td_Set_HZ(data, len);
 		break;
 
-	case set_voltage_pw:
+	case set_voltage_pulse_width:
 		td_Set_V_PW(data, len);
 		break;
 
-	case set_voltage_value_to_output:
+	case set_target_voltage_value:
 		td_Set_Voltage_Output(data, len);
 		break;
 
-	case get_deadtime:
-	case get_pulsewidth:
-	case get_frequency:
-	case get_voltage_pw:
-	case get_voltage_value_to_output:
+	case get_stim_deadtime:
+	case get_stim_pulse_width:
+	case get_stim_frequency:
+	case get_voltage_pulse_width:
+	case get_target_voltage_value:
 	case get_allprm:
-		td_Get_Res_Data(param_cmd_cnt - get_deadtime);
+		td_Get_Res_Data(param_cmd_cnt - get_stim_deadtime);
 		break;
 
 	default:
