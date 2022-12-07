@@ -1,5 +1,5 @@
 /*
- * echo_pwm_setting.c
+ * td_pwm_setting.c
  *
  *  Created on: 2022. 10. 20.
  *      Author: ECHO
@@ -313,7 +313,7 @@ void td_Stim_Start()
 	td_StepUP_Start();
 
 #if NOT_USEAGE_TRGO
-	Echo_Start_ADC2_Conv();
+	td_Start_ADC2_Conv();
 	HAL_TIM_Base_Start_IT(&htim2);
 #endif
 }

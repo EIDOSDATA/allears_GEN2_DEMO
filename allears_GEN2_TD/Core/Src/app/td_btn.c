@@ -1,5 +1,5 @@
 /*
- * echo_btn.c
+ * td_btn.c
  *
  *  Created on: Oct 24, 2022
  *      Author: ECHO
@@ -67,7 +67,7 @@ void td_Btn_Handle(void)
 		}
 		else
 		{
-			/* BUTTON PRESSED, Send Signal >> echo_state.c */
+			/* BUTTON PRESSED, Send Signal >> td_state.c */
 			TD_BTN_STATE_HANDLED = true;
 			TD_BTN_STATE_HELD_TICK = 0;
 		}

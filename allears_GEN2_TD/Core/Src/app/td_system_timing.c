@@ -1,5 +1,5 @@
 /*
- * echo_pwm_stim.c
+ * td_pwm_stim.c
  *
  *  Created on: Oct 26, 2022
  *      Author: ECHO
@@ -31,8 +31,8 @@ extern __IO int ex_voltage_val_output;
 extern __IO bool ex_slope_ctrl_end_f;
 
 /* STEPUP AND PEAK-DETECTION ADC VALUE*/
-extern uint16_t ex_peak_adc[TD_ADC1_RCV_SIZE];
-extern uint16_t ex_setpup_adc[TD_ADC1_RCV_SIZE];
+extern uint16_t ex_peak_adc[ADC1_RCV_SIZE];
+extern uint16_t ex_setpup_adc[ADC1_RCV_SIZE];
 
 /* TIMER COUNTER VALUE */
 int timer2_cnt = 1;

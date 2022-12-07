@@ -1,5 +1,5 @@
 /*
- * echo_pwm_setting.h
+ * td_pwm_setting.h
  *
  *  Created on: 2022. 10. 20.
  *      Author: ECHO

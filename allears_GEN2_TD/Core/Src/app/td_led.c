@@ -1,5 +1,5 @@
 /*
- * echo_led.c
+ * td_led.c
  *
  *  Created on: Oct 24, 2022
  *      Author: ECHO
@@ -41,7 +41,6 @@ typedef enum
 	td_led_red = (1 << 0),
 	td_led_green = (1 << 1),
 	td_led_blue = (1 << 2)
-//ECHO_LED_WHITE = (aul_led_red| aul_led_green | aul_led_blue)
 } td_led_color_t;
 
 typedef struct
@@ -104,9 +103,9 @@ static void st_td_LED_CTRL(td_led_color_t colors)
 	{
 #ifdef LED_RED_EN
 	if (colors & td_led_red)
-	Echo_LED_Red_On();
+	td_LED_Red_On();
 	else
-	Echo_LED_Red_Off();
+	td_LED_Red_Off();
 #endif
 #ifdef LED_GREEN_EN
 		if (colors & td_led_green)
@@ -116,9 +115,9 @@ static void st_td_LED_CTRL(td_led_color_t colors)
 #endif
 #ifdef LED_BLUE_EN
 	if (colors & td_led_blue)
-	Echo_LED_Blue_On();
+	td_LED_Blue_On();
 	else
-	Echo_LED_Blue_Off();
+	td_LED_Blue_Off();
 #endif
 	}
 }
@@ -132,7 +131,7 @@ void td_LED_Init(void)
 void td_LED_Enable(void)
 {
 #ifdef DEBUG
-	TD_SHELL_PRINT(("Echo_LED_Enable()\r\n"));
+	TD_SHELL_PRINT(("td_LED_Enable()\r\n"));
 #endif
 	st_td_LED_State_Reset();
 	TD_LED_STATE_IND_TIMEOUT_RESET();
@@ -147,7 +146,7 @@ void td_Set_LED_State(td_led_sate_t led_state)
 {
 	td_led_state_ind_t led_ind;
 #ifdef DEBUG
-	TD_SHELL_PRINT(("Echo_LED_StateSet()\r\n"));
+	TD_SHELL_PRINT(("td_LED_StateSet()\r\n"));
 #endif
 	td_LED_Enable();
 
@@ -187,7 +186,7 @@ void td_Set_LED_State(td_led_sate_t led_state)
 void td_LED_State_Refresh(void)
 {
 #ifdef DEBUG
-	ECHO_SHELL_PRINT(("Echo_LED_State_Refresh()\r\n"));
+	TD_SHELL_PRINT(("td_LED_State_Refresh()\r\n"));
 #endif
 
 	/* Force to change LED state */

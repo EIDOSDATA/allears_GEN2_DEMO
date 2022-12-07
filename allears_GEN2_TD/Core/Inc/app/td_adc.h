@@ -1,5 +1,5 @@
 /*
- * echo_stim_fdbk.h
+ * td_stim_fdbk.h
  *
  *  Created on: Oct 28, 2022
  *      Author: ECHO
@@ -43,18 +43,18 @@ typedef enum
 #define R2_Ved			1.f
 
 /* Voltage Scale : 1 uV */
-#define PEAKDETECTION_VOLTAGE_SCALE							1000
-#define STEPUP_VOLTAGE_SCALE								1000000
+#define PEAKDETECTION_VOLTAGE_SCALE					1000
+#define STEPUP_VOLTAGE_SCALE						1000000
 #define VOLTAGE_ERROR_RANGE_VALUE					1.8 * STEPUP_VOLTAGE_SCALE
 
 #define ADC1_CHK_CH_NUM								1
 #define ADC2_CHK_CH_NUM								1
 
-#define TD_ADC1_RCV_SIZE							10
-#define TD_ADC2_RCV_SIZE							10
+#define ADC1_RCV_SIZE								10
+#define ADC2_RCV_SIZE								10
 
-#define ADC1_CONV_BUF								get_adc1_buf
-#define ADC2_CONV_BUF								get_adc2_buf
+#define TD_ADC1_CONV_BUF								get_adc1_buf
+#define TD_ADC2_CONV_BUF								get_adc2_buf
 
 void td_ADC1_Enable(void);
 void td_ADC2_Enable(void);
@@ -72,7 +72,7 @@ uint32_t td_Peak_Detection_ADC2_AVG(void);
 uint32_t td_ADC_Calc_Stepup_V(uint32_t in_adc_val, float r1, float r2);
 uint32_t td_ADC_Calc_Peak_V(uint32_t in_adc_val);
 
-void Echo_ADC_Handle(void);
+void td_ADC_Handle(void);
 
 td_adc1_state_t td_Get_ADC1_State(void);
 td_adc2_state_t td_Get_ADC2_State(void);

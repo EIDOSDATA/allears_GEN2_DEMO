@@ -1,5 +1,5 @@
 /*
- * echo_sys_common.c
+ * td_sys_common.c
  *
  *  Created on: Oct 26, 2022
  *      Author: ECHO
@@ -77,7 +77,7 @@ void td_PCI_State_Init()
 	}
 
 	td_Print_Version();
-	sprintf((char*) res_msg, (const char*) "Echo_PCI_State_Init()\r\n"
+	sprintf((char*) res_msg, (const char*) "td_PCI_State_Init()\r\n"
 			"SYSTEM CLOCK : %lu Hz\r\n", HAL_RCC_GetHCLKFreq());
 
 	TD_SHELL_PRINT(("%s\n", res_msg));

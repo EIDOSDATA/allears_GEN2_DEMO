@@ -1,5 +1,5 @@
 /*
- * echo_stepup_setting.c
+ * td_stepup_setting.c
  *
  *  Created on: Oct 28, 2022
  *      Author: ECHO
@@ -45,11 +45,11 @@ int ref_adc_voltage_table[30] =
 /**********************/
 
 /* ADC BUFFER */
-uint16_t get_adc1_buf[ADC1_CHK_CH_NUM * TD_ADC1_RCV_SIZE];
-uint16_t get_adc2_buf[ADC2_CHK_CH_NUM * TD_ADC2_RCV_SIZE];
+uint16_t get_adc1_buf[ADC1_CHK_CH_NUM * ADC1_RCV_SIZE];
+uint16_t get_adc2_buf[ADC2_CHK_CH_NUM * ADC2_RCV_SIZE];
 
-uint16_t ex_setpup_adc[TD_ADC1_RCV_SIZE]; // ADC1
-uint16_t ex_peak_adc[TD_ADC2_RCV_SIZE]; // ADC2
+uint16_t ex_setpup_adc[ADC1_RCV_SIZE]; // ADC1
+uint16_t ex_peak_adc[ADC2_RCV_SIZE]; // ADC2
 
 /* ADC FSM STATE */
 #define TD_ADC1_CUR_STATE		td_adc1_fsm_state.state
@@ -78,37 +78,37 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
 	if (hadc->Instance == hadc1.Instance)
 	{
-		for (int index = 0; index < TD_ADC1_RCV_SIZE; index++)
+		for (int index = 0; index < ADC1_RCV_SIZE; index++)
 		{
 			/* ADC FILTER */
-			if (fabs(ADC1_CONV_BUF[index] - ADC1_CONV_BUF[(index + 1) % 10])
+			if (fabs(TD_ADC1_CONV_BUF[index] - TD_ADC1_CONV_BUF[(index + 1) % 10])
 					< 200)
 			{
-				ex_setpup_adc[index] = ADC1_CONV_BUF[index]; // STEPUP_FEEDBACK
+				ex_setpup_adc[index] = TD_ADC1_CONV_BUF[index]; // STEPUP_FEEDBACK
 			}
 			else
 			{
-				ex_setpup_adc[index] = ADC1_CONV_BUF[index - 1]; // STEPUP_FEEDBACK
+				ex_setpup_adc[index] = TD_ADC1_CONV_BUF[index - 1]; // STEPUP_FEEDBACK
 			}
 		}
 
 #if 0
 		ADC1_CONV_OK = true;
 #endif
-		//Echo_Start_ADC1_Conv();
-		ex_adc1_cur_state = td_adc1_conv_ok; //Echo_Set_ADC1_State(ECHO_ADC1_CONV_OK);
+		//td_Start_ADC1_Conv();
+		ex_adc1_cur_state = td_adc1_conv_ok;
 	}
 
 	if (hadc->Instance == hadc2.Instance)
 	{
-		for (int index = 0; index < TD_ADC2_RCV_SIZE; index++)
+		for (int index = 0; index < ADC2_RCV_SIZE; index++)
 		{
-			ex_peak_adc[index] = ADC2_CONV_BUF[index]; // PEAK_DETECTION
+			ex_peak_adc[index] = TD_ADC2_CONV_BUF[index]; // PEAK_DETECTION
 		}
 #if 0
 	ADC2_CONV_OK = true;
 #endif
-		ex_adc2_cur_state = td_adc2_conv_ok; //Echo_Set_ADC2_State(ECHO_ADC2_CONV_OK);
+		ex_adc2_cur_state = td_adc2_conv_ok;
 	}
 }
 
@@ -159,8 +159,8 @@ void td_ADC_State_Init(void)
  * */
 void td_Start_ADC1_Conv()
 {
-	if (HAL_ADC_Start_DMA(&hadc1, (uint32_t*) ADC1_CONV_BUF,
-	ADC1_CHK_CH_NUM * TD_ADC1_RCV_SIZE) != HAL_OK)
+	if (HAL_ADC_Start_DMA(&hadc1, (uint32_t*) TD_ADC1_CONV_BUF,
+	ADC1_CHK_CH_NUM * ADC1_RCV_SIZE) != HAL_OK)
 	{
 		Error_Handler();
 	}
@@ -168,8 +168,8 @@ void td_Start_ADC1_Conv()
 
 void td_Start_ADC2_Conv()
 {
-	if (HAL_ADC_Start_DMA(&hadc2, (uint32_t*) ADC2_CONV_BUF,
-	ADC2_CHK_CH_NUM * TD_ADC2_RCV_SIZE) != HAL_OK)
+	if (HAL_ADC_Start_DMA(&hadc2, (uint32_t*) TD_ADC2_CONV_BUF,
+	ADC2_CHK_CH_NUM * ADC2_RCV_SIZE) != HAL_OK)
 	{
 		Error_Handler();
 	}
@@ -203,7 +203,7 @@ uint32_t td_Stepup_ADC1_AVG()
 {
 	uint32_t adc1_avg = 0;
 
-	for (int i = 0; i < TD_ADC1_RCV_SIZE; i++)
+	for (int i = 0; i < ADC1_RCV_SIZE; i++)
 	{
 		adc1_avg += ex_setpup_adc[i];
 	}
@@ -214,11 +214,11 @@ uint32_t td_Peak_Detection_ADC2_AVG()
 {
 	uint32_t adc2_avg = 0;
 
-	for (int i = 0; i < TD_ADC2_RCV_SIZE; i++)
+	for (int i = 0; i < ADC2_RCV_SIZE; i++)
 	{
 		adc2_avg += ex_peak_adc[i];
 	}
-	return adc2_avg / TD_ADC2_RCV_SIZE;
+	return adc2_avg / ADC2_RCV_SIZE;
 }
 /**********************/
 
@@ -281,25 +281,8 @@ uint32_t td_ADC_Calc_Peak_V(uint32_t in_adc_val)
 /*
  * ADC STEPUP HANDLER
  * */
-void Echo_ADC_Handle(void)
+void td_ADC_Handle(void)
 {
-#if 0
-/* NONE FSM ADC */
-if (Echo_Get_Sys_FSM_State()
-		== ECHO_SYS_STATE_RUN&& ADC1_BUFFER_FULL != true)
-//if (Echo_Get_FSM_State() == ECHO_STATE_RUN && ADC2_BUFFER_FULL != true)
-{
-	static uint32_t st_handle_tick = 0;
-
-	if (HAL_GetTick() - st_handle_tick >= PWR_HANDLE_PERIOD)
-	{
-		td_Start_ADC1_Conv();
-		//Echo_Start_ADC2_Conv();
-		st_handle_tick = HAL_GetTick();
-	}
-}
-#endif
-
 	/* FSM ADC */
 	if (TD_ADC1_CUR_STATE != ex_adc1_cur_state)
 	{

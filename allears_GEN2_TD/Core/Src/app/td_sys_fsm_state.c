@@ -9,29 +9,27 @@
 #include <td_sys_common.h>
 #include <td_sys_fsm_state.h>
 #include "main.h"
-//#include "echo_adc.h"
 
-#define ECHO_CUR_SYS_STATE								echo_sys_fsm_state.state
-#define ECHO_BUTTON_STATE 1
+#define TD_CUR_SYS_STATE								td_sys_fsm_state.state
+#define TD_BUTTON_STATE 1
 typedef struct
 {
 	td_sys_state_t state;
-} echo_sys_state_data_t;
-echo_sys_state_data_t echo_sys_fsm_state;
+} td_sys_state_data_t;
+td_sys_state_data_t td_sys_fsm_state;
 td_sys_state_t cur_state = td_sys_state_idle;
 
 extern td_adc1_state_t ex_adc1_cur_state;
 /* while out code*/
 void td_Sys_FSM_State_Init(void)
 {
-	ECHO_CUR_SYS_STATE = td_sys_state_max;
-	//ECHO_BUTTON_STATE = Echo_Button_NoPressed();
+	TD_CUR_SYS_STATE = td_sys_state_max;
 	td_Set_Sys_FSM_State(td_sys_state_init);
 }
 
 td_sys_state_t td_Get_Sys_FSM_State(void)
 {
-	return ECHO_CUR_SYS_STATE;
+	return TD_CUR_SYS_STATE;
 }
 
 void td_Set_Sys_FSM_State_Start()
@@ -59,51 +57,26 @@ void td_Sys_FSM_State_Handle(void)
 		}
 	}
 
-	if (ECHO_CUR_SYS_STATE != cur_state)
+	if (TD_CUR_SYS_STATE != cur_state)
 	{
 		td_Set_Sys_FSM_State(cur_state);
 		td_Btn_Handled_Clear();
 	}
-
-	/* SHELL COMMAND FLAG */
-	/*
-	 if (Echo_Shell_isHandled() == true)
-	 {
-	 if (cur_state == ECHO_STATE_IDLE)
-	 {
-	 cur_state = ECHO_STATE_RUN;
-	 }
-	 else if (cur_state == ECHO_STATE_RUN)
-	 {
-	 cur_state = ECHO_STATE_IDLE;
-	 }
-	 Echo_Shell_Handled_clear();
-	 }
-	 */
-
-	/*
-	 if (state_led_change == true)
-	 {
-	 Echo_LED_Enable();
-	 Echo_LED_State_Refresh();
-	 }
-	 */
 }
 
 void td_Set_Sys_FSM_State(td_sys_state_t state)
 {
 	/*
-	 if (ECHO_CUR_STATE == state || state >= echo_state_max)
+	 if (TD_CUR_STATE == state || state >= td_sys_state_max)
 	 return;
 	 */
-
 	switch (state)
 	{
 
 	case td_sys_state_init:
 #ifdef DEBUG
 #ifdef ECHO_PULSE_INTERRUPT
-		TD_SHELL_PRINT(("ECHO STATE INIT\r\n"));
+		TD_SHELL_PRINT(("TD STATE INIT\r\n"));
 #endif
 #endif
 		break;
@@ -114,7 +87,7 @@ void td_Set_Sys_FSM_State(td_sys_state_t state)
 		ex_adc1_cur_state = td_adc1_idle;
 #ifdef DEBUG
 #ifdef ECHO_PULSE_INTERRUPT
-		TD_SHELL_PRINT(("ECHO STATE IDLE\r\n"));
+		TD_SHELL_PRINT(("TD STATE IDLE\r\n"));
 #endif
 #endif
 		break;
@@ -125,7 +98,7 @@ void td_Set_Sys_FSM_State(td_sys_state_t state)
 		ex_adc1_cur_state = td_adc1_run;
 #ifdef DEBUG
 #ifdef ECHO_PULSE_INTERRUPT
-		TD_SHELL_PRINT(("ECHO STATE RUN\r\n"));
+		TD_SHELL_PRINT(("TD STATE RUN\r\n"));
 #endif
 #endif
 		break;
@@ -135,7 +108,7 @@ void td_Set_Sys_FSM_State(td_sys_state_t state)
 		ex_adc1_cur_state = td_adc1_error;
 #ifdef DEBUG
 #ifdef ECHO_PULSE_INTERRUPT
-		TD_SHELL_PRINT(("ECHO STATE ERROR\r\n"));
+		TD_SHELL_PRINT(("TD STATE ERROR\r\n"));
 #endif
 #endif
 		break;
@@ -143,11 +116,11 @@ void td_Set_Sys_FSM_State(td_sys_state_t state)
 	default:
 		// Cannot be here
 #ifdef DEBUG
-		TD_SHELL_PRINT(("UNKNOWN ECHO STATE: %d\n", state));
+		TD_SHELL_PRINT(("UNKNOWN TD STATE: %d\n", state));
 #endif
 		break;
 
 	}
-	ECHO_CUR_SYS_STATE = state;
+	TD_CUR_SYS_STATE = state;
 }
 

@@ -1,5 +1,5 @@
 /*
- * echo_flash_memory.c
+ * td_flash_memory.c
  *
  *  Created on: 2022. 10. 20.
  *      Author: ECHO
@@ -113,7 +113,7 @@ HAL_StatusTypeDef td_Flash_Read()
 }
 
 /*
- HAL_StatusTypeDef Echo_Flash_Read()
+ HAL_StatusTypeDef td_Flash_Read()
  {
  Address = FLASH_USER_START_ADDR;
  MemoryProgramStatus = 0x0;

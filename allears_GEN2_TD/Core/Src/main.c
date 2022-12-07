@@ -142,7 +142,7 @@ int main(void)
 			td_Sys_FSM_State_Handle();
 			td_Btn_Handle();
 			td_LED_Handle();
-			Echo_ADC_Handle();
+			td_ADC_Handle();
 			td_Shell_Input_Print();
 			schdule_tick = HAL_GetTick();
 		}

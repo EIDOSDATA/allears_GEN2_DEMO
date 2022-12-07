@@ -1,5 +1,5 @@
 /*
- * echo_led.h
+ * td_led.h
  *
  *  Created on: Oct 24, 2022
  *      Author: ECHO
@@ -17,10 +17,10 @@ typedef enum
 } td_led_sate_t;
 
 /*
- __STATIC_INLINE void Echo_LED_Green_Off(void);
- __STATIC_INLINE void Echo_LED_Green_On(void);
- __STATIC_INLINE void Echo_LED_Off_All(void);
- __STATIC_INLINE void Echo_LED_State_Reset(void);
+ __STATIC_INLINE void td_LED_Green_Off(void);
+ __STATIC_INLINE void td_LED_Green_On(void);
+ __STATIC_INLINE void td_LED_Off_All(void);
+ __STATIC_INLINE void td_LED_State_Reset(void);
  */
 
 void td_LED_Init(void);

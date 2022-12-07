@@ -1,5 +1,5 @@
 /*
- * echo_uart.c
+ * td_uart.c
  *
  *  Created on: Nov 1, 2022
  *      Author: ECHO
@@ -41,7 +41,7 @@ static __INLINE void st_td_Uart2_RCV_Q_Put_INLINE(uint8_t item)
 static __INLINE void st_td_Uart2_State_Init_INLINE(void)
 {
 	TD_USART2_STATE_RESET();
-	//echo_uart2_state.queue = echo_uart2_rcv_buf;
+	//td_uart2_state.queue = td_uart2_rcv_buf;
 }
 
 /*
