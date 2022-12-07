@@ -57,6 +57,9 @@ typedef struct
 	uint8_t len;
 } get_prm_cmd_str_t;
 
+/*
+ * RESPONSE Message String Table
+ * */
 const get_prm_cmd_str_t get_prm_cmd_str_table[res_prm_cmd_max] =
 {
 { "\r\n#resDT:", 9 },
@@ -422,6 +425,9 @@ void td_Pulse_V_PW_Config()
 	TIM1->CCR1 = TD_VOLTAGE_RELATED_PULSE_WIDTH;
 }
 
+/*
+ * STEP UP Feedback Control
+ * */
 uint32_t td_Voltage_Config(uint64_t adc_voltage)
 {
 	uint32_t voltage_scaleup_val = TD_VOLTAGE_VALUE_OUTPUT

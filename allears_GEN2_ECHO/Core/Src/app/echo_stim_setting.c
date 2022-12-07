@@ -50,13 +50,16 @@ timer_param_t tim2_param; // MASTER CLOCK >> PWM
 timer_param_t tim16_param; // STEP UP CLOCK >> PWM
 /****************************************/
 
-/* RESPONSE PARAMETER STRING */
+/****** RESPONSE PARAMETER STRING ******/
 typedef struct
 {
 	char *str;
 	uint8_t len;
 } get_prm_cmd_str_t;
 
+/*
+ * RESPONSE Message String Table
+ * */
 const get_prm_cmd_str_t get_prm_cmd_str_table[res_prm_cmd_max] =
 {
 { "\r\n#resDT:", 9 },
@@ -68,7 +71,7 @@ const get_prm_cmd_str_t get_prm_cmd_str_table[res_prm_cmd_max] =
 { "\r\n#resALLPRM:", 13 } };
 /****************************************/
 
-/* DATA PARSER */
+/****** DATA PARSER ******/
 char res_msg[256] =
 { '\0', };
 
@@ -420,6 +423,9 @@ void Echo_Pulse_V_PW_Config()
 	TIM1->CCR1 = ECHO_VOLTAGE_RELATED_PULSE_WIDTH;
 }
 
+/*
+ * STEP UP Feedback Control
+ * */
 uint32_t Echo_Voltage_Config(uint64_t adc_voltage)
 {
 	uint64_t voltage_scaleup_val = ECHO_VOLTAGE_VALUE_OUTPUT
