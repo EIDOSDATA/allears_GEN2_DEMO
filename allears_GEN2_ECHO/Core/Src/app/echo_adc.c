@@ -47,11 +47,11 @@ int ref_adc_voltage_table[30] =
 /**********************/
 
 /* ADC BUFFER */
-uint16_t get_adc1_buf[ECHO_ADC1_CHK_CH_NUM * ECHO_ADC1_RCV_SIZE];
-uint16_t get_adc2_buf[ECHO_ADC2_CHK_CH_NUM * ECHO_ADC2_RCV_SIZE];
+uint16_t get_adc1_buf[ADC1_CHK_CH_NUM * ADC1_RCV_SIZE];
+uint16_t get_adc2_buf[ADC2_CHK_CH_NUM * ADC2_RCV_SIZE];
 
-uint16_t ex_setpup_adc[ECHO_ADC1_RCV_SIZE]; // ADC1
-uint16_t ex_peak_adc[ECHO_ADC2_RCV_SIZE]; // ADC2
+uint16_t ex_setpup_adc[ADC1_RCV_SIZE]; // ADC1
+uint16_t ex_peak_adc[ADC2_RCV_SIZE]; // ADC2
 
 /* ADC1 STATE */
 typedef struct
@@ -76,7 +76,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
 	if (hadc->Instance == hadc1.Instance)
 	{
-		for (int index = 0; index < ECHO_ADC1_RCV_SIZE; index++)
+		for (int index = 0; index < ADC1_RCV_SIZE; index++)
 		{
 			/* ADC FILTER */
 			if (fabs(
@@ -100,7 +100,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 
 	if (hadc->Instance == hadc2.Instance)
 	{
-		for (int index = 0; index < ECHO_ADC2_RCV_SIZE; index++)
+		for (int index = 0; index < ADC2_RCV_SIZE; index++)
 		{
 			ex_peak_adc[index] = ECHO_ADC2_CONV_BUF[index]; // PEAK_DETECTION
 		}
@@ -144,8 +144,8 @@ void Echo_ADC2_Enable(void)
  * */
 void Echo_ADC_State_Init(void)
 {
-	TD_ADC1_CUR_STATE = echo_adc1_state_max;
-	TD_ADC2_CUR_STATE = echo_adc2_state_max;
+	ECHO_ADC1_CUR_STATE = echo_adc1_state_max;
+	ECHO_ADC2_CUR_STATE = echo_adc2_state_max;
 	Echo_Set_ADC1_State(echo_adc1_state_init);
 	Echo_Set_ADC2_State(echo_adc2_state_init);
 	Echo_ADC1_Enable();
@@ -159,7 +159,7 @@ void Echo_ADC_State_Init(void)
 void Echo_Start_ADC1_Conv()
 {
 	if (HAL_ADC_Start_DMA(&hadc1, (uint32_t*) ECHO_ADC1_CONV_BUF,
-	ECHO_ADC1_CHK_CH_NUM * ECHO_ADC1_RCV_SIZE) != HAL_OK)
+	ADC1_CHK_CH_NUM * ADC1_RCV_SIZE) != HAL_OK)
 	{
 		Error_Handler();
 	}
@@ -168,7 +168,7 @@ void Echo_Start_ADC1_Conv()
 void Echo_Start_ADC2_Conv()
 {
 	if (HAL_ADC_Start_DMA(&hadc2, (uint32_t*) ECHO_ADC2_CONV_BUF,
-	ECHO_ADC2_CHK_CH_NUM * ECHO_ADC2_RCV_SIZE) != HAL_OK)
+	ADC2_CHK_CH_NUM * ADC2_RCV_SIZE) != HAL_OK)
 	{
 		Error_Handler();
 	}
@@ -202,7 +202,7 @@ uint32_t Echo_Stepup_ADC1_AVG()
 {
 	uint32_t adc1_avg = 0;
 
-	for (int i = 0; i < ECHO_ADC1_RCV_SIZE; i++)
+	for (int i = 0; i < ADC1_RCV_SIZE; i++)
 	{
 		adc1_avg += ex_setpup_adc[i];
 	}
@@ -213,11 +213,11 @@ uint32_t Echo_Peak_Detection_ADC2_AVG()
 {
 	uint32_t adc2_avg = 0;
 
-	for (int i = 0; i < ECHO_ADC2_RCV_SIZE; i++)
+	for (int i = 0; i < ADC2_RCV_SIZE; i++)
 	{
 		adc2_avg += ex_peak_adc[i];
 	}
-	return adc2_avg / ECHO_ADC2_RCV_SIZE;
+	return adc2_avg / ADC2_RCV_SIZE;
 }
 /**********************/
 
@@ -297,7 +297,7 @@ if (Echo_Get_Sys_FSM_State()
 #endif
 
 	/* FSM ADC */
-	if (TD_ADC1_CUR_STATE != ex_adc1_cur_state)
+	if (ECHO_ADC1_CUR_STATE != ex_adc1_cur_state)
 	{
 		Echo_Set_ADC1_State(ex_adc1_cur_state);
 	}
@@ -306,12 +306,12 @@ if (Echo_Get_Sys_FSM_State()
 
 echo_adc1_state_t Echo_Get_ADC1_State(void)
 {
-	return TD_ADC1_CUR_STATE;
+	return ECHO_ADC1_CUR_STATE;
 }
 
 echo_adc2_state_t Echo_Get_ADC2_State(void)
 {
-	return TD_ADC2_CUR_STATE;
+	return ECHO_ADC2_CUR_STATE;
 }
 
 void Echo_Set_ADC1_State(echo_adc1_state_t state)
@@ -337,7 +337,7 @@ void Echo_Set_ADC1_State(echo_adc1_state_t state)
 	default:
 		break;
 	}
-	TD_ADC1_CUR_STATE = state;
+	ECHO_ADC1_CUR_STATE = state;
 }
 
 void Echo_Set_ADC2_State(echo_adc2_state_t state)
@@ -363,5 +363,5 @@ void Echo_Set_ADC2_State(echo_adc2_state_t state)
 	default:
 		break;
 	}
-	TD_ADC2_CUR_STATE = state;
+	ECHO_ADC2_CUR_STATE = state;
 }

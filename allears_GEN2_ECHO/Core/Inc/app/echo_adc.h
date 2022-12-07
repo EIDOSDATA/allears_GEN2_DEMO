@@ -39,10 +39,10 @@ typedef enum
 #define PWR_HANDLE_PERIOD							1				/* ms */
 
 /* REFERENCE VALUE2 */
-#define ECHO_R1_Vstup								3600.f //680.f;
-#define ECHO_R2_Vstup								110.f //22.f;
-#define ECHO_R1_Ved									18.f
-#define ECHO_R2_Ved									1.f
+#define R1_Vstup									3600.f //680.f;
+#define R2_Vstup									110.f //22.f;
+#define R1_Ved										18.f
+#define R2_Ved										1.f
 
 /* REFERENCE TABLE */
 /*
@@ -55,23 +55,23 @@ typedef enum
 /* Voltage Scale : 1 uV */
 #define PEAKDETECTION_VOLTAGE_SCALE					100
 #define STEPUP_VOLTAGE_SCALE						1000000
-#define ECHO_VOLTAGE_ERROR_RANGE_VALUE				1.8 * STEPUP_VOLTAGE_SCALE
+#define VOLTAGE_ERROR_RANGE_VALUE					1.8 * STEPUP_VOLTAGE_SCALE
 
 /* NUMBER OF ADC CHANNEL */
-#define ECHO_ADC1_CHK_CH_NUM						1
-#define ECHO_ADC2_CHK_CH_NUM						1
+#define ADC1_CHK_CH_NUM								1
+#define ADC2_CHK_CH_NUM								1
 
 /* ADC READING SIZE */
-#define ECHO_ADC1_RCV_SIZE							10
-#define ECHO_ADC2_RCV_SIZE							10
+#define ADC1_RCV_SIZE								10
+#define ADC2_RCV_SIZE								10
 
 /* ADC CONVERSION BUFFER SIZE*/
 #define ECHO_ADC1_CONV_BUF							get_adc1_buf
 #define ECHO_ADC2_CONV_BUF							get_adc2_buf
 
 /* ADC FSM STATE */
-#define TD_ADC1_CUR_STATE							echo_adc1_fsm_state.state
-#define TD_ADC2_CUR_STATE							echo_adc2_fsm_state.state
+#define ECHO_ADC1_CUR_STATE							echo_adc1_fsm_state.state
+#define ECHO_ADC2_CUR_STATE							echo_adc2_fsm_state.state
 
 void Echo_ADC1_Enable(void);
 void Echo_ADC2_Enable(void);

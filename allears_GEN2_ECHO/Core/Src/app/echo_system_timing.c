@@ -31,8 +31,8 @@ extern __IO int ex_voltage_val_output;
 extern __IO bool ex_slope_ctrl_end_f;
 
 /* STEPUP AND PEAK-DETECTION ADC VALUE*/
-extern uint16_t ex_peak_adc[ECHO_ADC1_RCV_SIZE];
-extern uint16_t ex_setpup_adc[ECHO_ADC1_RCV_SIZE];
+extern uint16_t ex_peak_adc[ADC1_RCV_SIZE];
+extern uint16_t ex_setpup_adc[ADC1_RCV_SIZE];
 
 /* TIMER COUNTER VALUE */
 int timer2_cnt = 1;
@@ -52,8 +52,8 @@ void Echo_ADC_Voltage_Feedback()
 {
 	fdbk_adc_avg_data = Echo_Stepup_ADC1_AVG();
 	fdbk_adc_voltage = Echo_ADC_Calc_Stepup_V(fdbk_adc_avg_data,
-	ECHO_R1_Vstup,
-	ECHO_R2_Vstup);
+	R1_Vstup,
+	R2_Vstup);
 	Echo_Voltage_Config(fdbk_adc_voltage);
 	timer16_cnt = 0;
 	stepup_print_f = true;

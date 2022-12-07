@@ -371,7 +371,7 @@ void Echo_Pulse_V_PW_Config()
 int Echo_Voltage_Config(uint64_t adc_voltage)
 {
 	uint64_t voltage_scaleup_val = VOLTAGE_VALUE_OUTPUT * STEPUP_VOLTAGE_SCALE;
-	if (abs(voltage_scaleup_val - adc_voltage) < ECHO_VOLTAGE_ERROR_RANGE_VALUE)
+	if (abs(voltage_scaleup_val - adc_voltage) < VOLTAGE_ERROR_RANGE_VALUE)
 	{
 		if (voltage_scaleup_val > adc_voltage)
 		{
@@ -387,7 +387,7 @@ int Echo_Voltage_Config(uint64_t adc_voltage)
 	}
 
 	else if (abs(
-			voltage_scaleup_val - adc_voltage) > ECHO_VOLTAGE_ERROR_RANGE_VALUE)
+			voltage_scaleup_val - adc_voltage) > VOLTAGE_ERROR_RANGE_VALUE)
 	{
 		if (voltage_scaleup_val > adc_voltage)
 		{
