@@ -61,7 +61,7 @@ uint32_t Echo_Voltage_Config(uint64_t adc_voltage);
 /* Factory RESET */
 void Echo_Factory_Reset(void);
 
-/* TEST */
+/* GET TIMER PARAMETER */
 int Echo_Get_Pulse_PSC(void);
 int Echo_Get_Pulse_ARR(void);
 
@@ -77,10 +77,6 @@ int Echo_Get_Pulse_ARR(void);
 #define ECHO_PULSE_HZ_FREQ						ex_pwm_param.pulse_freq
 #define ECHO_PULSE_WIDTH_TIME					ex_pwm_param.pulse_width
 #define ECHO_PULSE_DEAD_TIME					ex_pwm_param.dead_time
-
-#define ECHO_PULSE_HZ_FREQ_SCALE				ex_pwm_param.pulse_freq / ECHO_STIM_SCALE
-#define ECHO_PULSE_WIDTH_TIME_SCALE				ex_pwm_param.pulse_width / ECHO_STIM_SCALE
-#define ECHO_PULSE_DEAD_TIME_SCALE				ex_pwm_param.dead_time / ECHO_STIM_SCALE
 
 #define ECHO_CURRENT_CTRL_TIME0					(ECHO_PULSE_WIDTH_TIME +  ECHO_GLICH_DEBOUNCING_TIME) / ECHO_STIM_SCALE
 #define ECHO_CURRENT_CTRL_TIME1					(ECHO_PULSE_WIDTH_TIME + ECHO_PULSE_DEAD_TIME + ECHO_GLICH_DEBOUNCING_TIME) / ECHO_STIM_SCALE
