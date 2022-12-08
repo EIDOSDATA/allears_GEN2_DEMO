@@ -512,6 +512,8 @@ void td_StepUP_Stop()
 
 void td_StepUP_Start()
 {
+	TIM16->CNT = 0;
+	TIM16->ARR = (1000 / TD_STIM_SCALE ) - 1;
 	TIM1->CCR1 = TD_VOLTAGE_RELATED_PULSE_WIDTH;
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 	HAL_TIM_Base_Start_IT(&htim16);
