@@ -64,12 +64,19 @@ void Echo_Factory_Reset(void);
 /* PULSE HZ CONFIG */
 void Echo_Pulse_FREQ_Config(void);
 
-#define ECHO_MASTER_CLK_FREQ					80000000
-#define ECHO_MASTER_PSC							80
-#define ECHO_MASTER_ARR							1000000
-#define ECHO_SET_HZ_PERIOD						10
+/* TEST */
+int Echo_Get_Pulse_PSC(void);
+int Echo_Get_Pulse_ARR(void);
 
-#define ECHO_GLICH_DEBOUNCING_TIME				5
+#define ECHO_MASTER_CLK_FREQ					80000000
+
+#define ECHO_CLK_FREQ							HAL_RCC_GetHCLKFreq()
+#define ECHO_STIM_SCALE							ECHO_MASTER_CLK_FREQ / ECHO_CLK_FREQ
+
+#define ECHO_MASTER_PSC							Echo_Get_Pulse_PSC()
+#define ECHO_MASTER_ARR							ECHO_CLK_FREQ / ECHO_MASTER_PSC
+
+#define ECHO_GLICH_DEBOUNCING_TIME				5 / ECHO_STIM_SCALE
 #define ECHO_PULSE_HZ_FREQ						ex_pwm_param.pulse_freq
 #define ECHO_PULSE_WIDTH_TIME					ex_pwm_param.pulse_width
 #define ECHO_PULSE_DEAD_TIME					ex_pwm_param.dead_time

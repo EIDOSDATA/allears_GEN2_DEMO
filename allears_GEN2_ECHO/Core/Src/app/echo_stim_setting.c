@@ -200,17 +200,17 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 	{
 	case res_stim_deadtime:
 		sprintf((char*) res_msg, (const char*) "%s %d us\r\n", mes_head,
-				ex_pwm_param.dead_time);
+		ECHO_PULSE_DEAD_TIME);
 		break;
 
 	case res_stim_pulse_width:
 		sprintf((char*) res_msg, (const char*) "%s %d us\r\n", mes_head,
-				ex_pwm_param.pulse_width);
+		ECHO_PULSE_WIDTH_TIME);
 		break;
 
 	case res_stim_frequency:
 		sprintf((char*) res_msg, (const char*) "%s %d Hz\r\n", mes_head,
-				ex_pwm_param.pulse_freq);
+		ECHO_PULSE_HZ_FREQ);
 		break;
 
 	case res_voltage_pulse_width:
@@ -235,8 +235,8 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 				"HZ: %d Hz\r\n"
 				"VPW: %d step\r\n"
 				"VOL: %d v\r\n"
-				"DAC: %d step", mes_head, ex_pwm_param.dead_time,
-				ex_pwm_param.pulse_width, ex_pwm_param.pulse_freq,
+				"DAC: %d step", mes_head, ECHO_PULSE_DEAD_TIME,
+				ECHO_PULSE_WIDTH_TIME, ECHO_PULSE_HZ_FREQ,
 				ECHO_VOLTAGE_RELATED_PULSE_WIDTH, ECHO_VOLTAGE_VALUE_OUTPUT,
 				ECHO_CURRENT_STRENGTH_STEP);
 		break;
@@ -253,13 +253,22 @@ void Echo_Get_Res_Data(uint8_t select_msg)
  * */
 void Echo_Factory_Reset()
 {
-	ex_pwm_param.dead_time = 20;
+	ex_pwm_param.dead_time = 10;
 	ex_pwm_param.pulse_width = 1000;
-	ex_pwm_param.pulse_freq = 100;
+	ex_pwm_param.pulse_freq = 10;
 	ECHO_VOLTAGE_RELATED_PULSE_WIDTH = 0;
 	ECHO_VOLTAGE_VALUE_OUTPUT = 0;
 	Echo_Flash_Write();
 }
+int Echo_Get_Pulse_PSC(void)
+{
+	return (TIM2->PSC) + 1;
+}
+int Echo_Get_Pulse_ARR(void)
+{
+	return (TIM2->ARR) + 1;
+}
+
 /****************************************/
 
 #ifdef ECHO_PULSE_DMA
