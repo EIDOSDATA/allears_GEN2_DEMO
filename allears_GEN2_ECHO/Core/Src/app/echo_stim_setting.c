@@ -81,11 +81,11 @@ char res_msg[256] =
 void Echo_Set_DT(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setDT,%hd%*[^\r]",
-			&ex_pwm_param.dead_time);
+			&ECHO_PULSE_DEAD_TIME);
 	/* ERROR CONTROL */
-	if (ex_pwm_param.dead_time < (ECHO_GLICH_DEBOUNCING_TIME * 2))
+	if (ECHO_PULSE_DEAD_TIME < (ECHO_GLICH_DEBOUNCING_TIME * 2))
 	{
-		ex_pwm_param.dead_time = ECHO_GLICH_DEBOUNCING_TIME * 2;
+		ECHO_PULSE_DEAD_TIME = ECHO_GLICH_DEBOUNCING_TIME * 2;
 	}
 	Echo_Pulse_Prm_Config();
 	Echo_Get_Res_Data(res_stim_deadtime);
@@ -97,7 +97,7 @@ void Echo_Set_DT(uint8_t *data, uint16_t len)
 void Echo_Set_PW(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setPW,%hd%*[^\r]",
-			&ex_pwm_param.pulse_width);
+			&ECHO_PULSE_WIDTH_TIME);
 	Echo_Pulse_Prm_Config();
 	Echo_Get_Res_Data(res_stim_pulse_width);
 }
@@ -108,12 +108,12 @@ void Echo_Set_PW(uint8_t *data, uint16_t len)
 void Echo_Set_HZ(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setHZ,%hd%*[^\r]",
-			&ex_pwm_param.pulse_freq);
+			&ECHO_PULSE_HZ_FREQ);
 
 	/* ERROR CONTROL */
 	if (ECHO_PULSE_FREQ_ARR <= (ECHO_TOTAL_PULSE_WIDTH_TIME * 2))
 	{
-		ex_pwm_param.pulse_freq = 1;
+		ECHO_PULSE_HZ_FREQ = 1;
 	}
 
 	if (Echo_Get_Sys_FSM_State() == echo_sys_state_run)
@@ -236,9 +236,9 @@ void Echo_Get_Res_Data(uint8_t select_msg)
 				"VPW: %d step\r\n"
 				"VOL: %d v\r\n"
 				"DAC: %d step", mes_head, ECHO_PULSE_DEAD_TIME,
-				ECHO_PULSE_WIDTH_TIME, ECHO_PULSE_HZ_FREQ,
-				ECHO_VOLTAGE_RELATED_PULSE_WIDTH, ECHO_VOLTAGE_VALUE_OUTPUT,
-				ECHO_CURRENT_STRENGTH_STEP);
+		ECHO_PULSE_WIDTH_TIME, ECHO_PULSE_HZ_FREQ,
+		ECHO_VOLTAGE_RELATED_PULSE_WIDTH, ECHO_VOLTAGE_VALUE_OUTPUT,
+		ECHO_CURRENT_STRENGTH_STEP);
 		break;
 	default:
 		break;
@@ -253,9 +253,9 @@ void Echo_Get_Res_Data(uint8_t select_msg)
  * */
 void Echo_Factory_Reset()
 {
-	ex_pwm_param.dead_time = 10;
-	ex_pwm_param.pulse_width = 1000;
-	ex_pwm_param.pulse_freq = 10;
+	ECHO_PULSE_DEAD_TIME = 10;
+	ECHO_PULSE_WIDTH_TIME = 1000;
+	ECHO_PULSE_HZ_FREQ = 10;
 	ECHO_VOLTAGE_RELATED_PULSE_WIDTH = 0;
 	ECHO_VOLTAGE_VALUE_OUTPUT = 0;
 	Echo_Flash_Write();

@@ -61,9 +61,6 @@ uint32_t Echo_Voltage_Config(uint64_t adc_voltage);
 /* Factory RESET */
 void Echo_Factory_Reset(void);
 
-/* PULSE HZ CONFIG */
-void Echo_Pulse_FREQ_Config(void);
-
 /* TEST */
 int Echo_Get_Pulse_PSC(void);
 int Echo_Get_Pulse_ARR(void);

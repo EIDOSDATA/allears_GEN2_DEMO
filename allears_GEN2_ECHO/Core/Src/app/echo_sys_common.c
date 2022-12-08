@@ -69,9 +69,9 @@ void Echo_PCI_State_Init()
 	/* FLASH READ */
 	if (Echo_Flash_Read() != HAL_OK)
 	{
-		ex_pwm_param.dead_time = 10;
-		ex_pwm_param.pulse_width = 1000;
-		ex_pwm_param.pulse_freq = 10;
+		ECHO_PULSE_DEAD_TIME = 10;
+		ECHO_PULSE_WIDTH_TIME = 1000;
+		ECHO_PULSE_HZ_FREQ = 10;
 		ECHO_VOLTAGE_RELATED_PULSE_WIDTH = 0;
 		ECHO_VOLTAGE_VALUE_OUTPUT = 0;
 	}
