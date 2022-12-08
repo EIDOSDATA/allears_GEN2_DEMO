@@ -73,7 +73,7 @@ int td_Get_Pulse_ARR(void);
 #define TD_MASTER_PSC						td_Get_Pulse_PSC()
 #define TD_MASTER_ARR						(int)(TD_CLK_FREQ / TD_MASTER_PSC)
 
-#define TD_GLICH_DEBOUNCING_TIME			(int)(5 / TD_STIM_SCALE)
+#define TD_GLICH_DEBOUNCING_TIME			5 /* 5us */
 #define TD_PULSE_HZ_FREQ					ex_pwm_param.pulse_freq
 #define TD_PULSE_WIDTH_TIME					ex_pwm_param.pulse_width
 #define TD_PULSE_DEAD_TIME					ex_pwm_param.dead_time
