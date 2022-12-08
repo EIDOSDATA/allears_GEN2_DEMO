@@ -340,7 +340,7 @@ void td_Stim_Start()
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_TOGGLE;
-	sConfigOC.Pulse = 10;
+	sConfigOC.Pulse = 5;
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	if (HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -379,13 +379,16 @@ void td_Stim_Start()
 
 	td_Pulse_Prm_Config();
 
+	/* PULSE START */
 	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_1,
 			(uint32_t*) current_ctrl_proc_arr, 4); // PA5 TIM2 CH_1 CURRENT CONTROL
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2); // PA1 TIM2 CH_2 ANODE
 	HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_4, (uint32_t*) cathode_pwm_arr, 2); // PA3 TIM2 CH_4 CATHODE
 
-	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
+	/* DMA INTERRUPT DISABLE */
 	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch1, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
+	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
+	//__HAL_DMA_DISABLE_IT(&hdma_tim2_ch1, (DMA_IT_TC | DMA_IT_HT)); // HAL_DMA_Start_IT
 
 	td_StepUP_Start();
 
