@@ -64,10 +64,17 @@ void td_Factory_Reset(void);
 /* PULSE HZ CONFIG */
 void td_Pulse_FREQ_Config(void);
 
+/* GET TIMER PARAMETER */
+int td_Get_Pulse_PSC(void);
+int td_Get_Pulse_ARR(void);
+
 #define TD_MASTER_CLK_FREQ					80000000
-#define TD_MASTER_PSC						80
-#define TD_MASTER_ARR						1000000
-#define TD_SET_HZ_PERIOD					10
+
+#define TD_CLK_FREQ							HAL_RCC_GetHCLKFreq()
+#define ECHO_STIM_SCALE						(int)(ECHO_MASTER_CLK_FREQ / ECHO_CLK_FREQ)
+
+#define TD_MASTER_PSC						td_Get_Pulse_PSC()
+#define TD_MASTER_ARR						TD_CLK_FREQ / TD_MASTER_PSC
 
 #define TD_GLICH_DEBOUNCING_TIME			5
 #define TD_PULSE_HZ_FREQ					ex_pwm_param.pulse_freq
