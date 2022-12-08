@@ -262,6 +262,15 @@ void td_Factory_Reset()
 	TD_VOLTAGE_VALUE_OUTPUT = 0;
 	td_Flash_Write();
 }
+
+int td_Get_Pulse_PSC(void)
+{
+	return (TIM2->PSC) + 1;
+}
+int td_Get_Pulse_ARR(void)
+{
+	return (TIM2->ARR) + 1;
+}
 /****************************************/
 
 #ifdef TD_PULSE_DMA
