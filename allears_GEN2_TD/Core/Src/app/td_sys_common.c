@@ -69,9 +69,9 @@ void td_PCI_State_Init()
 	/* FLASH READ */
 	if (td_Flash_Read() != HAL_OK)
 	{
-		ex_pwm_param.dead_time = 20;
-		ex_pwm_param.pulse_width = 1000;
-		ex_pwm_param.pulse_freq = 100;
+		TD_PULSE_DEAD_TIME = 20;
+		TD_PULSE_WIDTH_TIME = 1000;
+		TD_PULSE_HZ_FREQ = 100;
 		TD_VOLTAGE_RELATED_PULSE_WIDTH = 0;
 		TD_VOLTAGE_VALUE_OUTPUT = 0;
 	}

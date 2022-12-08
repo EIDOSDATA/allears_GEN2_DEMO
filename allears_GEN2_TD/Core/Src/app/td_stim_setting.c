@@ -81,11 +81,11 @@ char res_msg[256] =
 void td_Set_DT(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setDT,%hd%*[^\r]",
-			&ex_pwm_param.dead_time);
+			&TD_PULSE_DEAD_TIME);
 	/* ERROR CONTROL */
-	if (ex_pwm_param.dead_time < (TD_GLICH_DEBOUNCING_TIME * 2))
+	if (TD_PULSE_DEAD_TIME < (TD_GLICH_DEBOUNCING_TIME * 2))
 	{
-		ex_pwm_param.dead_time = TD_GLICH_DEBOUNCING_TIME * 2;
+		TD_PULSE_DEAD_TIME = TD_GLICH_DEBOUNCING_TIME * 2;
 	}
 	td_Pulse_Prm_Config();
 	td_Get_Res_Data(res_stim_deadtime);
@@ -97,7 +97,7 @@ void td_Set_DT(uint8_t *data, uint16_t len)
 void td_Set_PW(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setPW,%hd%*[^\r]",
-			&ex_pwm_param.pulse_width);
+			&TD_PULSE_WIDTH_TIME);
 	td_Pulse_Prm_Config();
 	td_Get_Res_Data(res_stim_pulse_width);
 }
@@ -108,12 +108,12 @@ void td_Set_PW(uint8_t *data, uint16_t len)
 void td_Set_HZ(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setHZ,%hd%*[^\r]",
-			&ex_pwm_param.pulse_freq);
+			&TD_PULSE_HZ_FREQ);
 
 	/* ERROR CONTROL */
 	if (TD_PULSE_FREQ_ARR <= (TD_TOTAL_PULSE_WIDTH_TIME * 2))
 	{
-		ex_pwm_param.pulse_freq = 1;
+		TD_PULSE_HZ_FREQ = 1;
 	}
 
 	if (td_Get_Sys_FSM_State() == td_sys_state_run)
@@ -202,17 +202,17 @@ void td_Get_Res_Data(uint8_t select_msg)
 	{
 	case res_stim_deadtime:
 		sprintf((char*) res_msg, (const char*) "%s %d us\r\n", mes_head,
-				ex_pwm_param.dead_time);
+		TD_PULSE_DEAD_TIME);
 		break;
 
 	case res_stim_pulse_width:
 		sprintf((char*) res_msg, (const char*) "%s %d us\r\n", mes_head,
-				ex_pwm_param.pulse_width);
+		TD_PULSE_WIDTH_TIME);
 		break;
 
 	case res_stim_frequency:
 		sprintf((char*) res_msg, (const char*) "%s %d Hz\r\n", mes_head,
-				ex_pwm_param.pulse_freq);
+		TD_PULSE_HZ_FREQ);
 		break;
 
 	case res_voltage_pulse_width:
@@ -237,10 +237,10 @@ void td_Get_Res_Data(uint8_t select_msg)
 				"HZ: %d Hz\r\n"
 				"VPW: %d\r\n"
 				"VOL: %d\r\n"
-				"DAC: %d step", mes_head, ex_pwm_param.dead_time,
-				ex_pwm_param.pulse_width, ex_pwm_param.pulse_freq,
-				TD_VOLTAGE_RELATED_PULSE_WIDTH, TD_VOLTAGE_VALUE_OUTPUT,
-				TD_CURRENT_STRENGTH_STEP);
+				"DAC: %d step", mes_head, TD_PULSE_DEAD_TIME,
+		TD_PULSE_WIDTH_TIME, TD_PULSE_HZ_FREQ,
+		TD_VOLTAGE_RELATED_PULSE_WIDTH, TD_VOLTAGE_VALUE_OUTPUT,
+		TD_CURRENT_STRENGTH_STEP);
 		break;
 	default:
 		break;
@@ -255,9 +255,9 @@ void td_Get_Res_Data(uint8_t select_msg)
  * */
 void td_Factory_Reset()
 {
-	ex_pwm_param.dead_time = 20;
-	ex_pwm_param.pulse_width = 1000;
-	ex_pwm_param.pulse_freq = 100;
+	TD_PULSE_DEAD_TIME = 20;
+	TD_PULSE_WIDTH_TIME = 1000;
+	TD_PULSE_HZ_FREQ = 100;
 	TD_VOLTAGE_RELATED_PULSE_WIDTH = 0;
 	TD_VOLTAGE_VALUE_OUTPUT = 0;
 	td_Flash_Write();
