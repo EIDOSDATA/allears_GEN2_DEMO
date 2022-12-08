@@ -82,6 +82,7 @@ void Echo_Set_DT(uint8_t *data, uint16_t len)
 {
 	sscanf((const char*) data, (const char*) "#setDT,%hd%*[^\r]",
 			&ECHO_PULSE_DEAD_TIME);
+
 	/* ERROR CONTROL */
 	if (ECHO_PULSE_DEAD_TIME < (ECHO_GLICH_DEBOUNCING_TIME * 2))
 	{
