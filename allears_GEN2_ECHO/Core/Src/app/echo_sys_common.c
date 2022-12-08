@@ -79,8 +79,8 @@ void Echo_PCI_State_Init()
 	Echo_Print_Version();
 	sprintf((char*) res_msg, (const char*) "Echo_PCI_State_Init()\r\n"
 			"SYSTEM CLOCK : %lu Hz\r\n", HAL_RCC_GetHCLKFreq());
-
 	ECHO_SHELL_PRINT(("%s\n", res_msg));
+
 	Echo_ADC_State_Init();
 	Echo_Print_Manual();
 	Echo_LED_Init();

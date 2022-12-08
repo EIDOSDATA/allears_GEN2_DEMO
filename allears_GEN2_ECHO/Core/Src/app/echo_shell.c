@@ -25,8 +25,8 @@ typedef struct
 
 echo_shell_msg_rcv_state_t echo_shell_msg_state;
 
-const char *help_manual = "\r\n----------   MANUAL   ----------\r\n"
-		"\r\n********  ADMIN COMMAND  ********\r\n"
+const char *help_manual = "----------   MANUAL   ----------\r\n"
+		"********  ADMIN COMMAND  ********\r\n"
 		"#start		:	START PWM\r\n"
 		"#stop		:	STOP PWM\r\n"
 		"#save		:	SAVE PWM PARAMETER\r\n"
@@ -34,13 +34,13 @@ const char *help_manual = "\r\n----------   MANUAL   ----------\r\n"
 		"#help		:	PRINT HELP MANUAL\r\n"
 		"#version	:	PRINT VERSION INFO\r\n\r\n"
 
-		"\r\n********  PARAMETER COMMAND  ********\r\n"
+		"********  PARAMETER COMMAND  ********\r\n"
 		"#setDT		:	Dead Time Setting\r\n"
 		"#setPW		:	Pulse Width Setting\r\n"
 		"#setHZ		:	Pulse Frequency Setting\r\n"
 		"#setVPW		:	Directly sets the voltage-related pulse width\r\n"
 		"#setVOL		:	Set the voltage value to output\r\n"
-		"#setDAC		:	Adjust the strength of the current.\r\n"
+		"#setDAC		:	Adjust the strength of the current.\r\n\r\n"
 
 		"#getDT		:	Get Dead Time\r\n"
 		"#getPW		:	Get Pulse Width\r\n"
@@ -147,10 +147,11 @@ void Echo_Print_Manual()
  */
 void Echo_Print_Version()
 {
-	char res_msg[40] =
+	char res_msg[60] =
 	{ '\0', };
 
-	sprintf(res_msg, "\r\nVERSION INFO: %s \r\n", ECHO_FW_VER);
+	sprintf(res_msg, "VERSION INFO: %s\r\n"
+			"Build Date: %s\r\n", ECHO_FW_VER, __DATE__);
 	ECHO_SHELL_PRINT(("%s\n",res_msg));
 }
 /**********************/
