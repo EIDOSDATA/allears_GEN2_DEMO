@@ -25,22 +25,16 @@ extern TIM_HandleTypeDef htim16;
 extern DMA_HandleTypeDef hdma_tim2_ch2_ch4;
 extern DMA_HandleTypeDef hdma_tim2_ch1;
 
-/* TEST */
-
-/* TIM2_CH1 DMA buffer: WORD size */
-volatile uint32_t gAulTim2Ch1Dma_buf[AUL_TIM2_CH1_DMA_DATA_TOTAL_NUM];
-
-/* TIM2_CH4 DMA buffer: WORD size */
-volatile uint32_t gAulTim2Ch4Dma_buf[AUL_TIM2_CH4_DMA_DATA_TOTAL_NUM];
-
 /*
  * PWM Parameter
  * */
 pwm_pulse_param_t ex_pwm_param;
 uint64_t *ex_p64_pwm_param = (uint64_t*) &ex_pwm_param;
 
-volatile uint32_t cathode_pwm_arr[2];
-volatile uint32_t current_ctrl_proc_arr[4];
+/* TIM2_CH1 DMA buffer: WORD size */
+volatile uint32_t tim2ch1_current_dma[4];
+/* TIM2_CH4 DMA buffer: WORD size */
+volatile uint32_t tim2ch4_cathode_dma[2];
 
 __IO int ex_voltage_r_pw = 0;
 __IO int ex_voltage_val_output = 0;
@@ -291,28 +285,15 @@ void td_Pulse_Prm_Config()
 	TIM2->CNT = 0;
 	TIM2->ARR = TD_PULSE_FREQ_ARR - 1;
 
-	/*
-	 gAulTim2Ch1Dma_buf[0] = AUL_TIM2_PULSE_LEN + AUL_TIM2_STABLE_LEN;
-	 gAulTim2Ch1Dma_buf[1] = AUL_TIM2_PULSE_LEN + AUL_TIM2_DELAY_LEN
-	 + AUL_TIM2_STABLE_LEN;
-	 gAulTim2Ch1Dma_buf[2] = 2 * AUL_TIM2_PULSE_LEN + AUL_TIM2_DELAY_LEN
-	 + AUL_TIM2_STABLE_LEN;
-	 gAulTim2Ch1Dma_buf[3] = AUL_TIM2_STABLE_LEN;
-
-	 gAulTim2Ch4Dma_buf[0] = 2 * AUL_TIM2_PULSE_LEN + AUL_TIM2_DELAY_LEN
-	 + 2 * AUL_TIM2_STABLE_LEN;
-	 gAulTim2Ch4Dma_buf[1] = AUL_TIM2_PULSE_LEN + AUL_TIM2_DELAY_LEN;
-	 */
-
 	/* PULSE and DEAD TIME SETTING */
 	TIM2->CCR2 = TD_ANODE_PULSE_TIME;
-	current_ctrl_proc_arr[0] = TD_CURRENT_CTRL_TIME0;
-	current_ctrl_proc_arr[1] = TD_CURRENT_CTRL_TIME1;
-	current_ctrl_proc_arr[2] = TD_CURRENT_CTRL_TIME2;
-	current_ctrl_proc_arr[3] = TD_CURRENT_CTRL_TIME3;
+	tim2ch1_current_dma[0] = TD_CURRENT_CTRL_TIME0;
+	tim2ch1_current_dma[1] = TD_CURRENT_CTRL_TIME1;
+	tim2ch1_current_dma[2] = TD_CURRENT_CTRL_TIME2;
+	tim2ch1_current_dma[3] = TD_CURRENT_CTRL_TIME3;
 
-	cathode_pwm_arr[0] = TD_CATHODE_PULSE_TIME0;
-	cathode_pwm_arr[1] = TD_CATHODE_PULSE_TIME1;
+	tim2ch4_cathode_dma[0] = TD_CATHODE_PULSE_TIME0;
+	tim2ch4_cathode_dma[1] = TD_CATHODE_PULSE_TIME1;
 }
 /****************************************/
 
@@ -371,7 +352,7 @@ void td_Stim_Start()
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_TOGGLE;
-	sConfigOC.Pulse = 10;
+	sConfigOC.Pulse = TD_CURRENT_CTRL_TIME3;
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	if (HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -379,7 +360,7 @@ void td_Stim_Start()
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	sConfigOC.Pulse = 1100;
+	sConfigOC.Pulse = TD_ANODE_PULSE_TIME;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
 	{
 		Error_Handler();
@@ -390,13 +371,13 @@ void td_Stim_Start()
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_TOGGLE;
-	sConfigOC.Pulse = 1200;
+	sConfigOC.Pulse = TD_CATHODE_PULSE_TIME1;
 	if (HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
 	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM2_Init 2 */
-
+	// ADC TIMER
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
 	sConfigOC.Pulse = 40;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
@@ -409,34 +390,17 @@ void td_Stim_Start()
 
 #endif
 
-	/* Start Timer */
-	/*
-	 while (HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_1,
-	 (uint32_t*) gAulTim2Ch1Dma_buf, AUL_TIM2_CH1_DMA_DATA_TOTAL_NUM)
-	 != HAL_OK)
-	 ;
-	 while (HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2) != HAL_OK)
-	 ;
-	 while (HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_4,
-	 (uint32_t*) gAulTim2Ch4Dma_buf, AUL_TIM2_CH4_DMA_DATA_TOTAL_NUM)
-	 != HAL_OK)
-	 ;
-	 __HAL_DMA_DISABLE_IT(&hdma_tim2_ch1, (DMA_IT_TC | DMA_IT_HT));
-	 __HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT));
-	 */
-	/* Enable DMA ERROR interrupt only */
 	td_Pulse_Prm_Config();
-	/* PULSE START */
+	/* START PULSE TIMER */
 	while (HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_1,
-			(uint32_t*) current_ctrl_proc_arr, 4) != HAL_OK)
+			(uint32_t*) tim2ch1_current_dma, 4) != HAL_OK)
 		;
 	while (HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2) != HAL_OK)
 		;
 	while (HAL_TIM_OC_Start_DMA(&htim2, TIM_CHANNEL_4,
-			(uint32_t*) cathode_pwm_arr, 2) != HAL_OK)
+			(uint32_t*) tim2ch4_cathode_dma, 2) != HAL_OK)
 		;
-
-	/* DMA INTERRUPT DISABLE */
+	/* ENABLE DMA ERROR INTERRUPT ONLYs */
 	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch1, (DMA_IT_TC | DMA_IT_HT));
 	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT));
 

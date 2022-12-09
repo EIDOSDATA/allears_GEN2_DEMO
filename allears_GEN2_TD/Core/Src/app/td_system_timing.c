@@ -148,6 +148,57 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim)
 }
 #endif
 
+/*********** TIMER STATUS CALLBACK ***********/
+void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim->Instance == TIM2)
+	{
+		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+		{
+			TD_SHELL_PRINT(("DMA CMPLT 1\n"));
+		}
+
+		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
+		{
+			TD_SHELL_PRINT(("DMA CMPLT 4\n"));
+		}
+	}
+}
+
+void HAL_TIM_PWM_PulseFinishedHalfCpltCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim->Instance == TIM2)
+	{
+		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+		{
+			TD_SHELL_PRINT(("DMA HALF CMPLT 1\n"));
+		}
+
+		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
+		{
+			TD_SHELL_PRINT(("DMA HALF CMPLT 4\n"));
+		}
+	}
+}
+
+void HAL_TIM_ErrorCallback(TIM_HandleTypeDef *htim)
+{
+	if (htim->Instance == TIM2)
+	{
+		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1)
+		{
+			TD_SHELL_PRINT(("DMA ERROR: TIM2_CH1\n"));
+		}
+
+		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
+		{
+			TD_SHELL_PRINT(("DMA ERROR: TIM2_CH4\n"));
+		}
+	}
+}
+/*********** END OF TIMER STATUS CALLBACK ***********/
+
+/*********** FEEDBACK TIMER ***********/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 #if NOT_USEAGE_TRGO
@@ -168,17 +219,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			/* SLOPE VOLTAGE RISE CONTROL */
 			if (timer16_cnt == 10 && TD_SLOPE_CONTROL_END_FLAG == false)
 			{
-				//td_ADC_Voltage_Feedback();
+				td_ADC_Voltage_Feedback();
 			}
 			/* VOLTAGE RANGE KEEPING CONTROL */
 			else if (timer16_cnt == 2 && TD_SLOPE_CONTROL_END_FLAG == true)
 			{
-				//td_ADC_Voltage_Feedback();
+				td_ADC_Voltage_Feedback();
 			}
-			//td_Stepup_ADC_Data_Print();
+			td_Stepup_ADC_Data_Print();
 
 			td_Set_ADC1_State(td_adc1_print_ok);
 			timer16_cnt++;
 		}
 	}
 }
+/*********** END OF FEEDBACK TIMER ***********/

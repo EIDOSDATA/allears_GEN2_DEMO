@@ -65,7 +65,7 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-
+extern pwm_pulse_param_t ex_pwm_param;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -500,8 +500,13 @@ static void MX_TIM2_Init(void)
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM2_Init 2 */
-
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
+	sConfigOC.Pulse = TD_CATHODE_PULSE_TIME1;
+	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
 	sConfigOC.Pulse = 40;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
 	{

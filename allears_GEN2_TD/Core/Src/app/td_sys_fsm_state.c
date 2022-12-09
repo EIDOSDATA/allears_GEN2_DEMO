@@ -18,6 +18,7 @@ td_sys_state_data_t td_sys_fsm_state;
 td_sys_state_t cur_state = td_sys_state_idle;
 
 extern td_adc1_state_t ex_adc1_cur_state;
+extern td_adc1_state_t ex_adc2_cur_state;
 /* while out code*/
 void td_Sys_FSM_State_Init(void)
 {
@@ -70,7 +71,6 @@ void td_Set_Sys_FSM_State(td_sys_state_t state)
 	 */
 	switch (state)
 	{
-
 	case td_sys_state_init:
 #ifdef DEBUG
 #ifdef TD_PULSE_INTERRUPT
@@ -83,6 +83,7 @@ void td_Set_Sys_FSM_State(td_sys_state_t state)
 		td_Stim_Stop();
 		td_Set_LED_State(td_led_idle);
 		ex_adc1_cur_state = td_adc1_idle;
+		//ex_adc2_cur_state = td_adc2_idle;
 #ifdef DEBUG
 #ifdef TD_PULSE_INTERRUPT
 		TD_SHELL_PRINT(("TD STATE IDLE\r\n"));
@@ -94,6 +95,7 @@ void td_Set_Sys_FSM_State(td_sys_state_t state)
 		td_Stim_Start();
 		td_Set_LED_State(td_led_run);
 		ex_adc1_cur_state = td_adc1_run;
+		//ex_adc2_cur_state = td_adc2_run;
 #ifdef DEBUG
 #ifdef TD_PULSE_INTERRUPT
 		TD_SHELL_PRINT(("TD STATE RUN\r\n"));
@@ -104,6 +106,7 @@ void td_Set_Sys_FSM_State(td_sys_state_t state)
 	case td_sys_state_error:
 		td_Set_LED_State(td_led_idle);
 		ex_adc1_cur_state = td_adc1_error;
+		//ex_adc2_cur_state = td_adc2_error;
 #ifdef DEBUG
 #ifdef TD_PULSE_INTERRUPT
 		TD_SHELL_PRINT(("TD STATE ERROR\r\n"));

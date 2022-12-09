@@ -78,7 +78,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 		for (int index = 0; index < ADC1_RCV_SIZE; index++)
 		{
 			/* ADC FILTER */
-			if (fabs(TD_ADC1_CONV_BUF[index] - TD_ADC1_CONV_BUF[(index + 1) % 10]) < 200)
+			if (fabs(
+			TD_ADC1_CONV_BUF[index] - TD_ADC1_CONV_BUF[(index + 1) % 10]) < 200)
 			{
 				ex_setpup_adc[index] = TD_ADC1_CONV_BUF[index]; // STEPUP_FEEDBACK
 			}
@@ -281,6 +282,12 @@ void td_ADC_Handle(void)
 	{
 		td_Set_ADC1_State(ex_adc1_cur_state);
 	}
+	/*
+	 if (TD_ADC2_CUR_STATE != ex_adc2_cur_state)
+	 {
+	 td_Set_ADC2_State(ex_adc2_cur_state);
+	 }
+	 */
 }
 /**********************/
 
@@ -335,7 +342,7 @@ void td_Set_ADC2_State(td_adc2_state_t state)
 	case td_adc2_conv_ok:
 		break;
 	case td_adc2_print_ok:
-		td_Set_ADC2_State(td_adc2_run);
+		ex_adc2_cur_state = td_adc2_run;
 		break;
 	case td_adc2_error:
 		td_Stop_ADC2_Conv();
