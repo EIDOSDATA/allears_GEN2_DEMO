@@ -168,14 +168,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			/* SLOPE VOLTAGE RISE CONTROL */
 			if (timer16_cnt == 10 && TD_SLOPE_CONTROL_END_FLAG == false)
 			{
-				td_ADC_Voltage_Feedback();
+				//td_ADC_Voltage_Feedback();
 			}
 			/* VOLTAGE RANGE KEEPING CONTROL */
 			else if (timer16_cnt == 2 && TD_SLOPE_CONTROL_END_FLAG == true)
 			{
-				td_ADC_Voltage_Feedback();
+				//td_ADC_Voltage_Feedback();
 			}
-			td_Stepup_ADC_Data_Print();
+			//td_Stepup_ADC_Data_Print();
 
 			td_Set_ADC1_State(td_adc1_print_ok);
 			timer16_cnt++;

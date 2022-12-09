@@ -127,6 +127,7 @@ int main(void)
 	/* USER CODE BEGIN 2 */
 	static uint32_t schdule_tick = 0;
 	td_PCI_State_Init();
+
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -136,6 +137,7 @@ int main(void)
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
+
 		td_Shell_CMD_Handle();
 		if (HAL_GetTick() - schdule_tick >= TD_SCHED_HANDLE_PERIOD)
 		{
@@ -195,7 +197,7 @@ void SystemClock_Config(void)
 	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
 	RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
 	RCC_OscInitStruct.PLL.PLLM = 1;
-	RCC_OscInitStruct.PLL.PLLN = 16;
+	RCC_OscInitStruct.PLL.PLLN = 40;
 	RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
 	RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
 	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -208,11 +210,11 @@ void SystemClock_Config(void)
 	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
 			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV2;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
 	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
 	{
 		Error_Handler();
 	}
@@ -324,7 +326,7 @@ static void MX_ADC2_Init(void)
 	hadc2.Init.DiscontinuousConvMode = DISABLE;
 	hadc2.Init.ExternalTrigConv = ADC_EXTERNALTRIG_T2_TRGO;
 	hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_FALLING;
-	hadc2.Init.DMAContinuousRequests = ENABLE;
+	hadc2.Init.DMAContinuousRequests = DISABLE;
 	hadc2.Init.Overrun = ADC_OVR_DATA_PRESERVED;
 	hadc2.Init.OversamplingMode = DISABLE;
 	if (HAL_ADC_Init(&hadc2) != HAL_OK)
@@ -455,7 +457,7 @@ static void MX_TIM2_Init(void)
 	htim2.Instance = TIM2;
 	htim2.Init.Prescaler = 79;
 	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim2.Init.Period = 999;
+	htim2.Init.Period = 9999;
 	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
 	if (HAL_TIM_OC_Init(&htim2) != HAL_OK)
@@ -466,14 +468,14 @@ static void MX_TIM2_Init(void)
 	{
 		Error_Handler();
 	}
-	sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+	sMasterConfig.MasterOutputTrigger = TIM_TRGO_OC3REF;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
 	if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
 	{
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_TOGGLE;
-	sConfigOC.Pulse = 5;
+	sConfigOC.Pulse = 10;
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	if (HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -481,24 +483,30 @@ static void MX_TIM2_Init(void)
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	sConfigOC.Pulse = 1010;
+	sConfigOC.Pulse = 1100;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
 	{
 		Error_Handler();
 	}
-	__HAL_TIM_DISABLE_OCxPRELOAD(&htim2, TIM_CHANNEL_2);
 	sConfigOC.Pulse = 0;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
 	{
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_TOGGLE;
-	sConfigOC.Pulse = 1040;
+	sConfigOC.Pulse = 1200;
 	if (HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
 	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM2_Init 2 */
+
+	sConfigOC.OCMode = TIM_OCMODE_PWM1;
+	sConfigOC.Pulse = 40;
+	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+	{
+		Error_Handler();
+	}
 
 	/* USER CODE END TIM2_Init 2 */
 	HAL_TIM_MspPostInit(&htim2);
@@ -649,7 +657,7 @@ static void MX_GPIO_Init(void)
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOB,
-			QCC_CRTL0_Pin | LED_Pin | BIPHASIC_SW_Pin | PEAK_DISCHG_SW_Pin,
+	QCC_CRTL0_Pin | LED_Pin | BIPHASIC_SW_Pin | PEAK_DISCHG_SW_Pin,
 			GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
