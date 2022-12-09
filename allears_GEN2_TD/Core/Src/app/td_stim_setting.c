@@ -259,7 +259,7 @@ void td_Factory_Reset()
 {
 	TD_PULSE_DEAD_TIME = 200;
 	TD_PULSE_WIDTH_TIME = 1000;
-	TD_PULSE_HZ_FREQ = 100;
+	TD_PULSE_HZ_FREQ = 20;
 	TD_VOLTAGE_RELATED_PULSE_WIDTH = 0;
 	TD_VOLTAGE_VALUE_OUTPUT = 0;
 	td_Flash_Write();
@@ -283,6 +283,7 @@ void td_Pulse_Prm_Config()
 {
 	/* HZ SETTING */
 	TIM2->CNT = 0;
+	TIM2->PSC = (int) (TD_MASTER_PSC / TD_TIMER_SCALE ) - 1;
 	TIM2->ARR = TD_PULSE_FREQ_ARR - 1;
 
 	/* PULSE and DEAD TIME SETTING */
@@ -530,7 +531,7 @@ void td_StepUP_Stop()
 void td_StepUP_Start()
 {
 	TIM16->CNT = 0;
-	TIM16->ARR = (1000 / TD_STIM_SCALE ) - 1;
+	TIM16->ARR = (1000 / TD_TIMER_SCALE ) - 1;
 	TIM1->CCR1 = TD_VOLTAGE_RELATED_PULSE_WIDTH;
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 	HAL_TIM_Base_Start_IT(&htim16);
