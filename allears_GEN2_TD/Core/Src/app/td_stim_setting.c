@@ -362,7 +362,7 @@ void td_Stim_Start()
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_TOGGLE;
-	sConfigOC.Pulse = TD_CURRENT_CTRL_TIME3;
+	sConfigOC.Pulse = 10;
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	if (HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -370,7 +370,7 @@ void td_Stim_Start()
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	sConfigOC.Pulse = TD_ANODE_PULSE_TIME;
+	sConfigOC.Pulse = 1100;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
 	{
 		Error_Handler();
@@ -381,15 +381,35 @@ void td_Stim_Start()
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_TOGGLE;
-	sConfigOC.Pulse = TD_CATHODE_PULSE_TIME1;
+	sConfigOC.Pulse = 1200;
 	if (HAL_TIM_OC_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
 	{
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM2_Init 2 */
-	// ADC TIMER
+	htim2.Instance = TIM2;
+	htim2.Init.Prescaler = TD_STIM_PSC;
+	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim2.Init.Period = TD_STIM_FREQ_ARR;
+	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+	if (HAL_TIM_OC_Init(&htim2) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	sConfigOC.Pulse = 40;
+	sConfigOC.Pulse = TD_CATHODE_PULSE_TIME1;
+	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	sConfigOC.Pulse = TD_TIM2_ADC2_TRG_TIME;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
 	{
 		Error_Handler();

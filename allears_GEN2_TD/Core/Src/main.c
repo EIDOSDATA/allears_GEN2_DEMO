@@ -500,6 +500,21 @@ static void MX_TIM2_Init(void)
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM2_Init 2 */
+	htim2.Instance = TIM2;
+	htim2.Init.Prescaler = TD_STIM_PSC;
+	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim2.Init.Period = TD_STIM_FREQ_ARR;
+	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+	if (HAL_TIM_OC_Init(&htim2) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
 	sConfigOC.Pulse = TD_CATHODE_PULSE_TIME1;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
@@ -507,7 +522,7 @@ static void MX_TIM2_Init(void)
 		Error_Handler();
 	}
 
-	sConfigOC.Pulse = 40;
+	sConfigOC.Pulse = TD_TIM2_ADC2_TRG_TIME;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
 	{
 		Error_Handler();
@@ -545,7 +560,17 @@ static void MX_TIM16_Init(void)
 		Error_Handler();
 	}
 	/* USER CODE BEGIN TIM16_Init 2 */
-
+	htim16.Instance = TIM16;
+	htim16.Init.Prescaler = TD_STEPUP_PSC;
+	htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim16.Init.Period = TD_STEPUP_FREQ_ARR;
+	htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	htim16.Init.RepetitionCounter = 0;
+	htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+	if (HAL_TIM_Base_Init(&htim16) != HAL_OK)
+	{
+		Error_Handler();
+	}
 	/* USER CODE END TIM16_Init 2 */
 
 }
@@ -662,7 +687,7 @@ static void MX_GPIO_Init(void)
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOB,
-			QCC_CRTL0_Pin | LED_Pin | BIPHASIC_SW_Pin | PEAK_DISCHG_SW_Pin,
+	QCC_CRTL0_Pin | LED_Pin | BIPHASIC_SW_Pin | PEAK_DISCHG_SW_Pin,
 			GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
