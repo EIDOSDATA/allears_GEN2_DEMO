@@ -246,7 +246,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 				td_ADC_Voltage_Feedback();
 			}
 			/* VOLTAGE RANGE KEEPING CONTROL */
-			else if (TD_SLOPE_CONTROL_END_FLAG == true)
+			else if (timer16_cnt == 2 && TD_SLOPE_CONTROL_END_FLAG == true)
 			{
 				//td_ADC_PeakDetection();
 				td_ADC_Voltage_Feedback();
