@@ -435,11 +435,6 @@ void td_Stim_Start()
 	__HAL_DMA_DISABLE_IT(&hdma_tim2_ch2_ch4, (DMA_IT_TC | DMA_IT_HT));
 
 	td_StepUP_Start();
-
-#if NOT_USEAGE_TRGO
-	td_Start_ADC2_Conv();
-	HAL_TIM_Base_Start_IT(&htim2);
-#endif
 }
 #endif
 

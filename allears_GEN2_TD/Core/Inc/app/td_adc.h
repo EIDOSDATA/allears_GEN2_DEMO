@@ -47,7 +47,7 @@ typedef enum
 /* REFERENCE TABLE */
 /*
  #define TD_REF_VOLTAGE_TABLE						ref_voltage_table
- #define TD_REF_ADC_VALUE_TABLE					ref_adc_value_table
+ #define TD_REF_ADC_VALUE_TABLE						ref_adc_value_table
  #define TD_REF_ADC_VOLTAGE_TABLE					ref_adc_voltage_table
  */
 

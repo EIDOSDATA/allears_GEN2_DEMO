@@ -21,29 +21,48 @@ extern DMA_HandleTypeDef hdma_adc2;
 extern __IO int ex_voltage_r_pw;
 
 /* REFERENCE TABLE */
-#define TD_REF_VOLTAGE_TABLE				ref_voltage_table
-#define TD_REF_ADC_VALUE_TABLE				ref_adc_value_table
-#define TD_REF_ADC_VOLTAGE_TABLE			ref_adc_voltage_table
+#define TD_REF_VOLTAGE_TABLE				ref_voltage_table_20mhz
+#define TD_REF_ADC_VALUE_TABLE				ref_adc_value_table_20mhz
+#define TD_REF_ADC_VOLTAGE_TABLE			ref_adc_voltage_table_20mhz
 
+/*********** SYSTEM CLOCK : 80MHZ ***********/
+// STEPUP PULSE TIMER : 200KHz
 /* Voltage Scale : 10 uV >> ADC BUFFER IS 10 */
-int ref_voltage_table[30] =
+int ref_voltage_table_80mhz[30] =
 { 360000, 660000, 880000, 1080000, 1320000, 1520000, 1760000, 1960000, 2160000,
 		2380000, 2600000, 2800000, 3000000, 3200000, 3380000, 3560000, 3720000,
 		3920000, 4080000, 4240000, 4400000, 4540000, 4680000, 4820000, 4940000,
 		5080000, 5180000, 5260000, 5340000, 5420000 }; // 30
 
-int ref_adc_value_table[30] =
+int ref_adc_value_table_80mhz[30] =
 { 282, 340, 384, 428, 477, 540, 585, 630, 676, 720, 763, 803, 847, 888, 928,
 		968, 1005, 1042, 1080, 1118, 1150, 1188, 1216, 1247, 1275, 1300, 1322,
 		1342, 1357, 1373 }; //30
 
 /* Voltage Scale : 10 uV >> ADC BUFFER IS 10 */
-int ref_adc_voltage_table[30] =
+int ref_adc_voltage_table_80mhz[30] =
 { 10000, 18000, 23000, 30000, 37000, 42000, 49000, 56000, 62000, 68000, 74000,
 		80000, 86000, 92000, 97000, 103500, 107000, 112000, 119000, 122000,
 		128000, 133000, 137000, 141000, 145000, 149000, 151000, 154000, 157000,
 		159000 }; // 30
-/**********************/
+/*********** END OF SYSTEM CLOCK : 80MHZ ***********/
+
+/*********** SYSTEM CLOCK : 20MHZ ***********/
+// STEPUP PULSE TIMER : 120KHz
+/* Voltage Scale : 10 uV >> ADC BUFFER IS 10 */
+int ref_voltage_table_20mhz[15] =
+{ 540000, 870000, 1262000, 1650000, 1985000, 2310000, 2624000, 2948000, 3258000,
+		3542000, 3805000, 4035000, 4220000, 4335000, 4397000 }; // 15
+
+int ref_adc_value_table_20mhz[15] =
+{ 227, 370, 465, 580, 673, 765, 847, 933, 1009, 1087, 1162, 1222, 1273, 1310,
+		1322 }; // 15
+
+/* Voltage Scale : 10 uV >> ADC BUFFER IS 10 */
+int ref_adc_voltage_table_20mhz[15] =
+{ 11000, 22500, 32500, 42500, 53300, 63100, 72300, 82200, 91200, 99250, 108800,
+		113400, 119500, 124700, 126500 }; // 15
+/*********** END OF SYSTEM CLOCK : 20MHZ ***********/
 
 /* ADC BUFFER */
 uint16_t get_adc1_buf[ADC1_CHK_CH_NUM * ADC1_RCV_SIZE];
@@ -240,12 +259,12 @@ uint32_t td_ADC_Calc_Stepup_V(uint32_t in_adc_val, uint32_t r1, uint32_t r2)
 	 */
 
 	/* REFERENCE TABLE */
-	/*
-	 if (TD_VOLTAGE_RELATED_PULSE_WIDTH > 24)
-	 {
-	 TD_VOLTAGE_RELATED_PULSE_WIDTH = 24;
-	 }
-	 */
+
+	if (TD_VOLTAGE_RELATED_PULSE_WIDTH > 24)
+	{
+		TD_VOLTAGE_RELATED_PULSE_WIDTH = 24;
+	}
+
 	uint64_t adc_val = (TD_REF_ADC_VOLTAGE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH]
 			* in_adc_val)
 			/ TD_REF_ADC_VALUE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH];
