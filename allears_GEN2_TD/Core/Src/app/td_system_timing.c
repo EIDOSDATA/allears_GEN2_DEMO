@@ -31,8 +31,9 @@ extern __IO int ex_voltage_val_output;
 extern __IO bool ex_slope_ctrl_end_f;
 
 /* STEPUP AND PEAK-DETECTION ADC VALUE*/
-extern uint16_t ex_peak_adc[ADC1_RCV_SIZE];
 extern uint16_t ex_setpup_adc[ADC1_RCV_SIZE];
+extern uint16_t ex_peak_adc_r[ADC1_RCV_SIZE];
+extern uint16_t ex_peak_adc_l[ADC1_RCV_SIZE];
 
 /* TIMER COUNTER VALUE */
 int timer2_cnt = 1;
@@ -201,7 +202,7 @@ void HAL_TIM_ErrorCallback(TIM_HandleTypeDef *htim)
 /*********** FEEDBACK TIMER ***********/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-#if NOT_USEAGE_TRGO
+#if 0
 	if (htim->Instance == TIM2)
 	{
 		/* ADC2 TRGO SIGNAL */
@@ -229,6 +230,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			td_Stepup_ADC_Data_Print();
 
 			td_Set_ADC1_State(td_adc1_print_ok);
+
 			timer16_cnt++;
 		}
 	}

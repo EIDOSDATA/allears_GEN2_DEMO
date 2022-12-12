@@ -59,7 +59,7 @@ typedef enum
 
 /* NUMBER OF ADC CHANNEL */
 #define ADC1_CHK_CH_NUM								1
-#define ADC2_CHK_CH_NUM								1
+#define ADC2_CHK_CH_NUM								2
 
 /* ADC READING SIZE */
 #define ADC1_RCV_SIZE								10

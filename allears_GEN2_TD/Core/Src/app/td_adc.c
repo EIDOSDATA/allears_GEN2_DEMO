@@ -50,7 +50,8 @@ uint16_t get_adc1_buf[ADC1_CHK_CH_NUM * ADC1_RCV_SIZE];
 uint16_t get_adc2_buf[ADC2_CHK_CH_NUM * ADC2_RCV_SIZE];
 
 uint16_t ex_setpup_adc[ADC1_RCV_SIZE]; // ADC1
-uint16_t ex_peak_adc[ADC2_RCV_SIZE]; // ADC2
+uint16_t ex_peak_adc_r[ADC2_RCV_SIZE]; // ADC2
+uint16_t ex_peak_adc_l[ADC2_RCV_SIZE]; // ADC2
 
 /* ADC1 STATE */
 typedef struct
@@ -95,7 +96,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 	{
 		for (int index = 0; index < ADC2_RCV_SIZE; index++)
 		{
-			ex_peak_adc[index] = TD_ADC2_CONV_BUF[index]; // PEAK_DETECTION
+			ex_peak_adc_r[index] = TD_ADC2_CONV_BUF[index]; // PEAK_DETECTION
 		}
 		ex_adc2_cur_state = td_adc2_conv_ok;
 	}
@@ -205,7 +206,7 @@ uint32_t td_Peak_Detection_ADC2_AVG()
 
 	for (int i = 0; i < ADC2_RCV_SIZE; i++)
 	{
-		adc2_avg += ex_peak_adc[i];
+		adc2_avg += ex_peak_adc_r[i];
 	}
 	return adc2_avg / ADC2_RCV_SIZE;
 }
@@ -274,12 +275,12 @@ void td_ADC_Handle(void)
 	{
 		td_Set_ADC1_State(ex_adc1_cur_state);
 	}
-	/*
-	 if (TD_ADC2_CUR_STATE != ex_adc2_cur_state)
-	 {
-	 td_Set_ADC2_State(ex_adc2_cur_state);
-	 }
-	 */
+
+	if (TD_ADC2_CUR_STATE != ex_adc2_cur_state)
+	{
+		td_Set_ADC2_State(ex_adc2_cur_state);
+	}
+
 }
 /**********************/
 
