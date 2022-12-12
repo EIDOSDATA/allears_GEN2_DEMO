@@ -88,12 +88,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 				ex_setpup_adc[index] = TD_ADC1_CONV_BUF[index - 1]; // STEPUP_FEEDBACK
 			}
 		}
-
-#if 0
-		ADC1_CONV_OK = true;
-#endif
-		//td_Start_ADC1_Conv();
-		ex_adc1_cur_state = td_adc1_conv_ok;
+		ex_adc1_cur_state = td_adc1_conv_ok; // td_Start_ADC1_Conv();
 	}
 
 	if (hadc->Instance == hadc2.Instance)
@@ -102,9 +97,6 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 		{
 			ex_peak_adc[index] = TD_ADC2_CONV_BUF[index]; // PEAK_DETECTION
 		}
-#if 0
-	ADC2_CONV_OK = true;
-#endif
 		ex_adc2_cur_state = td_adc2_conv_ok;
 	}
 }

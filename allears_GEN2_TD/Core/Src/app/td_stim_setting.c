@@ -113,7 +113,7 @@ void td_Set_HZ(uint8_t *data, uint16_t len)
 			&TD_PULSE_HZ_FREQ);
 
 	/* ERROR CONTROL */
-	if (TD_PULSE_FREQ_ARR <= (TD_TOTAL_PULSE_WIDTH_TIME * 2))
+	if (TD_STIM_FREQ_ARR <= (TD_TOTAL_PULSE_WIDTH_TIME * 2))
 	{
 		TD_PULSE_HZ_FREQ = 1;
 	}
@@ -265,13 +265,22 @@ void td_Factory_Reset()
 	td_Flash_Write();
 }
 
-int td_Get_Pulse_PSC(void)
+int td_Get_Stim_PSC(void)
 {
 	return (TIM2->PSC) + 1;
 }
-int td_Get_Pulse_ARR(void)
+int td_Get_Stim_ARR(void)
 {
 	return (TIM2->ARR) + 1;
+}
+
+int td_Get_Stepup_PSC(void)
+{
+	return (TIM16->PSC) + 1;
+}
+int td_Get_Stepup_ARR(void)
+{
+	return (TIM16->ARR) + 1;
 }
 /****************************************/
 
@@ -283,8 +292,8 @@ void td_Pulse_Prm_Config()
 {
 	/* HZ SETTING */
 	TIM2->CNT = 0;
-	TIM2->PSC = (int) (TD_MASTER_PSC / TD_TIMER_SCALE ) - 1;
-	TIM2->ARR = TD_PULSE_FREQ_ARR - 1;
+	TIM2->PSC = TD_STIM_PSC - 1;
+	TIM2->ARR = TD_STIM_FREQ_ARR - 1;
 
 	/* PULSE and DEAD TIME SETTING */
 	TIM2->CCR2 = TD_ANODE_PULSE_TIME;
@@ -531,7 +540,9 @@ void td_StepUP_Stop()
 void td_StepUP_Start()
 {
 	TIM16->CNT = 0;
-	TIM16->ARR = (1000 / TD_TIMER_SCALE ) - 1;
+	TIM16->PSC = TD_STEPUP_PSC - 1;
+	TIM16->ARR = TD_STEPUP_FREQ_ARR - 1;
+
 	TIM1->CCR1 = TD_VOLTAGE_RELATED_PULSE_WIDTH;
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 	HAL_TIM_Base_Start_IT(&htim16);
