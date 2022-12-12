@@ -113,7 +113,7 @@ void td_Set_HZ(uint8_t *data, uint16_t len)
 			&TD_PULSE_HZ_FREQ);
 
 	/* ERROR CONTROL */
-	if (TD_STIM_FREQ_ARR <= (TD_TOTAL_PULSE_WIDTH_TIME * 2))
+	if (TD_STIM_ARR <= (TD_TOTAL_PULSE_WIDTH_TIME * 2))
 	{
 		TD_PULSE_HZ_FREQ = 1;
 	}
@@ -293,7 +293,7 @@ void td_Pulse_Prm_Config()
 	/* HZ SETTING */
 	TIM2->CNT = 0;
 	TIM2->PSC = TD_STIM_PSC - 1;
-	TIM2->ARR = TD_STIM_FREQ_ARR - 1;
+	TIM2->ARR = TD_STIM_ARR - 1;
 
 	/* PULSE and DEAD TIME SETTING */
 	TIM2->CCR2 = TD_ANODE_PULSE_TIME;
@@ -390,7 +390,7 @@ void td_Stim_Start()
 	htim2.Instance = TIM2;
 	htim2.Init.Prescaler = TD_STIM_PSC;
 	htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim2.Init.Period = TD_STIM_FREQ_ARR;
+	htim2.Init.Period = TD_STIM_ARR;
 	htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
 	if (HAL_TIM_OC_Init(&htim2) != HAL_OK)
@@ -560,8 +560,8 @@ void td_StepUP_Stop()
 void td_StepUP_Start()
 {
 	TIM16->CNT = 0;
-	TIM16->PSC = TD_STEPUP_PSC - 1;
-	TIM16->ARR = TD_STEPUP_FREQ_ARR - 1;
+	TIM16->PSC = TD_STEPUP_FDBK_PSC - 1;
+	TIM16->ARR = TD_STEPUP_FDBK_ARR - 1;
 
 	TIM1->CCR1 = TD_VOLTAGE_RELATED_PULSE_WIDTH;
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
