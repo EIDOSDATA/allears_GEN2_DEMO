@@ -89,6 +89,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 				ex_setpup_adc[index] = TD_ADC1_CONV_BUF[index - 1]; // STEPUP_FEEDBACK
 			}
 		}
+		HAL_ADC_Stop_DMA(&hadc1);
 		ex_adc1_cur_state = td_adc1_conv_ok; // td_Start_ADC1_Conv();
 	}
 
@@ -96,8 +97,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 	{
 		for (int index = 0; index < ADC2_RCV_SIZE; index++)
 		{
-			ex_peak_adc_r[index] = TD_ADC2_CONV_BUF[index]; // PEAK_DETECTION
+			ex_peak_adc_r[index] = TD_ADC2_CONV_BUF[index * 2]; // PEAK_DETECTION
+			ex_peak_adc_l[index] = TD_ADC2_CONV_BUF[(index * 2) + 1]; // PEAK_DETECTION
 		}
+		HAL_ADC_Stop_DMA(&hadc2);
 		ex_adc2_cur_state = td_adc2_conv_ok;
 	}
 }
@@ -200,13 +203,22 @@ uint32_t td_Stepup_ADC1_AVG()
 	return adc1_avg; //return adc1_avg / TD_ADC1_RCV_SIZE;
 }
 
-uint32_t td_Peak_Detection_ADC2_AVG()
+uint32_t td_Peak_Detection_ADC2_AVG(uint8_t channel)
 {
 	uint32_t adc2_avg = 0;
-
-	for (int i = 0; i < ADC2_RCV_SIZE; i++)
+	if (channel == ADC2_RIGHT_CH)
 	{
-		adc2_avg += ex_peak_adc_r[i];
+		for (int i = 0; i < ADC2_RCV_SIZE; i++)
+		{
+			adc2_avg += ex_peak_adc_r[i];
+		}
+	}
+	else if (channel == ADC2_LEFT_CH)
+	{
+		for (int i = 0; i < ADC2_RCV_SIZE; i++)
+		{
+			adc2_avg += ex_peak_adc_r[i];
+		}
 	}
 	return adc2_avg / ADC2_RCV_SIZE;
 }

@@ -70,8 +70,12 @@ typedef enum
 #define TD_ADC2_CONV_BUF							get_adc2_buf
 
 /* ADC FSM STATE */
-#define TD_ADC1_CUR_STATE		td_adc1_fsm_state.state
-#define TD_ADC2_CUR_STATE		td_adc2_fsm_state.state
+#define TD_ADC1_CUR_STATE							td_adc1_fsm_state.state
+#define TD_ADC2_CUR_STATE							td_adc2_fsm_state.state
+
+/* ADC2 CHANNEL DEFINE */
+#define ADC2_RIGHT_CH								0
+#define ADC2_LEFT_CH								1
 
 void td_ADC1_Enable(void);
 void td_ADC2_Enable(void);
@@ -84,7 +88,7 @@ void td_Stop_ADC1_Conv(void);
 void td_Stop_ADC2_Conv(void);
 
 uint32_t td_Stepup_ADC1_AVG(void);
-uint32_t td_Peak_Detection_ADC2_AVG(void);
+uint32_t td_Peak_Detection_ADC2_AVG(uint8_t channel);
 
 uint32_t td_ADC_Calc_Stepup_V(uint32_t in_adc_val, uint32_t r1, uint32_t r2);
 uint32_t td_ADC_Calc_Peak_V(uint32_t in_adc_val);
