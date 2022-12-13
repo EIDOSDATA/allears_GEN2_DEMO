@@ -118,6 +118,7 @@ int td_Get_Stepup_ARR(void);
 #define TD_CURRENT_STRENGTH_STEP			ex_current_strength_step
 #define TD_SLOPE_CONTROL_END_FLAG			ex_slope_ctrl_end_f
 
-#define TD_VOLTAGE_PW_MAX_VALUE				16
+#define TD_VOLTAGE_PW_MAX_VALUE				20
+#define TD_VOLTAGE_TABLE_MAX_VALUE			16
 
 #endif /* INC_APP_TD_STIM_SETTING_H_ */

@@ -498,6 +498,10 @@ uint32_t td_Voltage_Config(uint64_t adc_voltage)
 		if (voltage_scaleup_val > adc_voltage)
 		{
 			TD_VOLTAGE_RELATED_PULSE_WIDTH++;
+			if (TD_VOLTAGE_RELATED_PULSE_WIDTH > TD_VOLTAGE_TABLE_MAX_VALUE - 1)
+			{
+				TD_VOLTAGE_RELATED_PULSE_WIDTH = TD_VOLTAGE_TABLE_MAX_VALUE;
+			}
 		}
 		else if (voltage_scaleup_val < adc_voltage)
 		{
@@ -514,6 +518,11 @@ uint32_t td_Voltage_Config(uint64_t adc_voltage)
 		{
 			TD_VOLTAGE_RELATED_PULSE_WIDTH++;
 			TD_SLOPE_CONTROL_END_FLAG = false;
+			TD_VOLTAGE_RELATED_PULSE_WIDTH++;
+			if (TD_VOLTAGE_RELATED_PULSE_WIDTH > TD_VOLTAGE_TABLE_MAX_VALUE - 1)
+			{
+				TD_VOLTAGE_RELATED_PULSE_WIDTH = TD_VOLTAGE_TABLE_MAX_VALUE;
+			}
 		}
 		else if (voltage_scaleup_val < adc_voltage)
 		{
