@@ -118,7 +118,7 @@ int main(void)
 		//td_Shell_CMD_Handle();
 		if (HAL_GetTick() - schdule_tick >= TD_SCHED_HANDLE_PERIOD)
 		{
-			TD_SHELL_PRINT(("GPIOA PIN DATA: \n"));
+			TD_SHELL_PRINT(("GPIOA PIN DATA: ON:1 / OFF:0\n"));
 			for (int i = 0; i <= 15; i++)
 			{
 				GPIOA->ODR ^= GPIO_PIN_0 << i;
@@ -128,11 +128,12 @@ int main(void)
 					TD_SHELL_PRINT(("%d  ", result));
 				}
 				TD_SHELL_PRINT(("\r\n"));
+				HAL_Delay(10);
 				//TD_SHELL_PRINT(("%x  ",(uint16_t)GPIOA->ODR));
 			}
-			TD_SHELL_PRINT(("\r\n\r\n"));
+			TD_SHELL_PRINT(("\r\n"));
 
-			TD_SHELL_PRINT(("GPIOB PIN DATA: \n"));
+			TD_SHELL_PRINT(("GPIOB PIN DATA: ON: 1 / OFF: 0\n"));
 			for (int i = 0; i <= 7; i++)
 			{
 				GPIOB->ODR ^= GPIO_PIN_0 << i;
@@ -142,9 +143,10 @@ int main(void)
 					TD_SHELL_PRINT(("%d  ", result));
 				}
 				TD_SHELL_PRINT(("\r\n"));
+				HAL_Delay(10);
 				//TD_SHELL_PRINT(("%x  ",(uint16_t)GPIOB->ODR));
 			}
-			TD_SHELL_PRINT(("\r\n\r\n"));
+			TD_SHELL_PRINT(("\r\n"));
 			schdule_tick = HAL_GetTick();
 		};
 		/*

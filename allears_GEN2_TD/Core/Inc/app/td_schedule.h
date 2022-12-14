@@ -8,7 +8,7 @@
 #ifndef INC_APP_TD_SCHEDULE_H_
 #define INC_APP_TD_SCHEDULE_H_
 
-#define TD_SCHED_HANDLE_PERIOD			1000 /* 10 ms */
+#define TD_SCHED_HANDLE_PERIOD			500 /* 10 ms */
 
 void td_Sched(void);
 
