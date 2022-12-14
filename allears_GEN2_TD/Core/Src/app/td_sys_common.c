@@ -67,6 +67,7 @@ void td_PCI_State_Init()
 	char res_msg[55] =
 	{ '\0', };
 	/* FLASH READ */
+#if 0
 	if (td_Flash_Read() != HAL_OK)
 	{
 		TD_PULSE_DEAD_TIME = 200;
@@ -75,7 +76,7 @@ void td_PCI_State_Init()
 		TD_VOLTAGE_RELATED_PULSE_WIDTH = 0;
 		TD_VOLTAGE_VALUE_OUTPUT = 0;
 	}
-
+#endif
 	td_Print_Version();
 	HAL_UART_Transmit(&TD_USART1_HANDLE, (uint8_t*) "COMMS CHNL: UART1\r\n", 19,
 			100);
@@ -85,7 +86,7 @@ void td_PCI_State_Init()
 			"SYSTEM CLOCK: %lu Hz\r\n", HAL_RCC_GetHCLKFreq());
 
 	TD_SHELL_PRINT(("%s\n", res_msg));
-	td_ADC_State_Init();
+	//td_ADC_State_Init();
 	td_Print_Manual();
 	td_LED_Init();
 	td_Sys_FSM_State_Init();

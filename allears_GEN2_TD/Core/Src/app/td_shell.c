@@ -193,6 +193,7 @@ void td_Shell_Init(void)
 /*
  *  SHELL COMMAND EXE
  */
+#if 0
 void td_Shell_CMD_Handle()
 {
 	static uint8_t st_byte;
@@ -255,6 +256,7 @@ void td_Shell_CMD_Handle()
 		}
 	}
 }
+#endif
 /**********************/
 
 /*

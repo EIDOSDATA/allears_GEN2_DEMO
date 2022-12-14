@@ -4,6 +4,7 @@
  *  Created on: 2022. 10. 20.
  *      Author: ECHO
  */
+#if 0
 #include <stdint.h>
 #include <string.h>
 #include <strings.h>
@@ -578,3 +579,4 @@ void td_StepUP_Start()
 }
 /****************************************/
 
+#endif

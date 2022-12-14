@@ -13,6 +13,7 @@
 #include <td_sys_fsm_state.h>
 #include "main.h"
 
+#if 0
 extern ADC_HandleTypeDef hadc1;
 extern ADC_HandleTypeDef hadc2;
 extern DMA_HandleTypeDef hdma_adc1;
@@ -270,3 +271,5 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 }
 /*********** END OF FEEDBACK TIMER ***********/
+
+#endif
