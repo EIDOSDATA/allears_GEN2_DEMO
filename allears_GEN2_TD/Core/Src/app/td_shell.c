@@ -26,7 +26,7 @@ typedef struct
 
 td_shell_msg_rcv_state_t td_shell_msg_state;
 
-const char *help_manual = "----------   MANUAL   ----------\r\n"
+const char *help_manual = "\r\n----------   MANUAL   ----------\r\n"
 		"********  ADMIN COMMAND  ********\r\n"
 		"#start		:	START PWM\r\n"
 		"#stop		:	STOP PWM\r\n"
