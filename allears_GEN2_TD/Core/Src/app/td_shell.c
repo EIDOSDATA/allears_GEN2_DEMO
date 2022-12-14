@@ -162,30 +162,24 @@ void td_Print_Version()
  */
 void td_Shell_Input_Print()
 {
-	if (ex_td_uart1_rcv_byte != 0)
+	if (ex_td_uart2_rcv_byte != 0)
 	{
-		TD_USART1_MUTEX_LOCK;
 		TD_USART2_MUTEX_LOCK;
 
-		HAL_UART_Transmit(&TD_USART1_HANDLE, &ex_td_uart1_rcv_byte, 1, 10);
-		HAL_UART_Transmit(&TD_USART2_HANDLE, &ex_td_uart2_rcv_byte, 1, 10);
-
-		ex_td_uart1_rcv_byte = 0;
-		TD_USART1_MUTEX_UNLOCK;
-		TD_USART2_MUTEX_UNLOCK;
-	}
-
-	else if (ex_td_uart2_rcv_byte != 0)
-	{
-		TD_USART1_MUTEX_LOCK;
-		TD_USART2_MUTEX_LOCK;
-
-		HAL_UART_Transmit(&TD_USART1_HANDLE, &ex_td_uart1_rcv_byte, 1, 10);
 		HAL_UART_Transmit(&TD_USART2_HANDLE, &ex_td_uart2_rcv_byte, 1, 10);
 
 		ex_td_uart2_rcv_byte = 0;
-		TD_USART1_MUTEX_UNLOCK;
 		TD_USART2_MUTEX_UNLOCK;
+	}
+
+	if (ex_td_uart1_rcv_byte != 0)
+	{
+		TD_USART1_MUTEX_LOCK;
+
+		HAL_UART_Transmit(&TD_USART1_HANDLE, &ex_td_uart1_rcv_byte, 1, 10);
+
+		ex_td_uart1_rcv_byte = 0;
+		TD_USART1_MUTEX_UNLOCK;
 	}
 }
 /**********************/

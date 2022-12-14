@@ -72,11 +72,11 @@ extern pwm_pulse_param_t ex_pwm_param;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
+static void MX_USART2_UART_Init(void);
+static void MX_USART1_UART_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM16_Init(void);
-static void MX_USART1_UART_Init(void);
-static void MX_USART2_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ADC2_Init(void);
 /* USER CODE BEGIN PFP */
@@ -117,11 +117,11 @@ int main(void)
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
 	MX_DMA_Init();
+	MX_USART2_UART_Init();
+	MX_USART1_UART_Init();
 	MX_TIM1_Init();
 	MX_TIM2_Init();
 	MX_TIM16_Init();
-	MX_USART1_UART_Init();
-	MX_USART2_UART_Init();
 	MX_ADC1_Init();
 	MX_ADC2_Init();
 	/* USER CODE BEGIN 2 */
