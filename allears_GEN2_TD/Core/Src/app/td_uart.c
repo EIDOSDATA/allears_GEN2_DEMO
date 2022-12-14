@@ -151,14 +151,27 @@ void td_Uart2_Interrupt_Enable(void)
 /*
  * 1. UART RX Interrupt
  */
-
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 	if (huart->Instance == USART1)
 	{
 		st_td_Uart1_RCV_Q_Put_INLINE(ex_td_uart1_rcv_byte);
 	}
-	else if (huart->Instance == USART2)
+	if (huart->Instance == USART2)
+	{
+		st_td_Uart2_RCV_Q_Put_INLINE(ex_td_uart2_rcv_byte);
+	}
+	HAL_UART_Receive_IT(&TD_USART1_HANDLE, &ex_td_uart1_rcv_byte, 1);
+	HAL_UART_Receive_IT(&TD_USART2_HANDLE, &ex_td_uart2_rcv_byte, 1);
+}
+
+void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart)
+{
+	if (huart->Instance == USART1)
+	{
+		st_td_Uart1_RCV_Q_Put_INLINE(ex_td_uart1_rcv_byte);
+	}
+	if (huart->Instance == USART2)
 	{
 		st_td_Uart2_RCV_Q_Put_INLINE(ex_td_uart2_rcv_byte);
 	}
