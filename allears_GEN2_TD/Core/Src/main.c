@@ -687,7 +687,7 @@ static void MX_GPIO_Init(void)
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOB,
-	QCC_CRTL0_Pin | LED_Pin | BIPHASIC_SW_Pin | PEAK_DISCHG_SW_Pin,
+			QCC_CRTL0_Pin | LED_Pin | BIPHASIC_SW_Pin | PEAK_DISCHG_SW_Pin,
 			GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */

@@ -74,7 +74,7 @@ void td_Uart1_Init(void)
 	TD_USART1_HANDLE.Init.OverSampling = UART_OVERSAMPLING_16;
 	TD_USART1_HANDLE.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
 	TD_USART1_HANDLE.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-	if (HAL_UART_Init(&huart1) != HAL_OK)
+	if (HAL_UART_Init(&TD_USART1_HANDLE) != HAL_OK)
 	{
 		Error_Handler();
 	}
@@ -182,13 +182,11 @@ bool td_Uart1_Get_RCV_Q(uint8_t *item)
 				% TD_USART1_RCV_Q_SIZE;
 		*item = td_uart1_state.queue[td_uart1_state.q_front];
 
-		TD_USART1_MUTEX_LOCK
-		;
+		TD_USART1_MUTEX_LOCK;
 
 		td_uart1_state.item_num--;
 
-		TD_USART1_MUTEX_UNLOCK
-		;
+		TD_USART1_MUTEX_UNLOCK;
 
 		data_valid = true;
 	}
@@ -209,13 +207,11 @@ bool td_Uart2_Get_RCV_Q(uint8_t *item)
 				% TD_USART2_RCV_Q_SIZE;
 		*item = td_uart2_state.queue[td_uart2_state.q_front];
 
-		TD_USART2_MUTEX_LOCK
-		;
+		TD_USART2_MUTEX_LOCK;
 
 		td_uart2_state.item_num--;
 
-		TD_USART2_MUTEX_UNLOCK
-		;
+		TD_USART2_MUTEX_UNLOCK;
 
 		data_valid = true;
 	}
