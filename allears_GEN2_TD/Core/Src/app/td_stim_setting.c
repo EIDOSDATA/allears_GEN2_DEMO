@@ -14,6 +14,7 @@
 #include <td_shell.h>
 #include <td_stim_setting.h>
 #include <td_sys_fsm_state.h>
+#include <td_uart.h>
 #include "main.h"
 
 extern ADC_HandleTypeDef hadc1;
@@ -247,6 +248,10 @@ void td_Get_Res_Data(uint8_t select_msg)
 	default:
 		break;
 	}
+	HAL_UART_Transmit(&TD_USART1_HANDLE, (uint8_t*) "\r\nRES CHNL: UART1\r\n",
+			19, 100);
+	HAL_UART_Transmit(&TD_USART2_HANDLE, (uint8_t*) "\r\nRES CHNL: UART2\r\n",
+			19, 100);
 	TD_SHELL_PRINT(("%s\r\n", res_msg));
 }
 

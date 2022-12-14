@@ -386,7 +386,7 @@ static void MX_TIM1_Init(void)
 	htim1.Instance = TIM1;
 	htim1.Init.Prescaler = 0;
 	htim1.Init.CounterMode = TIM_COUNTERMODE_DOWN;
-	htim1.Init.Period = 159;
+	htim1.Init.Period = 1999;
 	htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
 	htim1.Init.RepetitionCounter = 0;
 	htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
@@ -687,7 +687,7 @@ static void MX_GPIO_Init(void)
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOB,
-			QCC_CRTL0_Pin | LED_Pin | BIPHASIC_SW_Pin | PEAK_DISCHG_SW_Pin,
+	QCC_CRTL0_Pin | LED_Pin | BIPHASIC_SW_Pin | PEAK_DISCHG_SW_Pin,
 			GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
