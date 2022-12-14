@@ -118,45 +118,39 @@ int main(void)
 		//td_Shell_CMD_Handle();
 		if (HAL_GetTick() - schdule_tick >= TD_SCHED_HANDLE_PERIOD)
 		{
-			GPIOA->ODR ^= GPIO_PIN_0;
-			GPIOA->ODR ^= GPIO_PIN_1;
-			GPIOA->ODR ^= GPIO_PIN_2;
-			GPIOA->ODR ^= GPIO_PIN_3;
-			GPIOA->ODR ^= GPIO_PIN_4;
-			GPIOA->ODR ^= GPIO_PIN_5;
-			GPIOA->ODR ^= GPIO_PIN_6;
-			GPIOA->ODR ^= GPIO_PIN_7;
-			GPIOA->ODR ^= GPIO_PIN_8;
-			GPIOA->ODR ^= GPIO_PIN_9;
-			GPIOA->ODR ^= GPIO_PIN_10;
-			GPIOA->ODR ^= GPIO_PIN_11;
-			GPIOA->ODR ^= GPIO_PIN_12;
-			GPIOA->ODR ^= GPIO_PIN_13;
-			GPIOA->ODR ^= GPIO_PIN_14;
-			GPIOA->ODR ^= GPIO_PIN_15;
-
-			GPIOB->ODR ^= GPIO_PIN_0;
-			GPIOB->ODR ^= GPIO_PIN_1;
-			GPIOB->ODR ^= GPIO_PIN_3;
-			GPIOB->ODR ^= GPIO_PIN_4;
-			GPIOB->ODR ^= GPIO_PIN_5;
-			GPIOB->ODR ^= GPIO_PIN_6;
-			GPIOB->ODR ^= GPIO_PIN_7;
-
 			TD_SHELL_PRINT(("GPIOA PIN DATA: \n"));
-			for (int i = 0; i < 15; i++)
+			for (int i = 0; i <= 15; i++)
 			{
-				TD_SHELL_PRINT(("%d \n"));
+				GPIOA->ODR ^= GPIO_PIN_0 << i;
+				for (int j = 15; j >= 0; --j)
+				{
+					uint8_t result = GPIOA->ODR >> j & 1;
+					TD_SHELL_PRINT(("%d  ", result));
+				}
+				TD_SHELL_PRINT(("\r\n"));
+				//TD_SHELL_PRINT(("%x  ",(uint16_t)GPIOA->ODR));
 			}
-			TD_SHELL_PRINT(("GPIOB PIN DATA: \n"));
-			for (int i = 0; i < 15; i++)
-			{
-			}
-			schdule_tick = HAL_GetTick();
-		}
+			TD_SHELL_PRINT(("\r\n\r\n"));
 
-		GPIOB->ODR ^= LED_Pin;
-		HAL_Delay(25);
+			TD_SHELL_PRINT(("GPIOB PIN DATA: \n"));
+			for (int i = 0; i <= 7; i++)
+			{
+				GPIOB->ODR ^= GPIO_PIN_0 << i;
+				for (int j = 7; j >= 0; --j)
+				{
+					uint8_t result = GPIOB->ODR >> j & 1;
+					TD_SHELL_PRINT(("%d  ", result));
+				}
+				TD_SHELL_PRINT(("\r\n"));
+				//TD_SHELL_PRINT(("%x  ",(uint16_t)GPIOB->ODR));
+			}
+			TD_SHELL_PRINT(("\r\n\r\n"));
+			schdule_tick = HAL_GetTick();
+		};
+		/*
+		 GPIOB->ODR ^= LED_Pin;
+		 HAL_Delay(25);
+		 */
 
 		/*
 		 * POWER SLEEP MODE
@@ -328,7 +322,8 @@ static void MX_GPIO_Init(void)
 	 PA6 PA7 PA8 PA9
 	 PA10 PA11 PA12 */
 	GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_3 | GPIO_PIN_5
-			| GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10
+
+	| GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10
 			| GPIO_PIN_11 | GPIO_PIN_12;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
