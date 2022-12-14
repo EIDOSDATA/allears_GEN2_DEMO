@@ -90,6 +90,7 @@ void td_PCI_State_Init()
 	td_LED_Init();
 	td_Sys_FSM_State_Init();
 	td_Shell_Init();
+	td_Uart1_Interrupt_Enable();
 	td_Uart2_Interrupt_Enable();
 }
 
