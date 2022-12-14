@@ -14,7 +14,7 @@
 #include <td_stim_setting.h>
 #include <td_sys_common.h>
 #include <td_sys_fsm_state.h>
-#include <td_uart2.h>
+#include <td_uart.h>
 #include "main.h"
 
 /*

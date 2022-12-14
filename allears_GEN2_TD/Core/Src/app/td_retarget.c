@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <td_private.h>
-#include <td_uart2.h>
+#include <td_uart.h>
 #include "main.h"
 
 struct __FILE
