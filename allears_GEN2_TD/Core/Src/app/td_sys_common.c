@@ -77,8 +77,12 @@ void td_PCI_State_Init()
 	}
 
 	td_Print_Version();
+	HAL_UART_Transmit(&TD_USART1_HANDLE, (uint8_t*) "COMMS CHNL: UART1\r\n", 19,
+			100);
+	HAL_UART_Transmit(&TD_USART2_HANDLE, (uint8_t*) "COMMS CHNL: UART2\r\n", 19,
+			100);
 	sprintf((char*) res_msg, (const char*) "td_PCI_State_Init()\r\n"
-			"SYSTEM CLOCK : %lu Hz\r\n", HAL_RCC_GetHCLKFreq());
+			"SYSTEM CLOCK: %lu Hz\r\n", HAL_RCC_GetHCLKFreq());
 
 	TD_SHELL_PRINT(("%s\n", res_msg));
 	td_ADC_State_Init();

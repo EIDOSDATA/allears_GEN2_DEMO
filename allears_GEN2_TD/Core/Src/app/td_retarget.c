@@ -25,8 +25,10 @@ PUTCHAR_PROTOTYPE
 {
 	if (ch == '\n')
 	{
+		HAL_UART_Transmit(&TD_USART1_HANDLE, (uint8_t*) "\r", 1, 0xFFFF);
 		HAL_UART_Transmit(&TD_USART2_HANDLE, (uint8_t*) "\r", 1, 0xFFFF);
 	}
+	HAL_UART_Transmit(&TD_USART1_HANDLE, (uint8_t*) &ch, 1, 0xFFFF);
 	HAL_UART_Transmit(&TD_USART2_HANDLE, (uint8_t*) &ch, 1, 0xFFFF);
 	return ch;
 }

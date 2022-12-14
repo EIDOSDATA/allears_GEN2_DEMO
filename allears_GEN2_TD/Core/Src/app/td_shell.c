@@ -13,6 +13,7 @@
 #ifdef	TD_SHELL_ENABLED
 
 extern pwm_pulse_param_t ex_pwm_param;
+extern uint8_t ex_td_uart1_rcv_byte;
 extern uint8_t ex_td_uart2_rcv_byte;
 
 typedef struct
@@ -161,10 +162,30 @@ void td_Print_Version()
  */
 void td_Shell_Input_Print()
 {
-	if (ex_td_uart2_rcv_byte != 0)
+	if (ex_td_uart1_rcv_byte != 0)
 	{
+		TD_USART1_MUTEX_LOCK;
+		TD_USART2_MUTEX_LOCK;
+
+		HAL_UART_Transmit(&TD_USART1_HANDLE, &ex_td_uart1_rcv_byte, 1, 10);
 		HAL_UART_Transmit(&TD_USART2_HANDLE, &ex_td_uart2_rcv_byte, 1, 10);
+
+		ex_td_uart1_rcv_byte = 0;
+		TD_USART1_MUTEX_UNLOCK;
+		TD_USART2_MUTEX_UNLOCK;
+	}
+
+	else if (ex_td_uart2_rcv_byte != 0)
+	{
+		TD_USART1_MUTEX_LOCK;
+		TD_USART2_MUTEX_LOCK;
+
+		HAL_UART_Transmit(&TD_USART1_HANDLE, &ex_td_uart1_rcv_byte, 1, 10);
+		HAL_UART_Transmit(&TD_USART2_HANDLE, &ex_td_uart2_rcv_byte, 1, 10);
+
 		ex_td_uart2_rcv_byte = 0;
+		TD_USART1_MUTEX_UNLOCK;
+		TD_USART2_MUTEX_UNLOCK;
 	}
 }
 /**********************/
@@ -181,7 +202,8 @@ void td_Shell_Init(void)
 void td_Shell_CMD_Handle()
 {
 	static uint8_t st_byte;
-	while (td_Uart2_Get_RCV_Q(&st_byte) == true
+	while ((td_Uart1_Get_RCV_Q(&st_byte) == true
+			|| td_Uart2_Get_RCV_Q(&st_byte) == true)
 			&& SHELL_MSG_RCV_POS < SHELL_MSG_RCV_BUF_SIZE)
 	{
 		SHELL_MSG_RCV_FLUSH_CHK_TIME = HAL_GetTick();
