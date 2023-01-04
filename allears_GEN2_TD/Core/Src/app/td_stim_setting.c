@@ -300,7 +300,10 @@ void td_Pulse_Prm_Config()
 	TIM2->PSC = TD_STIM_PSC - 1;
 	TIM2->ARR = TD_STIM_ARR - 1;
 
-	/* PULSE and DEAD TIME SETTING */
+	/* PEAK DETECTION ADC READ TIME SETTING */
+	TIM2->CCR3 = TD_TIM2_ADC2_TRG_TIME;
+
+	/* PULSE AND DEAD TIME SETTING */
 	TIM2->CCR2 = TD_ANODE_PULSE_TIME;
 	tim2ch4_current_dma[0] = TD_CURRENT_CTRL_TIME0;
 	tim2ch4_current_dma[1] = TD_CURRENT_CTRL_TIME1;
@@ -408,7 +411,7 @@ void td_Stim_Start()
 	}
 
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	sConfigOC.Pulse = TD_CATHODE_PULSE_TIME1;
+	sConfigOC.Pulse = TD_ANODE_PULSE_TIME;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
 	{
 		Error_Handler();
