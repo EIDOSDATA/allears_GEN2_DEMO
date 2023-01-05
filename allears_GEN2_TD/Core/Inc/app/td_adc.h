@@ -68,8 +68,8 @@ typedef enum
 #define ADC2_RCV_SIZE								10
 
 /* ADC CONVERSION BUFFER SIZE*/
-#define TD_ADC1_CONV_BUF							get_adc1_buf
-#define TD_ADC2_CONV_BUF							get_adc2_buf
+#define TD_ADC1_CONV_BUF							ex_get_adc1_buf
+#define TD_ADC2_CONV_BUF							ex_get_adc2_buf
 
 /* ADC FSM STATE */
 #define TD_ADC1_CUR_STATE							td_adc1_fsm_state.state
@@ -88,6 +88,9 @@ void td_Start_ADC2_Conv(void);
 
 void td_Stop_ADC1_Conv(void);
 void td_Stop_ADC2_Conv(void);
+
+void td_Non_Conv_ADC1_Buff_Read(void);
+void td_Non_Conv_ADC2_Buff_Read(void);
 
 uint32_t td_Stepup_ADC1_AVG(void);
 uint32_t td_Peak_Detection_ADC2_AVG(uint8_t channel);

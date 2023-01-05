@@ -23,6 +23,14 @@ extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim16;
 extern DMA_HandleTypeDef hdma_tim2_ch2_ch4;
 
+/* ADC BUFFER */
+extern uint16_t ex_get_adc1_buf[ADC1_CHK_CH_NUM * ADC1_RCV_SIZE];
+extern uint16_t ex_get_adc2_buf[ADC2_CHK_CH_NUM * ADC2_RCV_SIZE];
+
+/* FSM STATE */
+extern td_adc1_state_t ex_adc1_cur_state;
+extern td_adc1_state_t ex_adc2_cur_state;
+
 /* PWM STRUCT */
 extern pwm_pulse_param_t ex_pwm_param;
 
@@ -58,7 +66,7 @@ void td_ADC_Voltage_Feedback()
 	fdbk_adc_voltage = td_ADC_Calc_Stepup_V(fdbk_adc_avg_data, R1_Vstup,
 	R2_Vstup);
 	/* VPW TEST */
-	td_Voltage_Config(fdbk_adc_voltage);
+	//td_Voltage_Config(fdbk_adc_voltage);
 	/* END OF VPW TEST */
 	timer16_cnt = 0;
 	stepup_print_f = true;
@@ -78,13 +86,13 @@ void td_Stepup_ADC_Data_Print()
 		}
 		//dec_point[0] = fdbk_adc_voltage % STEPUP_VOLTAGE_SCALE;
 
+		TD_SHELL_PRINT(("----- ADC1 -----\n"));
 		TD_SHELL_PRINT(("ADC1 SUM DATA: %ld\n", fdbk_adc_avg_data));
 		TD_SHELL_PRINT(
 				("VOLTAGE : %ld.%d%d%d%d%d\n", n_number, dec_point[0],dec_point[1],dec_point[2],dec_point[3],dec_point[4]));
 
 		TD_SHELL_PRINT(("SETTING VOLTAGE : %d\n", TD_VOLTAGE_VALUE_OUTPUT));
-		TD_SHELL_PRINT(("STEPUP PW : %d\n", TD_VOLTAGE_RELATED_PULSE_WIDTH));
-		TD_SHELL_PRINT(("----------\n\n"));
+		TD_SHELL_PRINT(("STEPUP PW : %d\n\n", TD_VOLTAGE_RELATED_PULSE_WIDTH));
 	}
 	stepup_print_f = false;
 }
@@ -119,7 +127,7 @@ void td_PeakDetection_ADC_Data_Print()
 					/ (mode_val / 10);
 			mode_val /= 10;
 		}
-
+		TD_SHELL_PRINT(("----- ADC2 -----\n"));
 		TD_SHELL_PRINT(
 				("ADC2 RIGHT PEAK DATA : %ld\n", peak_adc_avg_data[ADC2_R_CH]));
 		TD_SHELL_PRINT(
@@ -136,8 +144,7 @@ void td_PeakDetection_ADC_Data_Print()
 		TD_SHELL_PRINT(
 				("ADC2 LEFT PEAK DATA : %ld\n", peak_adc_avg_data[ADC2_L_CH]));
 		TD_SHELL_PRINT(
-				("VOLTAGE : %ld.%d%d%d\n", n_number, dec_point[0], dec_point[1], dec_point[2]));
-		TD_SHELL_PRINT(("----------\n"));
+				("VOLTAGE : %ld.%d%d%d\n\n", n_number, dec_point[0], dec_point[1], dec_point[2]));
 	}
 	peak_print_f = false;
 }
@@ -259,29 +266,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	/* TIMER 16 100ms */
 	if (htim->Instance == TIM16)
 	{
-		/* ADC1 FSM */
-		if (td_Get_ADC1_State() == td_adc1_conv_ok) // && td_Get_ADC2_State() == td_adc2_conv_ok
+		timer16_cnt++;
+		td_Non_Conv_ADC1_Buff_Read();
+		/* SLOPE VOLTAGE RISE CONTROL */
+		if (timer16_cnt == 10 && TD_SLOPE_CONTROL_END_FLAG == false)
 		{
-			timer16_cnt++;
-			/* SLOPE VOLTAGE RISE CONTROL */
-			if (timer16_cnt == 10 && TD_SLOPE_CONTROL_END_FLAG == false)
-			{
-				//td_ADC_PeakDetection();
-				td_ADC_Voltage_Feedback();
-			}
-			/* VOLTAGE RANGE KEEPING CONTROL */
-			else if (timer16_cnt == 1 && TD_SLOPE_CONTROL_END_FLAG == true)
-			{
-				//td_ADC_PeakDetection();
-				td_ADC_Voltage_Feedback();
-			}
-			//td_PeakDetection_ADC_Data_Print();
-			td_Stepup_ADC_Data_Print();
-
-			td_Set_ADC1_State(td_adc1_print_ok);
-			//td_Set_ADC2_State(td_adc2_print_ok);
+			td_ADC_Voltage_Feedback();
 		}
-#if 0
+		/* VOLTAGE RANGE KEEPING CONTROL */
+		else if (timer16_cnt == 1 && TD_SLOPE_CONTROL_END_FLAG == true)
+		{
+			td_ADC_Voltage_Feedback();
+		}
+		td_Stepup_ADC_Data_Print();
+
+#if 1
 		if (td_Get_ADC2_State() == td_adc2_conv_ok)
 		{
 			td_ADC_PeakDetection();

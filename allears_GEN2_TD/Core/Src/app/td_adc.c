@@ -142,8 +142,8 @@ int ref_adc_voltage_table_20mhz[TD_VOLTAGE_PW_MAX_VALUE] =
 /*********** END OF SYSTEM CLOCK : 20MHZ ***********/
 
 /* ADC BUFFER */
-uint16_t get_adc1_buf[ADC1_CHK_CH_NUM * ADC1_RCV_SIZE];
-uint16_t get_adc2_buf[ADC2_CHK_CH_NUM * ADC2_RCV_SIZE];
+uint16_t ex_get_adc1_buf[ADC1_CHK_CH_NUM * ADC1_RCV_SIZE];
+uint16_t ex_get_adc2_buf[ADC2_CHK_CH_NUM * ADC2_RCV_SIZE];
 
 uint16_t ex_setpup_adc[ADC1_RCV_SIZE]; // ADC1
 uint16_t ex_peak_adc_r[ADC2_RCV_SIZE]; // ADC2
@@ -167,9 +167,19 @@ typedef struct
 td_adc2_state_data_t td_adc2_fsm_state;
 td_adc2_state_t ex_adc2_cur_state = td_adc2_idle;
 
+void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef *hadc)
+{
+	/* Set variable to report analog watchdog out of window status to main      */
+	/* program.                                                                 */
+	//HAL_GPIO_WritePin(QCC_CRTL0_GPIO_Port, QCC_CRTL0_Pin, GPIO_PIN_SET);
+	td_Stim_Stop();
+	td_Set_Sys_FSM_State_Stop();
+}
+
 /* ADC CALLBACK FUNCTION */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 {
+#if 0
 	if (hadc->Instance == hadc1.Instance)
 	{
 		for (int index = 0; index < ADC1_RCV_SIZE; index++)
@@ -185,9 +195,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
 				ex_setpup_adc[index] = TD_ADC1_CONV_BUF[index - 1]; // STEPUP_FEEDBACK
 			}
 		}
-		//HAL_ADC_Stop_DMA(&hadc1);
-		ex_adc1_cur_state = td_adc1_conv_ok; // td_Start_ADC1_Conv();
+		ex_adc1_cur_state = td_adc1_conv_ok;
 	}
+#endif
 
 	if (hadc->Instance == hadc2.Instance)
 	{
@@ -253,6 +263,10 @@ void td_Start_ADC1_Conv()
 	{
 		Error_Handler();
 	}
+#if 1
+	__HAL_DMA_DISABLE_IT(&hdma_adc1, DMA_IT_HT | DMA_IT_TC);
+	__HAL_ADC_DISABLE_IT(&hadc1, ADC_IT_OVR);
+#endif
 }
 
 void td_Start_ADC2_Conv()
@@ -262,6 +276,10 @@ void td_Start_ADC2_Conv()
 	{
 		Error_Handler();
 	}
+#if 0
+	__HAL_DMA_DISABLE_IT(&hdma_adc2, DMA_IT_HT | DMA_IT_TC);
+	__HAL_ADC_DISABLE_IT(&hadc2, ADC_IT_OVR);
+#endif
 }
 /**********************/
 
@@ -283,6 +301,37 @@ void td_Stop_ADC2_Conv()
 		Error_Handler();
 	}
 }
+/**********************/
+
+/*
+ * NON FSM & NON ADC Conversion Buffer Read
+ * */
+void td_Non_Conv_ADC1_Buff_Read()
+{
+	for (int index = 0; index < ADC1_RCV_SIZE; index++)
+	{
+		/* ADC FILTER */
+		if (fabs(
+		TD_ADC1_CONV_BUF[index] - TD_ADC1_CONV_BUF[(index + 1) % 10]) < 200)
+		{
+			ex_setpup_adc[index] = TD_ADC1_CONV_BUF[index]; // STEPUP_FEEDBACK
+		}
+		else
+		{
+			ex_setpup_adc[index] = TD_ADC1_CONV_BUF[index - 1]; // STEPUP_FEEDBACK
+		}
+	}
+}
+
+void td_Non_Conv_ADC2_Buff_Read()
+{
+	for (int index = 0; index < ADC2_RCV_SIZE; index++)
+	{
+		ex_peak_adc_r[index] = TD_ADC2_CONV_BUF[index * 2]; // PEAK_DETECTION
+		ex_peak_adc_l[index] = TD_ADC2_CONV_BUF[(index * 2) + 1]; // PEAK_DETECTION
+	}
+}
+
 /**********************/
 
 /*
@@ -435,7 +484,7 @@ void td_Set_ADC2_State(td_adc2_state_t state)
 		td_Stop_ADC2_Conv();
 		break;
 	case td_adc2_run:
-		//td_ADC2_Enable();
+		td_ADC2_Enable();
 		td_Start_ADC2_Conv();
 		break;
 	case td_adc2_conv_ok:
