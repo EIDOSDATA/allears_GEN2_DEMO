@@ -25,6 +25,10 @@ extern __IO int ex_voltage_r_pw;
 #define TD_REF_ADC_VALUE_TABLE				ref_adc_value_table
 #define TD_REF_ADC_VOLTAGE_TABLE			ref_adc_voltage_table
 
+#define TD_NOLOAD_VOLTAGE_TABLE				noload_voltage_table
+#define TD_NOLOAD_ADC_VALUE_TABLE			noload_adc_value_table
+#define TD_NOLOAD_ADC_VOLTAGE_TABLE			noload_adc_voltage_table
+
 /*
  * SYSTEM CLOCK : 80MHz
  * STEPUP PULSE TIMER : 200KHz
@@ -99,7 +103,7 @@ int ref_adc_voltage_table[TD_VOLTAGE_PW_MAX_VALUE] =
  * */
 #if 1
 int ref_voltage_table[TD_VOLTAGE_PW_MAX_VALUE] =
-{ 47580, 69860, 8544, 99610, 114300, 129700, 144600, 159500, 173800, 187800,
+{ 47580, 69860, 85440, 99610, 114300, 129700, 144600, 159500, 173800, 187800,
 		201500, 215600, 229000, 241500, 253800, 265700, 278600, 291100, 302300,
 		314100, 325100, 336500, 347600, 357700, 367900, 377500, 387200, 395200,
 		401600, 406700, 407600 };
@@ -119,21 +123,15 @@ int ref_adc_voltage_table[TD_VOLTAGE_PW_MAX_VALUE] =
  * STEPUP CIRCUIT INPUY VOLTAGE : 5.0V
  * END POINT RESISTANCE : 0K
  * */
-int noload_voltage_table[TD_VOLTAGE_PW_MAX_VALUE] =
-{ 47700, 69590, 84620, 99110, 114200, 129500, 144200, 158300, 173500, 187500,
-		201400, 214800, 228200, 240800, 253700, 265700, 277600, 289900, 301800,
-		313600, 324700, 335500, 345900, 356100, 365900, 375900, 385400, 392900,
-		399700, 403900, 405500 };
+int noload_voltage_table[11] =
+{ 47620, 117800, 153500, 189800, 223800, 257600, 289600, 322200, 353500, 385400,
+		415700 };
 
-int noload_adc_value_table[TD_VOLTAGE_PW_MAX_VALUE] =
-{ 252, 367, 441, 558, 636, 712, 781, 856, 928, 1000, 1077, 1149, 1216, 1283,
-		1351, 1419, 1484, 1538, 1599, 1662, 1720, 1778, 1828, 1882, 1935, 1984,
-		2384, 2426, 2462, 2487, 2492 };
+int noload_adc_value_table[11] =
+{ 253, 655, 832, 1014, 1199, 1375, 1540, 1712, 1874, 2388, 2550 };
 
-int noload_adc_voltage_table[TD_VOLTAGE_PW_MAX_VALUE] =
-{ 1033, 1431, 1738, 2083, 2514, 2792, 3109, 3345, 3677, 3997, 4273, 4586, 4824,
-		5119, 5378, 5663, 5903, 6217, 6428, 6671, 6907, 7165, 7360, 7598, 7786,
-		8002, 8146, 10220, 10330, 10400, 10480 };
+int noload_adc_voltage_table[11] =
+{ 755, 2398, 3101, 3844, 4620, 5265, 5964, 6621, 7294, 9898, 10540 };
 
 #endif
 
@@ -194,6 +192,9 @@ uint16_t ex_setpup_adc[ADC1_RCV_SIZE]; // ADC1
 uint16_t ex_peak_adc_r[ADC2_RCV_SIZE]; // ADC2
 uint16_t ex_peak_adc_l[ADC2_RCV_SIZE]; // ADC2
 
+/* ADC END POINT LOAD DETECT FLAG */
+uint8_t ex_load_flage = 0;
+
 /* ADC1 STATE */
 typedef struct
 {
@@ -219,7 +220,6 @@ void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef *hadc)
 	HAL_GPIO_WritePin(QCC_CRTL0_GPIO_Port, QCC_CRTL0_Pin, GPIO_PIN_SET);
 	td_Stim_Stop();
 	td_Set_Sys_FSM_State_Stop();
-	//HAL_GPIO_WritePin(QCC_CRTL0_GPIO_Port, QCC_CRTL0_Pin, GPIO_PIN_RESET);
 }
 
 /* ADC CALLBACK FUNCTION */
@@ -386,11 +386,38 @@ void td_Non_Conv_ADC2_Buff_Read()
 uint32_t td_Stepup_ADC1_AVG()
 {
 	uint32_t adc1_avg = 0;
+	uint32_t adc1_avg_div10 = 0;
 
 	for (int i = 0; i < ADC1_RCV_SIZE; i++)
 	{
 		adc1_avg += ex_setpup_adc[i];
 	}
+	adc1_avg_div10 = (uint32_t) (adc1_avg / 10);
+
+	if (TD_VOLTAGE_RELATED_PULSE_WIDTH < 11
+			&& TD_VOLTAGE_RELATED_PULSE_WIDTH != 0)
+	{
+		if (TD_NOLOAD_ADC_VALUE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH] - 200
+				<= adc1_avg_div10
+				&& TD_NOLOAD_ADC_VALUE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH]
+						+ 200 >= adc1_avg_div10)
+		{
+			LOAD_DETECTION = 0;
+		}
+		else
+		{
+			LOAD_DETECTION = 1;
+		}
+	}
+	else if (TD_VOLTAGE_RELATED_PULSE_WIDTH == 0)
+	{
+		LOAD_DETECTION = 0;
+	}
+	else
+	{
+		LOAD_DETECTION = 1;
+	}
+
 	return adc1_avg; //return adc1_avg / ADC1_RCV_SIZE;
 }
 
@@ -431,14 +458,29 @@ uint64_t td_ADC_Calc_Stepup_V(uint32_t in_adc_val, uint32_t r1, uint32_t r2)
 	 */
 
 	/* REFERENCE TABLE */
-	uint64_t adc_val = (TD_REF_ADC_VOLTAGE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH]
-			* in_adc_val)
-			/ TD_REF_ADC_VALUE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH];
-	uint64_t v_out = (TD_REF_VOLTAGE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH]
-			* adc_val)
-			/ TD_REF_ADC_VOLTAGE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH];
-
-	return v_out;
+	if (LOAD_DETECTION == 1)
+	{
+		uint64_t adc_val =
+				(TD_REF_ADC_VOLTAGE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH]
+						* in_adc_val)
+						/ TD_REF_ADC_VALUE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH];
+		uint64_t v_out = (TD_REF_VOLTAGE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH]
+				* adc_val)
+				/ TD_REF_ADC_VOLTAGE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH];
+		return v_out;
+	}
+	else
+	{
+		uint64_t adc_val =
+				(TD_NOLOAD_ADC_VOLTAGE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH]
+						* in_adc_val)
+						/ TD_NOLOAD_ADC_VALUE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH];
+		uint64_t v_out =
+				(TD_NOLOAD_VOLTAGE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH]
+						* adc_val)
+						/ TD_NOLOAD_ADC_VOLTAGE_TABLE[TD_VOLTAGE_RELATED_PULSE_WIDTH];
+		return v_out;
+	}
 
 #if 0
 	float f_adc_val;

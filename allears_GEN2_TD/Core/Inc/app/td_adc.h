@@ -76,8 +76,11 @@ typedef enum
 #define TD_ADC2_CUR_STATE							td_adc2_fsm_state.state
 
 /* ADC2 CHANNEL DEFINE */
-#define ADC2_R_CH								0
-#define ADC2_L_CH								1
+#define ADC2_R_CH									0
+#define ADC2_L_CH									1
+
+/* ADC NO LOAD DETECTION */
+#define LOAD_DETECTION								ex_load_flage
 
 void td_ADC1_Enable(void);
 void td_ADC2_Enable(void);

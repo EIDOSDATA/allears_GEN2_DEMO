@@ -44,6 +44,9 @@ extern uint16_t ex_setpup_adc[ADC1_RCV_SIZE];
 extern uint16_t ex_peak_adc_r[ADC1_RCV_SIZE];
 extern uint16_t ex_peak_adc_l[ADC1_RCV_SIZE];
 
+/* ADC END POINT LOAD DETECT FLAG */
+extern uint8_t ex_load_flage;
+
 /* TIMER COUNTER VALUE */
 int timer2_cnt = 0;
 int timer16_cnt = 0;
@@ -66,7 +69,7 @@ void td_ADC_Voltage_Feedback()
 	fdbk_adc_voltage = td_ADC_Calc_Stepup_V(fdbk_adc_avg_data, R1_Vstup,
 	R2_Vstup);
 	/* VPW TEST */
-	td_Voltage_Config(fdbk_adc_voltage);
+	//td_Voltage_Config(fdbk_adc_voltage);
 	/* END OF VPW TEST */
 	timer16_cnt = 0;
 	stepup_print_f = true;
@@ -92,7 +95,8 @@ void td_Stepup_ADC_Data_Print()
 				("VOLTAGE : %ld.%d%d%d%d%d\n", n_number, dec_point[0],dec_point[1],dec_point[2],dec_point[3],dec_point[4]));
 
 		TD_SHELL_PRINT(("SETTING VOLTAGE : %d\n", TD_VOLTAGE_VALUE_OUTPUT));
-		TD_SHELL_PRINT(("STEPUP PW : %d\n\n", TD_VOLTAGE_RELATED_PULSE_WIDTH));
+		TD_SHELL_PRINT(("STEPUP PW : %d\n", TD_VOLTAGE_RELATED_PULSE_WIDTH));
+		TD_SHELL_PRINT(("LOAD DETECTION FLAG : %d\n\n", LOAD_DETECTION));
 	}
 	stepup_print_f = false;
 }
@@ -278,6 +282,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			td_ADC_Voltage_Feedback();
 		}
+		//td_ADC_Voltage_Feedback();
 		td_Stepup_ADC_Data_Print();
 
 #if 0
