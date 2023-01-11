@@ -1,5 +1,5 @@
 #MicroXplorer Configuration settings - do not modify
-ADC1.AWD1HighThreshold=2650
+ADC1.AWD1HighThreshold=2600
 ADC1.AWD1ITMode=ENABLE
 ADC1.Channel-4\#ChannelRegularConversion=ADC_CHANNEL_11
 ADC1.ClockPrescaler=ADC_CLOCK_ASYNC_DIV1
@@ -126,9 +126,9 @@ Mcu.UserConstants=
 Mcu.UserName=STM32L412KBUx
 MxCube.Version=6.6.1
 MxDb.Version=DB.6.0.60
-NVIC.ADC1_2_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
+NVIC.ADC1_2_IRQn=true\:1\:0\:true\:false\:true\:true\:true\:true
 NVIC.BusFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
-NVIC.DMA1_Channel2_IRQn=true\:0\:0\:false\:false\:true\:true\:true\:true
+NVIC.DMA1_Channel2_IRQn=true\:1\:0\:true\:false\:true\:true\:true\:true
 NVIC.DebugMonitor_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false
 NVIC.ForceEnableDMAVector=false
 NVIC.HardFault_IRQn=true\:0\:0\:false\:false\:true\:false\:false\:false

@@ -283,7 +283,7 @@ static void MX_ADC1_Init(void)
 	AnalogWDGConfig.WatchdogMode = ADC_ANALOGWATCHDOG_SINGLE_REG;
 	AnalogWDGConfig.Channel = ADC_CHANNEL_11;
 	AnalogWDGConfig.ITMode = ENABLE;
-	AnalogWDGConfig.HighThreshold = 2650;
+	AnalogWDGConfig.HighThreshold = 2600;
 	AnalogWDGConfig.LowThreshold = 0;
 	if (HAL_ADC_AnalogWDGConfig(&hadc1, &AnalogWDGConfig) != HAL_OK)
 	{
@@ -303,7 +303,8 @@ static void MX_ADC1_Init(void)
 		Error_Handler();
 	}
 	/* USER CODE BEGIN ADC1_Init 2 */
-
+	// 2650 == 44 V
+	// 2600 == 43.2 V
 	/* USER CODE END ADC1_Init 2 */
 
 }
@@ -585,7 +586,7 @@ static void MX_TIM2_Init(void)
 		Error_Handler();
 	}
 	sConfigOC.OCMode = TIM_OCMODE_PWM1;
-	sConfigOC.Pulse = 1100;
+	sConfigOC.Pulse = TD_ANODE_PULSE_TIME;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
 	{
 		Error_Handler();
@@ -758,7 +759,7 @@ static void MX_DMA_Init(void)
 
 	/* DMA interrupt init */
 	/* DMA1_Channel2_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 0, 0);
+	HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 1, 0);
 	HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
 
 }
@@ -780,7 +781,7 @@ static void MX_GPIO_Init(void)
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOB,
-			QCC_CRTL0_Pin | LED_Pin | BIPHASIC_SW_Pin | PEAK_DISCHG_SW_Pin,
+	QCC_CRTL0_Pin | LED_Pin | BIPHASIC_SW_Pin | PEAK_DISCHG_SW_Pin,
 			GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */

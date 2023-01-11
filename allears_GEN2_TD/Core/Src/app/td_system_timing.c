@@ -66,7 +66,7 @@ void td_ADC_Voltage_Feedback()
 	fdbk_adc_voltage = td_ADC_Calc_Stepup_V(fdbk_adc_avg_data, R1_Vstup,
 	R2_Vstup);
 	/* VPW TEST */
-	//td_Voltage_Config(fdbk_adc_voltage);
+	td_Voltage_Config(fdbk_adc_voltage);
 	/* END OF VPW TEST */
 	timer16_cnt = 0;
 	stepup_print_f = true;
@@ -280,7 +280,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 		td_Stepup_ADC_Data_Print();
 
-#if 1
+#if 0
 		if (td_Get_ADC2_State() == td_adc2_conv_ok)
 		{
 			td_ADC_PeakDetection();
