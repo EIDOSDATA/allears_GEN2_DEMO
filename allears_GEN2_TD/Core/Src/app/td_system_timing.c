@@ -23,6 +23,14 @@ extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim16;
 extern DMA_HandleTypeDef hdma_tim2_ch2_ch4;
 
+/* ADC BUFFER */
+extern uint16_t ex_get_adc1_buf[ADC1_CHK_CH_NUM * ADC1_RCV_SIZE];
+extern uint16_t ex_get_adc2_buf[ADC2_CHK_CH_NUM * ADC2_RCV_SIZE];
+
+/* FSM STATE */
+extern td_adc1_state_t ex_adc1_cur_state;
+extern td_adc1_state_t ex_adc2_cur_state;
+
 /* PWM STRUCT */
 extern pwm_pulse_param_t ex_pwm_param;
 
@@ -35,6 +43,9 @@ extern __IO bool ex_slope_ctrl_end_f;
 extern uint16_t ex_setpup_adc[ADC1_RCV_SIZE];
 extern uint16_t ex_peak_adc_r[ADC1_RCV_SIZE];
 extern uint16_t ex_peak_adc_l[ADC1_RCV_SIZE];
+
+/* ADC END POINT LOAD DETECT FLAG */
+extern uint8_t ex_load_flage;
 
 /* TIMER COUNTER VALUE */
 int timer2_cnt = 0;
@@ -84,7 +95,8 @@ void td_Stepup_ADC_Data_Print()
 				("VOLTAGE : %ld.%d%d%d%d%d\n", n_number, dec_point[0],dec_point[1],dec_point[2],dec_point[3],dec_point[4]));
 
 		TD_SHELL_PRINT(("SETTING VOLTAGE : %d\n", TD_VOLTAGE_VALUE_OUTPUT));
-		TD_SHELL_PRINT(("STEPUP PW : %d\n\n", TD_VOLTAGE_RELATED_PULSE_WIDTH));
+		TD_SHELL_PRINT(("STEPUP PW : %d\n", TD_VOLTAGE_RELATED_PULSE_WIDTH));
+		TD_SHELL_PRINT(("LOAD DETECTION FLAG : %d\n\n", LOAD_DETECTION));
 	}
 	stepup_print_f = false;
 }
@@ -258,29 +270,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	/* TIMER 16 100ms */
 	if (htim->Instance == TIM16)
 	{
-		/* ADC1 FSM */
-		if (td_Get_ADC1_State() == td_adc1_conv_ok) // && td_Get_ADC2_State() == td_adc2_conv_ok
+		timer16_cnt++;
+		td_Non_Conv_ADC1_Buff_Read();
+		/* SLOPE VOLTAGE RISE CONTROL */
+		if (timer16_cnt == 10 && TD_SLOPE_CONTROL_END_FLAG == false)
 		{
-			timer16_cnt++;
-			/* SLOPE VOLTAGE RISE CONTROL */
-			if (timer16_cnt == 10 && TD_SLOPE_CONTROL_END_FLAG == false)
-			{
-				td_ADC_Voltage_Feedback();
-				//td_ADC_PeakDetection();
-			}
-			/* VOLTAGE RANGE KEEPING CONTROL */
-			else if (timer16_cnt == 1 && TD_SLOPE_CONTROL_END_FLAG == true)
-			{
-				td_ADC_Voltage_Feedback();
-				//td_ADC_PeakDetection();
-			}
-			td_Stepup_ADC_Data_Print();
-			//td_PeakDetection_ADC_Data_Print();
-
-			td_Set_ADC1_State(td_adc1_print_ok);
-			//td_Set_ADC2_State(td_adc2_print_ok);
+			td_ADC_Voltage_Feedback();
 		}
-#if 1
+		/* VOLTAGE RANGE KEEPING CONTROL */
+		else if (timer16_cnt == 1 && TD_SLOPE_CONTROL_END_FLAG == true)
+		{
+			td_ADC_Voltage_Feedback();
+		}
+		//td_ADC_Voltage_Feedback();
+		td_Stepup_ADC_Data_Print();
+
+#if 0
 		if (td_Get_ADC2_State() == td_adc2_conv_ok)
 		{
 			td_ADC_PeakDetection();

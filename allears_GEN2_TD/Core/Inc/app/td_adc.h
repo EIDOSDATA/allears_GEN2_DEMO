@@ -57,7 +57,7 @@ typedef enum
 #define PEAKDETECTION_DEC_PLACES					3
 #define STEPUP_VOLTAGE_SCALE						100000
 #define STEPUP_DEC_PLACES							5
-#define VOLTAGE_ERROR_RANGE_VALUE					1.8 * STEPUP_VOLTAGE_SCALE
+#define FEEDBACK_VOLTAGE_RANGE_VALUE				1.8 * STEPUP_VOLTAGE_SCALE
 
 /* NUMBER OF ADC CHANNEL */
 #define ADC1_CHK_CH_NUM								1
@@ -68,16 +68,19 @@ typedef enum
 #define ADC2_RCV_SIZE								10
 
 /* ADC CONVERSION BUFFER SIZE*/
-#define TD_ADC1_CONV_BUF							get_adc1_buf
-#define TD_ADC2_CONV_BUF							get_adc2_buf
+#define TD_ADC1_CONV_BUF							ex_get_adc1_buf
+#define TD_ADC2_CONV_BUF							ex_get_adc2_buf
 
 /* ADC FSM STATE */
 #define TD_ADC1_CUR_STATE							td_adc1_fsm_state.state
 #define TD_ADC2_CUR_STATE							td_adc2_fsm_state.state
 
 /* ADC2 CHANNEL DEFINE */
-#define ADC2_R_CH								0
-#define ADC2_L_CH								1
+#define ADC2_R_CH									0
+#define ADC2_L_CH									1
+
+/* ADC NO LOAD DETECTION */
+#define LOAD_DETECTION								ex_load_flage
 
 void td_ADC1_Enable(void);
 void td_ADC2_Enable(void);
@@ -88,6 +91,9 @@ void td_Start_ADC2_Conv(void);
 
 void td_Stop_ADC1_Conv(void);
 void td_Stop_ADC2_Conv(void);
+
+void td_Non_Conv_ADC1_Buff_Read(void);
+void td_Non_Conv_ADC2_Buff_Read(void);
 
 uint32_t td_Stepup_ADC1_AVG(void);
 uint32_t td_Peak_Detection_ADC2_AVG(uint8_t channel);

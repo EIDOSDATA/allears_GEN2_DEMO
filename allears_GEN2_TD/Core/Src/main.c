@@ -238,6 +238,8 @@ static void MX_ADC1_Init(void)
 
 	ADC_MultiModeTypeDef multimode =
 	{ 0 };
+	ADC_AnalogWDGConfTypeDef AnalogWDGConfig =
+	{ 0 };
 	ADC_ChannelConfTypeDef sConfig =
 	{ 0 };
 
@@ -259,8 +261,8 @@ static void MX_ADC1_Init(void)
 	hadc1.Init.DiscontinuousConvMode = DISABLE;
 	hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
 	hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-	hadc1.Init.DMAContinuousRequests = DISABLE;
-	hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+	hadc1.Init.DMAContinuousRequests = ENABLE;
+	hadc1.Init.Overrun = ADC_OVR_DATA_OVERWRITTEN;
 	hadc1.Init.OversamplingMode = DISABLE;
 	if (HAL_ADC_Init(&hadc1) != HAL_OK)
 	{
@@ -271,6 +273,19 @@ static void MX_ADC1_Init(void)
 	 */
 	multimode.Mode = ADC_MODE_INDEPENDENT;
 	if (HAL_ADCEx_MultiModeConfigChannel(&hadc1, &multimode) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	/** Configure Analog WatchDog 1
+	 */
+	AnalogWDGConfig.WatchdogNumber = ADC_ANALOGWATCHDOG_1;
+	AnalogWDGConfig.WatchdogMode = ADC_ANALOGWATCHDOG_SINGLE_REG;
+	AnalogWDGConfig.Channel = ADC_CHANNEL_11;
+	AnalogWDGConfig.ITMode = ENABLE;
+	AnalogWDGConfig.HighThreshold = 2600;
+	AnalogWDGConfig.LowThreshold = 0;
+	if (HAL_ADC_AnalogWDGConfig(&hadc1, &AnalogWDGConfig) != HAL_OK)
 	{
 		Error_Handler();
 	}
@@ -288,7 +303,8 @@ static void MX_ADC1_Init(void)
 		Error_Handler();
 	}
 	/* USER CODE BEGIN ADC1_Init 2 */
-
+	// 2650 == 44 V
+	// 2600 == 43.2 V
 	/* USER CODE END ADC1_Init 2 */
 
 }
@@ -742,18 +758,9 @@ static void MX_DMA_Init(void)
 	__HAL_RCC_DMA1_CLK_ENABLE();
 
 	/* DMA interrupt init */
-	/* DMA1_Channel1_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 2, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 	/* DMA1_Channel2_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 2, 0);
+	HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 1, 0);
 	HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
-	/* DMA1_Channel5_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
-	/* DMA1_Channel7_IRQn interrupt configuration */
-	HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
 
 }
 

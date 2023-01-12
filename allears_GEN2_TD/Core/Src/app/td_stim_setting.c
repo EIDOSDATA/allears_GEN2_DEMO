@@ -502,9 +502,18 @@ uint32_t td_Voltage_Config(uint64_t adc_voltage)
 {
 	uint32_t voltage_scaleup_val = TD_VOLTAGE_VALUE_OUTPUT
 			* STEPUP_VOLTAGE_SCALE;
-	if (abs(voltage_scaleup_val - adc_voltage) < VOLTAGE_ERROR_RANGE_VALUE)
+
+#define VOLTAGE_DIFFERENCE_ABS		abs(voltage_scaleup_val - adc_voltage)
+#define FAST_STEPUP_VOLTAGE			4 * STEPUP_VOLTAGE_SCALE // 4 voltage
+#define FAST_STEPUP_ENABLE			VOLTAGE_DIFFERENCE_ABS > FAST_STEPUP_VOLTAGE
+
+#define OUTPUT_VOLTAGE_IS_LOW		voltage_scaleup_val > adc_voltage
+#define OUTPUT_VOLTAGE_IS_HIGH		voltage_scaleup_val < adc_voltage
+#define OUTPUT_VOLTAGE_IS_SAME		voltage_scaleup_val == adc_voltage
+
+	if (VOLTAGE_DIFFERENCE_ABS < FEEDBACK_VOLTAGE_RANGE_VALUE)
 	{
-		if (voltage_scaleup_val > adc_voltage)
+		if (OUTPUT_VOLTAGE_IS_LOW)
 		{
 			TD_VOLTAGE_RELATED_PULSE_WIDTH++;
 			if (TD_VOLTAGE_RELATED_PULSE_WIDTH > TD_VOLTAGE_TABLE_MAX_VALUE - 1)
@@ -512,7 +521,7 @@ uint32_t td_Voltage_Config(uint64_t adc_voltage)
 				TD_VOLTAGE_RELATED_PULSE_WIDTH = TD_VOLTAGE_TABLE_MAX_VALUE - 1;
 			}
 		}
-		else if (voltage_scaleup_val < adc_voltage)
+		else if (OUTPUT_VOLTAGE_IS_HIGH)
 		{
 			TD_VOLTAGE_RELATED_PULSE_WIDTH--;
 		}
@@ -521,18 +530,29 @@ uint32_t td_Voltage_Config(uint64_t adc_voltage)
 		return HAL_OK;
 	}
 
-	else if (abs(voltage_scaleup_val - adc_voltage) > VOLTAGE_ERROR_RANGE_VALUE)
+	else if (VOLTAGE_DIFFERENCE_ABS > FEEDBACK_VOLTAGE_RANGE_VALUE)
 	{
-		if (voltage_scaleup_val > adc_voltage)
+		if (OUTPUT_VOLTAGE_IS_LOW)
 		{
-			TD_VOLTAGE_RELATED_PULSE_WIDTH++;
+			/* FAST STEPUP */
+			/* When you set the voltage, raise the voltage here.
+			 * */
+			if (FAST_STEPUP_ENABLE)
+			{
+				TD_VOLTAGE_RELATED_PULSE_WIDTH += 7;
+			}
+			else
+			{
+				TD_VOLTAGE_RELATED_PULSE_WIDTH += 1;
+			}
+
 			TD_SLOPE_CONTROL_END_FLAG = false;
 			if (TD_VOLTAGE_RELATED_PULSE_WIDTH > TD_VOLTAGE_TABLE_MAX_VALUE - 1)
 			{
 				TD_VOLTAGE_RELATED_PULSE_WIDTH = TD_VOLTAGE_TABLE_MAX_VALUE - 1;
 			}
 		}
-		else if (voltage_scaleup_val < adc_voltage)
+		else if (OUTPUT_VOLTAGE_IS_HIGH)
 		{
 			TD_VOLTAGE_RELATED_PULSE_WIDTH--;
 			TD_SLOPE_CONTROL_END_FLAG = true;
@@ -545,7 +565,7 @@ uint32_t td_Voltage_Config(uint64_t adc_voltage)
 		return HAL_OK;
 	}
 
-	else if (voltage_scaleup_val == adc_voltage)
+	else if (OUTPUT_VOLTAGE_IS_SAME)
 	{
 		TD_SLOPE_CONTROL_END_FLAG = true;
 	}
