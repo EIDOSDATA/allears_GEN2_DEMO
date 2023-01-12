@@ -69,7 +69,7 @@ void td_ADC_Voltage_Feedback()
 	fdbk_adc_voltage = td_ADC_Calc_Stepup_V(fdbk_adc_avg_data, R1_Vstup,
 	R2_Vstup);
 	/* VPW TEST */
-	//td_Voltage_Config(fdbk_adc_voltage);
+	td_Voltage_Config(fdbk_adc_voltage);
 	/* END OF VPW TEST */
 	timer16_cnt = 0;
 	stepup_print_f = true;
